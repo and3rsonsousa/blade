@@ -17,6 +17,10 @@ import { type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "db_types";
 import styles from "./globals.css";
 import { cssBundleHref } from "@remix-run/css-bundle";
+import { ClientHintCheck, getHints, useNonce } from "./lib/client-hints";
+import { getTheme } from "./lib/theme-session.server";
+import { useTheme } from "./routes/action.set-theme";
+import clsx from "clsx";
 
 type TypedSupabaseClient = SupabaseClient<Database>;
 export type OutletContextType = {
@@ -42,10 +46,26 @@ export const loader = async ({ request }: LoaderArgs) => {
 		data: { session },
 	} = await supabase.auth.getSession();
 
-	return json({ env, session }, { headers: response.headers });
+	return json(
+		{
+			env,
+			session,
+			requestInfo: {
+				hints: getHints(request),
+				userPrefs: {
+					theme: getTheme(request),
+				},
+			},
+		},
+		{ headers: response.headers }
+	);
 };
 
 export default function App() {
+	const nonce = useNonce();
+	const theme = useTheme();
+
+	console.log("theme should be null on first load ", theme);
 	const { env, session } = useLoaderData<typeof loader>();
 	const revalidator = useRevalidator();
 	const [supabase] = useState(() =>
@@ -72,8 +92,9 @@ export default function App() {
 	}, [supabase, serverAccessToken, revalidator]);
 
 	return (
-		<html lang="pt-br" className="dark">
+		<html lang="pt-br" className={clsx(theme)}>
 			<head>
+				<ClientHintCheck nonce={nonce} />
 				<meta charSet="utf-8" />
 				<meta
 					name="viewport"

@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react";
 import Blade from "~/components/structure/blade";
 import { Button } from "~/components/ui/button";
 
@@ -9,7 +10,9 @@ export default function Index() {
 					<Blade className="w-full max-w-[240px]" />
 				</div>
 				<div className="mt-8">
-					<Button>Entrar</Button>
+					<Button asChild>
+						<Link to="/dashboard">Entrar</Link>
+					</Button>
 				</div>
 			</div>
 		</div>
