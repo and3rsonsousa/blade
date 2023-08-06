@@ -4,13 +4,23 @@ import { Button } from "~/components/ui/button";
 
 export default function Index() {
 	return (
-		<div className="grid min-h-screen place-content-center bg-gradient-to-b from-violet-900/50 via-transparent">
-			<div className="text-center">
-				<div>
-					<Blade className="w-full max-w-[240px]" />
+		<div className="grid min-h-screen place-content-center">
+			<div className="text-center max-w-xs">
+				<Blade className="w-32 mx-auto" />
+
+				<div className="my-8">
+					Sistema de gestão de ações criado e mantido pela{" "}
+					<a
+						href="https://agenciacanivete.com.br"
+						target="_blank"
+						rel="noreferrer"
+						className="link"
+					>
+						aɢêɴᴄɪa ᴄaɴɪᴠeᴛe.
+					</a>
 				</div>
-				<div className="mt-8">
-					<Button asChild>
+				<div>
+					<Button variant={"default"} asChild>
 						<Link to="/dashboard">Entrar</Link>
 					</Button>
 				</div>

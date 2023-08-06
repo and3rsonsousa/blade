@@ -1,13 +1,13 @@
 import { type SerializeFrom } from "@remix-run/node";
 import { useRouteLoaderData } from "@remix-run/react";
+import { type loader as rootLoader } from "~/root";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { type loader as rootLoader } from "~/root";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
-
+// Remix theme utils below
 export function useRequestInfo() {
 	const data = useRouteLoaderData("root") as SerializeFrom<typeof rootLoader>;
 	return data.requestInfo;
