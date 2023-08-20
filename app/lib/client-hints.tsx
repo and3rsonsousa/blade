@@ -76,7 +76,6 @@ export function ClientHintCheck({ nonce }: { nonce: string }) {
 	const { revalidate } = useRevalidator();
 
 	React.useEffect(() => {
-		console.log("script component ran");
 		const themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 		function handleThemeChange() {
 			document.cookie = `${clientHints.theme.cookieName}=${
@@ -100,7 +99,7 @@ const cookies = document.cookie.split(';').map(c => c.trim()).reduce((acc, cur) 
 	acc[key] = value;
 	return acc;
 }, {});
-console.log('actual script ran');
+
 let cookieChanged = false;
 const hints = [
 ${Object.values(clientHints)
@@ -118,7 +117,7 @@ for (const hint of hints) {
 	}
 }
 if (cookieChanged && navigator.cookieEnabled) {
-    console.log('cookie changed, reloading');
+    
 	window.location.reload();
 }
 			`,

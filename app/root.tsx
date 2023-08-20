@@ -64,8 +64,6 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function App() {
 	const nonce = useNonce();
 	const theme = useTheme();
-
-	console.log("theme should be null on first load ", theme);
 	const { env, session } = useLoaderData<typeof loader>();
 	const revalidator = useRevalidator();
 	const [supabase] = useState(() =>
