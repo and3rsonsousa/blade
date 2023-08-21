@@ -1,5 +1,12 @@
 import { type LoaderArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import {
+	eachDayOfInterval,
+	endOfMonth,
+	endOfWeek,
+	startOfMonth,
+	startOfWeek,
+	toDate,
+} from "date-fns";
 import supabaseServer from "~/lib/supabase.server";
 
 export async function loader({ request }: LoaderArgs) {
@@ -16,10 +23,26 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function DashboardIndex() {
-	const data = useLoaderData();
+	// const data = useLoaderData();
+	const date = toDate(Date.now());
+	const start = startOfWeek(startOfMonth(date));
+	const end = endOfWeek(endOfMonth(date));
+	const days = eachDayOfInterval({ start, end });
 	return (
-		<div>
-			<pre>{JSON.stringify(data, undefined, 2)}</pre>
+		<div className="grid grid-cols-7 grow">
+			{days.map((day, i) => (
+				<div key={i} className="">
+					<div
+						className={`p-2 text-sm ${
+							day.getMonth() !== date.getMonth()
+								? "opacity-25"
+								: ""
+						}`}
+					>
+						{day.getDate()}
+					</div>
+				</div>
+			))}
 		</div>
 	);
 }
