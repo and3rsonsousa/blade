@@ -8,7 +8,9 @@ export async function loader({ request }: LoaderArgs) {
 		request,
 		response,
 	});
-	const { data } = await supabase.from("actions").select();
+	const { data } = await supabase
+		.from("actions")
+		.select("*, category(*), state(*)");
 
 	return { data };
 }
