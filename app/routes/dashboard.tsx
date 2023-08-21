@@ -1,5 +1,8 @@
 import { redirect, type LoaderArgs } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
+import Layout from "~/components/structure/layout";
 import supabaseServer from "~/lib/supabase.server";
+
 export async function loader({ request }: LoaderArgs) {
 	const response = new Response();
 	const supabase = supabaseServer({
@@ -17,5 +20,9 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function Dashboard() {
-	return <div></div>;
+	return (
+		<Layout>
+			<Outlet />
+		</Layout>
+	);
 }

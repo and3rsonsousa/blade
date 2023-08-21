@@ -39,9 +39,9 @@ export default function Login() {
 	const PasswordVisibleComponent = isPasswordVisible ? Eye : EyeOff;
 
 	return (
-		<div className="space-y-4">
+		<div>
 			{error && (
-				<div>
+				<div className="mb-4">
 					<Alert variant={"destructive"}>
 						<AlertCircle className="w-4 h-4" />
 						<AlertTitle>Erro</AlertTitle>
@@ -49,7 +49,7 @@ export default function Login() {
 					</Alert>
 				</div>
 			)}
-			<div className="space-y-2">
+			<div className="space-y-2 mb-4">
 				<Label htmlFor="email">E-mail</Label>
 				<Input
 					name="email"
@@ -64,7 +64,7 @@ export default function Login() {
 					}
 				/>
 			</div>
-			<div className="space-y-2">
+			<div className="space-y-2 mb-8">
 				<Label htmlFor="password">Senha</Label>
 				<div className="relative">
 					<Input
