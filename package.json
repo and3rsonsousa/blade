@@ -5,6 +5,7 @@
 	"scripts": {
 		"build": "remix build",
 		"dev": "remix dev",
+		"gentypes": "npx supabase gen types typescript --project-id qmtklcseozqntgztgnoe --schema public > db_types.ts",
 		"typecheck": "tsc"
 	},
 	"dependencies": {

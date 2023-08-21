@@ -9,7 +9,7 @@ import {
 	startOfWeek,
 	toDate,
 } from "date-fns";
-import type { CalendarType } from "models";
+
 import { ScrollArea } from "~/components/ui/scroll-area";
 import supabaseServer from "~/lib/supabase.server";
 
@@ -43,16 +43,21 @@ export default function DashboardIndex() {
 				if (format(date, "y-M-d") === format(day, "y-M-d")) {
 					return true;
 				}
-			}),
+				return false;
+			}) as Action[],
 		});
 	});
 
 	return (
-		<div className="grid grid-cols-7 grow">
-			{calendar.map((c, i) => (
-				<div key={i} className="p-2 h-full">
+		<div
+			className={`grid grid-cols-7 ${
+				calendar.length === 35 ? "grid-rows-5" : "grid-rows-6"
+			} grow overflow-hidden`}
+		>
+			{calendar.map((c: DayType, i: number) => (
+				<div key={i} className="p-2 flex flex-col overflow-hidden">
 					<div
-						className={`text-sm ${
+						className={`text-sm mb-2 ${
 							c.day.getMonth() !== date.getMonth()
 								? "opacity-25"
 								: ""
@@ -60,13 +65,16 @@ export default function DashboardIndex() {
 					>
 						{c.day.getDate()}
 					</div>
-					<div>
+					<ScrollArea className="max-h-full grow shrink-0 pb-4">
 						{c.actions.map((action) => (
-							<div key={action.id} className="mb-2">
+							<div
+								key={action.id}
+								className="mb-1 pl-2 border-l-4 border-orange-900 rounded-[4px] hover:border-orange-700 py-1 text-sm hover:bg-orange-900 bg-card transition cursor-pointer"
+							>
 								{action.title}
 							</div>
 						))}
-					</div>
+					</ScrollArea>
 				</div>
 			))}
 		</div>

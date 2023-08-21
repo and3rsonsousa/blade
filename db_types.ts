@@ -11,27 +11,51 @@ export interface Database {
     Tables: {
       actions: {
         Row: {
+          category: number
           created_at: string
+          date: string
+          description: string | null
           id: string
+          state: number
           title: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          category: number
           created_at?: string
+          date?: string
+          description?: string | null
           id?: string
+          state: number
           title: string
           updated_at?: string
           user_id?: string
         }
         Update: {
+          category?: number
           created_at?: string
+          date?: string
+          description?: string | null
           id?: string
+          state?: number
           title?: string
           updated_at?: string
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "actions_category_fkey"
+            columns: ["category"]
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_state_fkey"
+            columns: ["state"]
+            referencedRelation: "states"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "actions_user_id_fkey"
             columns: ["user_id"]
@@ -39,6 +63,82 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      categories: {
+        Row: {
+          created_at: string
+          id: number
+          slug: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          slug: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          slug?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      people: {
+        Row: {
+          created_at: string
+          email: string
+          id: number
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: number
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: number
+          name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "people_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      states: {
+        Row: {
+          created_at: string
+          id: number
+          order: number
+          slug: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          order: number
+          slug: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          order?: number
+          slug?: string
+          title?: string
+        }
+        Relationships: []
       }
     }
     Views: {
