@@ -1,4 +1,4 @@
-import { type LoaderArgs } from "@remix-run/node";
+import { type LoaderArgs, type V2_MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
 	eachDayOfInterval,
@@ -9,9 +9,38 @@ import {
 	startOfWeek,
 	toDate,
 } from "date-fns";
-
+import { Plus } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "~/components/ui/dialog";
+import { Input } from "~/components/ui/input";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "~/components/ui/select";
+
 import supabaseServer from "~/lib/supabase.server";
+
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { Label } from "~/components/ui/label";
+
+export const meta: V2_MetaFunction = () => [
+	{
+		title: "Dashboard",
+	},
+];
 
 export async function loader({ request }: LoaderArgs) {
 	const response = new Response();
@@ -48,35 +77,112 @@ export default function DashboardIndex() {
 		});
 	});
 
+	const editor = useEditor({
+		extensions: [StarterKit],
+		content:
+			"<h2>testando meu deus</h2><p>de novo</p><p>Essa <strong>merda</strong> aqui</p><ol><li><p>Testando</p></li><li><p>valha jesus</p></li></ol><p></p><hr><p>Parece que agora vai</p><p>Sei lá né?</p><p></p>",
+		editorProps: {
+			attributes: {
+				class: "outline-none bg-input p-4 rounded-lg",
+			},
+		},
+		onUpdate() {
+			console.log(editor?.getHTML().toString());
+		},
+	});
+
 	return (
 		<div
-			className={`grid grid-cols-7 ${
+			className={`sm:grid grid-cols-7 ${
 				calendar.length === 35 ? "grid-rows-5" : "grid-rows-6"
-			} grow overflow-hidden`}
+			} grow sm:overflow-hidden`}
 		>
-			{calendar.map((c: DayType, i: number) => (
-				<div key={i} className="p-2 flex flex-col overflow-hidden">
-					<div
-						className={`text-sm mb-2 ${
-							c.day.getMonth() !== date.getMonth()
-								? "opacity-25"
-								: ""
-						}`}
-					>
-						{c.day.getDate()}
-					</div>
-					<ScrollArea className="max-h-full grow shrink-0 pb-4">
-						{c.actions.map((action) => (
+			{calendar.map(
+				(c: DayType, i: number) =>
+					c.actions.length > 0 && (
+						<div
+							key={i}
+							className="px-6 py-2 sm:p-2 sm:flex sm:flex-col sm:overflow-hidden"
+						>
 							<div
-								key={action.id}
-								className="mb-1 pl-2 border-l-4 border-orange-900 rounded-[4px] hover:border-orange-700 py-1 text-sm hover:bg-orange-900 bg-card transition cursor-pointer"
+								className={`text-sm mb-2 ${
+									c.day.getMonth() !== date.getMonth()
+										? "opacity-25"
+										: ""
+								}`}
 							>
-								{action.title}
+								{c.day.getDate()}
 							</div>
-						))}
-					</ScrollArea>
-				</div>
-			))}
+							<ScrollArea className="max-h-full grow shrink-0 pb-4">
+								{c.actions.map((action) => (
+									<div
+										key={action.id}
+										className="mb-1 pl-2 border-l-2 border-orange-900 hover:border-orange-700 py-0.5 text-xs hover:bg-card transition cursor-pointer text-slate-500"
+									>
+										{action.title}
+									</div>
+								))}
+							</ScrollArea>
+						</div>
+					)
+			)}
+
+			<div className="fixed bottom-6 right-4">
+				<Dialog defaultOpen={true}>
+					<DialogTrigger asChild>
+						<Button size={"icon"} className="rounded-full">
+							<Plus />
+						</Button>
+					</DialogTrigger>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Nova Ação</DialogTitle>
+						</DialogHeader>
+						<DialogDescription>
+							<ScrollArea className="max-sm:h-[60vh] -m-2">
+								<div className="p-2">
+									<div className="mb-4 space-y-2">
+										<Label htmlFor="title">Título</Label>
+										<Input
+											id="title"
+											name="title"
+											placeholder="Título da Ação"
+										/>
+									</div>
+									<div className="mb-4 space-y-2">
+										<Label htmlFor="title">Categoria</Label>
+										<Select>
+											<SelectTrigger>
+												<SelectValue placeholder="Categoria" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value="1">
+													Light
+												</SelectItem>
+												<SelectItem value="2">
+													Dark
+												</SelectItem>
+												<SelectItem value="3">
+													System
+												</SelectItem>
+											</SelectContent>
+										</Select>
+									</div>
+									<div className="mb-4 space-y-2">
+										<Label htmlFor="title">Descrição</Label>
+										<div className="prose">
+											<EditorContent editor={editor} />
+										</div>
+									</div>
+								</div>
+							</ScrollArea>
+						</DialogDescription>
+						<DialogFooter>
+							<Button>Inserir</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
+			</div>
 		</div>
 	);
 }
