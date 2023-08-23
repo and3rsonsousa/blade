@@ -119,11 +119,11 @@ export default function DashboardIndex() {
 						>
 							{c.day.getDate()}
 						</div>
-						<ScrollArea className="max-h-full grow shrink-0 pb-4">
+						<ScrollArea className="max-h-full w-full grow shrink-0 pb-4">
 							{c.actions.map((action) => (
 								<div
 									key={action.id}
-									className="mb-1 pl-2 border-l-2 border-orange-900 hover:border-orange-700 py-0.5 text-xs hover:bg-card transition cursor-pointer text-slate-500 overflow-hidden text-ellipsis whitespace-nowrap w-full"
+									className="mb-1 pl-2 border-l-4 border-orange-600 hover:border-orange-700 py-0.5 text-xs hover:bg-muted bg-card transition cursor-pointer text-slate-500 overflow-hidden text-ellipsis whitespace-nowrap w-full hover:text-muted-foreground rounded-[4px]"
 								>
 									{action.title}
 								</div>
@@ -133,9 +133,13 @@ export default function DashboardIndex() {
 				))}
 
 				<div className="fixed bottom-6 right-4">
-					<Dialog defaultOpen={true}>
+					<Dialog open={open}>
 						<DialogTrigger asChild>
-							<Button size={"icon"} className="rounded-full">
+							<Button
+								size={"icon"}
+								className="rounded-full"
+								onClick={() => setOpen(true)}
+							>
 								<Plus />
 							</Button>
 						</DialogTrigger>
