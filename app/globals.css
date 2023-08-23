@@ -78,11 +78,19 @@
 }
 
 .prose {
-	@apply text-muted-foreground;
+	@apply text-muted-foreground selection:bg-primary selection:text-primary-foreground;
 }
 
-.prose * {
+.prose .tiptap * {
 	@apply my-2;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5 {
+	@apply m-0 mb-4;
 }
 
 .prose p {
@@ -94,4 +102,11 @@
 }
 .prose ol * {
 	@apply my-0;
+}
+
+.prose .tiptap > *:first-child {
+	@apply mt-0;
+}
+.prose .tiptap > *:last-child {
+	@apply mb-0;
 }
