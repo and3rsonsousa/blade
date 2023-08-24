@@ -85,6 +85,27 @@ export interface Database {
         }
         Relationships: []
       }
+      clients: {
+        Row: {
+          created_at: string
+          id: number
+          slug: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          slug: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          slug?: string
+          title?: string
+        }
+        Relationships: []
+      }
       people: {
         Row: {
           created_at: string

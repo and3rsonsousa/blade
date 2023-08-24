@@ -90,7 +90,7 @@
 .prose h3,
 .prose h4,
 .prose h5 {
-	@apply m-0 mb-4;
+	@apply m-0 mb-4 font-bold;
 }
 
 .prose p {

@@ -1,5 +1,5 @@
-import { redirect, type LoaderArgs } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
+import { type LoaderArgs, redirect, json } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import Layout from "~/components/structure/layout";
 import supabaseServer from "~/lib/supabase.server";
 
@@ -16,13 +16,18 @@ export async function loader({ request }: LoaderArgs) {
 
 	if (!session) return redirect("/login", { headers: response.headers });
 
-	return {};
+	const [{ data: categories }] = await Promise.all([
+		supabase.from("categories").select("*"),
+	]);
+
+	return json({ categories });
 }
 
 export default function Dashboard() {
+	const { categories } = useLoaderData<typeof loader>();
 	return (
 		<Layout>
-			<Outlet />
+			<Outlet context={{ categories }} />
 		</Layout>
 	);
 }
