@@ -1,7 +1,14 @@
-import { Calendar } from "lucide-react";
-import { Button } from "../ui/button";
-import { useState } from "react";
 import { useMatches } from "@remix-run/react";
+
+import { format } from "date-fns";
+import ptBR from "date-fns/locale/pt-BR";
+import { CalendarIcon, Check } from "lucide-react";
+import { forwardRef, useRef, useState, type ReactNode } from "react";
+import { CategoryIcons } from "~/lib/icons";
+import { cn } from "~/lib/utils";
+import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
 	Select,
 	SelectContent,
@@ -10,78 +17,208 @@ import {
 	SelectValue,
 } from "../ui/select";
 
+type InternalAction = {
+	title?: string;
+	description?: string;
+	client?: string;
+	category?: string;
+	states?: string;
+	date: Date;
+};
+
 export default function ActionDialog() {
+	const [action, setAction] = useState<InternalAction>({
+		title: "",
+		description: "",
+		client: "",
+		category: "1",
+		states: "2",
+		date: new Date(),
+	});
+	const description = useRef<HTMLDivElement>(null);
+	const category = useRef<HTMLButtonElement>(null);
+
 	const matches = useMatches();
-	const { categories } = matches[1].data;
+	const { categories, clients, states } = matches[1].data;
+
+	const onBlurTitle = () => {
+		description.current?.focus();
+	};
+	const onBlurDescription = () => {
+		category.current?.focus();
+	};
 	return (
 		<>
+			{/* Título */}
 			<div className="max-sm:p-4 p-8 pb-0">
-				<ActionTitleInput placeholder="Nome da ação" />
+				<FancyInputText
+					placeholder="Nome da ação"
+					onBlur={onBlurTitle}
+					className="text-2xl font-semibold"
+					onInput={(value) => setAction({ ...action, title: value })}
+				/>
 			</div>
+			{/* Descrição */}
+			<div className="text-sm max-sm:px-4 px-8 sm:pt-4">
+				<FancyInputText
+					placeholder="Descreva sua ação aqui..."
+					onBlur={onBlurDescription}
+					ref={description}
+					max={200}
+					onInput={(value) =>
+						setAction({ ...action, description: value })
+					}
+				/>
+			</div>
+			{/* Botões */}
+			<div className="mt-4 sm:flex grid-cols-2 justify-between border-t p-4 sm:px-8 gap-4 overflow-hidden">
+				{/* Categoria e Cliente */}
+				<div className="flex gap-1 justify-between">
+					<SelectInput
+						items={clients}
+						placeholder="Cliente"
+						onChange={(value) => {
+							console.log(value);
+							setAction({ ...action, client: value });
+						}}
+					/>
 
-			<div className="text-sm px-8 pt-4 text-muted">
-				Descreva sua ação...
-			</div>
-			<div className="mt-4 sm:flex justify-between border-t p-4 sm:px-8 gap-16">
-				<div className="flex max-sm:pb-4 justify-between gap-4 items-center text-xs">
-					<div className="flex gap-4">
-						<Select>
-							<SelectTrigger className="p-2 rounded-sm bg-transparent border-0 h-auto text-xs">
-								<SelectValue placeholder="Teste" />
-							</SelectTrigger>
-							<SelectContent>
-								{(categories as Category[]).map((category) => (
-									<SelectItem
-										key={category.id}
-										value={String(category.id)}
-									>
-										{category.title}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-						<div>Univet</div>
-					</div>
-					<div className="flex gap-4">
-						<div className="flex gap-2 items-center">
-							<div className="h-2 w-2 rounded-full bg-orange-500"></div>
-							<div>Fazer</div>
-						</div>
-						<div className="flex gap-1 items-center">
-							<Calendar className="w-3 h-3 opacity-50" />
-							<div>12 de março</div>
-						</div>
-					</div>
+					<SelectInput
+						ref={category}
+						items={categories}
+						placeholder="Categoria"
+						selectedValue="1"
+						itemContent={({ slug }) => {
+							return (
+								<CategoryIcons id={slug} className="w-4 h-4" />
+							);
+						}}
+						onChange={(value) =>
+							setAction({ ...action, category: value })
+						}
+					/>
+
+					<SelectInput
+						items={states}
+						placeholder="Status"
+						selectedValue="2"
+						itemContent={(item) => {
+							return (
+								<div
+									className={`bg-${item.slug} h-3 w-3 rounded-full mr-2`}
+								></div>
+							);
+						}}
+						onChange={(value) =>
+							setAction({ ...action, states: value })
+						}
+					/>
 				</div>
-				<Button size={"sm"}>Inserir</Button>
+				{/* Data e Botão */}
+				<div className="flex gap-2 justify-between sm:justify-end">
+					<Popover>
+						<PopoverTrigger asChild>
+							<Button
+								variant={"ghost"}
+								size={"sm"}
+								className={cn(
+									"justify-start text-xs text-left font-normal",
+									!action.date && "text-muted-foreground"
+								)}
+							>
+								<CalendarIcon className="mr-2 h-3 w-3" />
+
+								<span className="sm:hidden">
+									{action.date
+										? format(
+												action.date,
+												"d 'de' MMMM 'de' Y",
+												{
+													locale: ptBR,
+												}
+										  )
+										: ""}
+								</span>
+								<span className="max-sm:hidden">
+									{action.date
+										? format(action.date, "d/MMM", {
+												locale: ptBR,
+										  })
+										: ""}
+								</span>
+							</Button>
+						</PopoverTrigger>
+						<PopoverContent className="w-auto p-0">
+							<Calendar
+								mode="single"
+								selected={action.date}
+								onSelect={(value) => {
+									setAction({
+										...action,
+										date: value as Date,
+									});
+								}}
+								initialFocus
+							/>
+						</PopoverContent>
+					</Popover>
+
+					<Button
+						size={"sm"}
+						className="items-center"
+						onClick={() => {
+							console.log({ action });
+						}}
+						disabled={!isValidAction(action)}
+					>
+						Inserir
+						<Check size={16} className="ml-2" />
+					</Button>
+				</div>
 			</div>
 		</>
 	);
 }
 
-const ActionTitleInput = ({
-	placeholder,
-	content,
-	max = 70,
-}: {
-	placeholder?: string;
-	content?: string;
-	max?: number;
-}) => {
+const FancyInputText = forwardRef<
+	HTMLDivElement,
+	{
+		placeholder?: string;
+		content?: string;
+		className?: string;
+		max?: number;
+		onBlur?: () => void;
+		onInput?: (value?: string) => void;
+	}
+>(({ placeholder, content, className, max = 70, onBlur, onInput }, ref) => {
 	const [visible, setVisible] = useState(!content);
 	const [text, setText] = useState(content || "");
 
 	return (
 		<div className="relative">
 			<div
-				className="text-2xl font-semibold bg-transparent outline-none w-full"
+				className={cn([
+					"bg-transparent outline-none w-full",
+					className,
+				])}
+				ref={ref}
 				contentEditable="true"
 				onInput={(event) => {
 					setVisible(event.currentTarget.innerText === "");
 					setText(event.currentTarget.innerText);
+					if (onInput) {
+						onInput(event.currentTarget.innerText);
+					}
 				}}
+				tabIndex={0}
 				onKeyDown={(event) => {
-					if (
+					if (event.key === "Enter") {
+						console.clear();
+						if (onBlur) {
+							event.preventDefault();
+							onBlur();
+						}
+					} else if (
 						event.currentTarget.innerText.length >= max &&
 						event.key !== "Backspace"
 					) {
@@ -105,10 +242,78 @@ const ActionTitleInput = ({
 				</div>
 			)}
 			{visible && (
-				<div className="absolute pointer-events-none top-1/2 -translate-y-1/2 text-muted text-2xl font-semibold">
+				<div
+					className={cn([
+						"absolute pointer-events-none top-1/2 -translate-y-1/2 text-slate-500/50",
+						className,
+					])}
+				>
 					{placeholder}
 				</div>
 			)}
 		</div>
 	);
-};
+});
+
+const SelectInput = forwardRef<
+	HTMLButtonElement,
+	{
+		placeholder?: string;
+		items: GenericItem[];
+		selectedValue?: string;
+		itemContent?: (item: GenericItem) => ReactNode;
+		onChange?: (value?: string) => void;
+	}
+>(({ placeholder, items, selectedValue, itemContent, onChange }, ref) => {
+	const [selected, setSelected] = useState(selectedValue);
+
+	return (
+		<Select
+			value={selected}
+			onValueChange={(value) => {
+				setSelected(() => value);
+				if (onChange) onChange(value);
+			}}
+		>
+			<SelectTrigger
+				ref={ref}
+				className={`p-2 rounded-sm bg-transparent border-0 h-auto text-xs`}
+			>
+				{itemContent ? (
+					itemContent(
+						items.filter((item) => selected === String(item.id))[0]
+					)
+				) : (
+					<SelectValue placeholder={placeholder} />
+				)}
+			</SelectTrigger>
+			<SelectContent>
+				{items.map((item) => (
+					<SelectItem
+						key={item.id}
+						value={String(item.id)}
+						className="text-xs px-3"
+					>
+						{item.title}
+					</SelectItem>
+				))}
+			</SelectContent>
+		</Select>
+	);
+});
+
+FancyInputText.displayName = "FancyInputText";
+SelectInput.displayName = "SelectInput";
+
+function isValidAction(action: InternalAction) {
+	console.log({ action });
+	let valid = true;
+	// if (!action.description) valid = false;
+	if (!action.title) valid = false;
+	if (!action.client) valid = false;
+	if (!action.category) valid = false;
+	if (!action.date) valid = false;
+	if (!action.states) valid = false;
+
+	return valid;
+}

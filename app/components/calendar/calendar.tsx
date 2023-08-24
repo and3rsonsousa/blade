@@ -55,7 +55,7 @@ export default function Calendar({ actions }: CalendarType) {
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent
-						className="w-full max-w-md"
+						className="w-[86vw] sm:w-full sm:max-w-3xl bg-foreground/5 border-foreground/10"
 						align="end"
 						sideOffset={16}
 						alignOffset={0}

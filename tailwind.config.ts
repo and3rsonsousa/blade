@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
+import colors from "tailwindcss/colors";
 module.exports = {
 	darkMode: ["class"],
 	content: [
@@ -51,6 +52,12 @@ module.exports = {
 					DEFAULT: "hsl(var(--card))",
 					foreground: "hsl(var(--card-foreground))",
 				},
+				idea: colors.yellow,
+				do: colors.orange,
+				doing: colors.rose,
+				review: colors.violet,
+				done: colors.sky,
+				finished: colors.teal,
 			},
 			borderRadius: {
 				lg: "var(--radius)",

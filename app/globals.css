@@ -110,3 +110,22 @@
 .prose .tiptap > *:last-child {
 	@apply mb-0;
 }
+
+.bg-idea {
+	@apply bg-idea-600 text-idea-50;
+}
+.bg-do {
+	@apply bg-do-600 text-do-50;
+}
+.bg-doing {
+	@apply bg-doing-600 text-doing-50;
+}
+.bg-review {
+	@apply bg-review-600 text-review-50;
+}
+.bg-done {
+	@apply bg-done-600 text-done-50;
+}
+.bg-finished {
+	@apply bg-finished-600 text-finished-50;
+}

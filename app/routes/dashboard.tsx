@@ -16,18 +16,30 @@ export async function loader({ request }: LoaderArgs) {
 
 	if (!session) return redirect("/login", { headers: response.headers });
 
-	const [{ data: categories }] = await Promise.all([
-		supabase.from("categories").select("*"),
-	]);
+	const [{ data: categories }, { data: clients }, { data: states }] =
+		await Promise.all([
+			supabase
+				.from("categories")
+				.select("*")
+				.order("id", { ascending: true }),
+			supabase
+				.from("clients")
+				.select("*")
+				.order("title", { ascending: true }),
+			supabase
+				.from("states")
+				.select("*")
+				.order("id", { ascending: true }),
+		]);
 
-	return json({ categories });
+	return json({ categories, clients, states });
 }
 
 export default function Dashboard() {
-	const { categories } = useLoaderData<typeof loader>();
+	const context = useLoaderData<typeof loader>();
 	return (
 		<Layout>
-			<Outlet context={{ categories }} />
+			<Outlet context={{ ...context }} />
 		</Layout>
 	);
 }
