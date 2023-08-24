@@ -22,7 +22,7 @@ type InternalAction = {
 	description?: string;
 	client?: string;
 	category?: string;
-	states?: string;
+	state?: string;
 	date: Date;
 };
 
@@ -32,7 +32,7 @@ export default function ActionDialog() {
 		description: "",
 		client: "",
 		category: "1",
-		states: "2",
+		state: "2",
 		date: new Date(),
 	});
 	const matches = useMatches();
@@ -111,7 +111,7 @@ export default function ActionDialog() {
 							);
 						}}
 						onChange={(value) =>
-							setAction({ ...action, states: value })
+							setAction({ ...action, state: value })
 						}
 					/>
 				</div>
@@ -174,7 +174,7 @@ export default function ActionDialog() {
 									description: action.description as string,
 									client: action.client as string,
 									category: action.category as string,
-									states: action.states as string,
+									state: action.state as string,
 									date: formatISO(action.date),
 								},
 								{
@@ -325,7 +325,7 @@ function isValidAction(action: InternalAction) {
 	if (!action.client) valid = false;
 	if (!action.category) valid = false;
 	if (!action.date) valid = false;
-	if (!action.states) valid = false;
+	if (!action.state) valid = false;
 
 	return valid;
 }

@@ -12,6 +12,7 @@ export interface Database {
       actions: {
         Row: {
           category: number
+          client: number
           created_at: string
           date: string
           description: string | null
@@ -23,6 +24,7 @@ export interface Database {
         }
         Insert: {
           category: number
+          client: number
           created_at?: string
           date?: string
           description?: string | null
@@ -34,6 +36,7 @@ export interface Database {
         }
         Update: {
           category?: number
+          client?: number
           created_at?: string
           date?: string
           description?: string | null
@@ -48,6 +51,12 @@ export interface Database {
             foreignKeyName: "actions_category_fkey"
             columns: ["category"]
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_client_fkey"
+            columns: ["client"]
+            referencedRelation: "clients"
             referencedColumns: ["id"]
           },
           {
@@ -89,18 +98,21 @@ export interface Database {
         Row: {
           created_at: string
           id: number
+          short: string
           slug: string
           title: string
         }
         Insert: {
           created_at?: string
           id?: number
+          short: string
           slug: string
           title: string
         }
         Update: {
           created_at?: string
           id?: number
+          short?: string
           slug?: string
           title?: string
         }

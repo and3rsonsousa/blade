@@ -129,3 +129,22 @@
 .bg-finished {
 	@apply bg-finished-600 text-finished-50;
 }
+
+.border-idea {
+	@apply border-idea-600;
+}
+.border-do {
+	@apply border-do-600;
+}
+.border-doing {
+	@apply border-doing-600;
+}
+.border-review {
+	@apply border-review-600;
+}
+.border-done {
+	@apply border-done-600;
+}
+.border-finished {
+	@apply border-finished-600;
+}
