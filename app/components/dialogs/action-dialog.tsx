@@ -1,6 +1,6 @@
-import { useMatches } from "@remix-run/react";
+import { useFetcher, useMatches } from "@remix-run/react";
 
-import { format } from "date-fns";
+import { format, formatISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import { CalendarIcon, Check } from "lucide-react";
 import { forwardRef, useRef, useState, type ReactNode } from "react";
@@ -35,10 +35,12 @@ export default function ActionDialog() {
 		states: "2",
 		date: new Date(),
 	});
+	const matches = useMatches();
+	const fetcher = useFetcher();
+
 	const description = useRef<HTMLDivElement>(null);
 	const category = useRef<HTMLButtonElement>(null);
 
-	const matches = useMatches();
 	const { categories, clients, states } = matches[1].data;
 
 	const onBlurTitle = () => {
@@ -71,14 +73,13 @@ export default function ActionDialog() {
 				/>
 			</div>
 			{/* Botões */}
-			<div className="mt-4 sm:flex grid-cols-2 justify-between border-t p-4 sm:px-8 gap-4 overflow-hidden">
+			<div className="mt-4 sm:flex grid-cols-2 justify-between border-t py-4 px-2 sm:px-6 gap-4 overflow-hidden">
 				{/* Categoria e Cliente */}
 				<div className="flex gap-1 justify-between">
 					<SelectInput
 						items={clients}
 						placeholder="Cliente"
 						onChange={(value) => {
-							console.log(value);
 							setAction({ ...action, client: value });
 						}}
 					/>
@@ -167,7 +168,20 @@ export default function ActionDialog() {
 						size={"sm"}
 						className="items-center"
 						onClick={() => {
-							console.log({ action });
+							fetcher.submit(
+								{
+									title: action.title as string,
+									description: action.description as string,
+									client: action.client as string,
+									category: action.category as string,
+									states: action.states as string,
+									date: formatISO(action.date),
+								},
+								{
+									method: "post",
+									action: "/handle-action",
+								}
+							);
 						}}
 						disabled={!isValidAction(action)}
 					>
@@ -205,9 +219,9 @@ const FancyInputText = forwardRef<
 				contentEditable="true"
 				onInput={(event) => {
 					setVisible(event.currentTarget.innerText === "");
-					setText(event.currentTarget.innerText);
+					setText(event.currentTarget.innerHTML);
 					if (onInput) {
-						onInput(event.currentTarget.innerText);
+						onInput(event.currentTarget.innerHTML);
 					}
 				}}
 				tabIndex={0}
@@ -306,9 +320,7 @@ FancyInputText.displayName = "FancyInputText";
 SelectInput.displayName = "SelectInput";
 
 function isValidAction(action: InternalAction) {
-	console.log({ action });
 	let valid = true;
-	// if (!action.description) valid = false;
 	if (!action.title) valid = false;
 	if (!action.client) valid = false;
 	if (!action.category) valid = false;

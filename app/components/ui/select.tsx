@@ -22,7 +22,9 @@ const SelectTrigger = React.forwardRef<
 		)}
 		{...props}
 	>
-		{children}
+		<div className="overflow-hidden whitespace-nowrap text-ellipsis">
+			{children}
+		</div>
 		<SelectPrimitive.Icon asChild>
 			<ChevronDown className="h-4 w-4 opacity-50" />
 		</SelectPrimitive.Icon>
