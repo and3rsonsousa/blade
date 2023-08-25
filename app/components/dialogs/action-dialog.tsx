@@ -149,22 +149,26 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 					)}
 				</div>
 
-				<pre className="text-xs whitespace-pre-wrap">
+				{/* <pre className="text-xs whitespace-pre-wrap">
 					{JSON.stringify(internalAction, undefined, 2)}
-				</pre>
+				</pre> */}
 			</div>
 			{/* Botões */}
 			<div>
-				<div className="mt-4 sm:flex grid-cols-2 justify-between border-t py-4 px-2 sm:px-6 gap-4 overflow-hidden ">
+				<div className="mt-4 sm:flex grid-cols-2 justify-between border-t py-4 px-2 sm:px-6 gap-4 overflow-hidden">
 					{/* Categoria e Cliente */}
-					<div className="flex gap-1 justify-between">
+					<div className="flex gap-1 justify-between w-full sm:justify-start">
 						<SelectInput
 							items={clients}
 							placeholder="Cliente"
 							onChange={(value) => {
 								setAction({ ...internalAction, client: value });
 							}}
-							selectedValue={internalAction.client as string}
+							selectedValue={
+								action
+									? (internalAction.client as string)
+									: undefined
+							}
 							ref={clientInput}
 						/>
 
@@ -383,13 +387,14 @@ const SelectInput = forwardRef<
 				ref={ref}
 				className={`p-2 rounded-sm bg-transparent border-0 h-auto text-xs`}
 			>
-				{itemContent ? (
+				{/* {itemContent ? (
 					itemContent(
 						items.filter((item) => selected === String(item.id))[0]
 					)
 				) : (
 					<SelectValue placeholder={placeholder} />
-				)}
+					)} */}
+				<SelectValue placeholder={placeholder} />
 			</SelectTrigger>
 			<SelectContent>
 				{items.map((item) => (
