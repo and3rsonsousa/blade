@@ -8,6 +8,11 @@ export default function Layout({ children }: { children: ReactNode }) {
 			<div className="p-6">
 				<Link to="/dashboard">
 					<Blade className="h-4" />
+					{/* <img
+						src="/blade-240-logo.png"
+						className="h-4"
+						alt="Blade"
+					/> */}
 				</Link>
 			</div>
 			{children}

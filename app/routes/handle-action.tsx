@@ -63,13 +63,13 @@ export const action: ActionFunction = async ({ request }) => {
 			.eq("id", id)
 			.single();
 
+		console.log(error, action, formData.get("state"));
+
 		return { error };
 	} else if (actionToHandle === "delete-action") {
 		const id = formData.get("id") as string;
-		console.log(id, actionToHandle);
 
 		const { error } = await supabase.from("actions").delete().eq("id", id);
-		console.log(error);
 
 		return { error };
 	}

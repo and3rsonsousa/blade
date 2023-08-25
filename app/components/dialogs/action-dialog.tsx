@@ -77,7 +77,6 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 				action: "/handle-action",
 			}
 		);
-		console.log(fetcher);
 	}
 
 	function updateAction() {

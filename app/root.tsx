@@ -29,6 +29,7 @@ export type OutletContextType = {
 
 export const links: LinksFunction = () => [
 	{ rel: "stylesheet", href: styles },
+	{ rel: "icon", href: "/icon-3.png" },
 	...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 

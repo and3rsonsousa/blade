@@ -48,7 +48,7 @@ export default function Calendar({ actions }: CalendarType) {
 				))}
 			</div>
 			<div className="fixed bottom-6 right-4">
-				<Popover defaultOpen={true}>
+				<Popover>
 					<PopoverTrigger asChild>
 						<Button size={"icon"} className="rounded-full">
 							<Plus />
