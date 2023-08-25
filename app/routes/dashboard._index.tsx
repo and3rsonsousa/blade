@@ -20,8 +20,6 @@ export async function loader({ request }: LoaderArgs) {
 		supabase.from("actions").select("*, category(*), state(*)"),
 	]);
 
-	console.log(actions);
-
 	return { actions };
 }
 

@@ -57,7 +57,7 @@ module.exports = {
 				doing: colors.rose,
 				review: colors.violet,
 				done: colors.sky,
-				finished: colors.teal,
+				finished: colors.emerald,
 			},
 			borderRadius: {
 				lg: "var(--radius)",

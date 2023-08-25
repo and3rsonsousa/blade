@@ -16,24 +16,30 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../ui/select";
+import Editor from "../editor";
 
 type InternalAction = {
 	title?: string;
-	description?: string;
-	client?: string;
+	description?: string | null;
+	client?: string | null;
 	category?: string;
 	state?: string;
 	date: Date;
 };
 
-export default function ActionDialog() {
-	const [action, setAction] = useState<InternalAction>({
-		title: "",
-		description: "",
-		client: "",
-		category: "1",
-		state: "2",
-		date: new Date(),
+type ActionDialogType = {
+	mode?: "page" | "popover";
+	action?: Action;
+};
+
+export default function ActionDialog({ mode, action }: ActionDialogType) {
+	const [internalAction, setAction] = useState<InternalAction>({
+		title: action ? action.title : "",
+		description: action ? action.description : "",
+		client: action ? String(action.client) : "",
+		category: action ? String(action.category) : "1",
+		state: action ? String(action.state) : "2",
+		date: action ? new Date(action.date) : new Date(),
 	});
 	const matches = useMatches();
 	const fetcher = useFetcher();
@@ -43,154 +49,175 @@ export default function ActionDialog() {
 
 	const { categories, clients, states } = matches[1].data;
 
-	const onBlurTitle = () => {
+	const onBlurTitle = (value?: string) => {
 		description.current?.focus();
+		setAction({ ...internalAction, title: value });
 	};
 	const onBlurDescription = () => {
 		category.current?.focus();
 	};
 	return (
-		<>
-			{/* Título */}
-			<div className="max-sm:p-4 p-8 pb-0">
-				<FancyInputText
-					placeholder="Nome da ação"
-					onBlur={onBlurTitle}
-					className="text-2xl font-semibold"
-					onInput={(value) => setAction({ ...action, title: value })}
-				/>
-			</div>
-			{/* Descrição */}
-			<div className="text-sm max-sm:px-4 px-8 sm:pt-4">
-				<FancyInputText
-					placeholder="Descreva sua ação aqui..."
-					onBlur={onBlurDescription}
-					ref={description}
-					max={200}
-					onInput={(value) =>
-						setAction({ ...action, description: value })
-					}
-				/>
+		<div className={`${mode === "page" ? "h-full flex flex-col" : ""}`}>
+			<div
+				className={mode === "page" ? "grow shrink-0 flex flex-col" : ""}
+			>
+				{/* Título */}
+				<div className={`max-sm:p-4  p-8 pb-0 `}>
+					<FancyInputText
+						placeholder="Nome da ação"
+						onBlur={onBlurTitle}
+						className="text-2xl font-semibold"
+						value={internalAction.title}
+					/>
+				</div>
+				{/* Descrição */}
+				<div className="text-sm max-sm:px-4 px-8 sm:pt-4">
+					{action ? (
+						<Editor content={action.description as string} />
+					) : (
+						<FancyInputText
+							placeholder="Descreva sua ação aqui..."
+							onBlur={onBlurDescription}
+							ref={description}
+							max={200}
+						/>
+					)}
+				</div>
 			</div>
 			{/* Botões */}
-			<div className="mt-4 sm:flex grid-cols-2 justify-between border-t py-4 px-2 sm:px-6 gap-4 overflow-hidden">
-				{/* Categoria e Cliente */}
-				<div className="flex gap-1 justify-between">
-					<SelectInput
-						items={clients}
-						placeholder="Cliente"
-						onChange={(value) => {
-							setAction({ ...action, client: value });
-						}}
-					/>
+			<div>
+				<div className="mt-4 sm:flex grid-cols-2 justify-between border-t py-4 px-2 sm:px-6 gap-4 overflow-hidden">
+					{/* Categoria e Cliente */}
+					<div className="flex gap-1 justify-between">
+						<SelectInput
+							items={clients}
+							placeholder="Cliente"
+							onChange={(value) => {
+								setAction({ ...internalAction, client: value });
+							}}
+						/>
 
-					<SelectInput
-						ref={category}
-						items={categories}
-						placeholder="Categoria"
-						selectedValue="1"
-						itemContent={({ slug }) => {
-							return (
-								<CategoryIcons id={slug} className="w-4 h-4" />
-							);
-						}}
-						onChange={(value) =>
-							setAction({ ...action, category: value })
-						}
-					/>
+						<SelectInput
+							ref={category}
+							items={categories}
+							placeholder="Categoria"
+							selectedValue="1"
+							itemContent={({ slug }) => {
+								return (
+									<CategoryIcons
+										id={slug}
+										className="w-4 h-4"
+									/>
+								);
+							}}
+							onChange={(value) =>
+								setAction({
+									...internalAction,
+									category: value,
+								})
+							}
+						/>
 
-					<SelectInput
-						items={states}
-						placeholder="Status"
-						selectedValue="2"
-						itemContent={(item) => {
-							return (
-								<div
-									className={`bg-${item.slug} h-3 w-3 rounded-full mr-2`}
-								></div>
-							);
-						}}
-						onChange={(value) =>
-							setAction({ ...action, state: value })
-						}
-					/>
-				</div>
-				{/* Data e Botão */}
-				<div className="flex gap-2 justify-between sm:justify-end">
-					<Popover>
-						<PopoverTrigger asChild>
-							<Button
-								variant={"ghost"}
-								size={"sm"}
-								className={cn(
-									"justify-start text-xs text-left font-normal",
-									!action.date && "text-muted-foreground"
-								)}
-							>
-								<CalendarIcon className="mr-2 h-3 w-3" />
+						<SelectInput
+							items={states}
+							placeholder="Status"
+							selectedValue="2"
+							itemContent={(item) => {
+								return (
+									<div
+										className={`bg-${item.slug} h-3 w-3 rounded-full mr-2`}
+									></div>
+								);
+							}}
+							onChange={(value) =>
+								setAction({ ...internalAction, state: value })
+							}
+						/>
+					</div>
+					{/* Data e Botão */}
+					<div className="flex gap-2 justify-between sm:justify-end">
+						<Popover>
+							<PopoverTrigger asChild>
+								<Button
+									variant={"ghost"}
+									size={"sm"}
+									className={cn(
+										"justify-start text-xs text-left font-normal",
+										!internalAction.date &&
+											"text-muted-foreground"
+									)}
+								>
+									<CalendarIcon className="mr-2 h-3 w-3" />
 
-								<span className="sm:hidden">
-									{action.date
-										? format(
-												action.date,
-												"d 'de' MMMM 'de' Y",
-												{
-													locale: ptBR,
-												}
-										  )
-										: ""}
-								</span>
-								<span className="max-sm:hidden">
-									{action.date
-										? format(action.date, "d/MMM", {
-												locale: ptBR,
-										  })
-										: ""}
-								</span>
-							</Button>
-						</PopoverTrigger>
-						<PopoverContent className="w-auto p-0">
-							<Calendar
-								mode="single"
-								selected={action.date}
-								onSelect={(value) => {
-									setAction({
-										...action,
-										date: value as Date,
-									});
-								}}
-								initialFocus
-							/>
-						</PopoverContent>
-					</Popover>
+									<span className="sm:hidden">
+										{internalAction.date
+											? format(
+													internalAction.date,
+													"d 'de' MMMM 'de' Y",
+													{
+														locale: ptBR,
+													}
+											  )
+											: ""}
+									</span>
+									<span className="max-sm:hidden">
+										{internalAction.date
+											? format(
+													internalAction.date,
+													"d/MMM",
+													{
+														locale: ptBR,
+													}
+											  )
+											: ""}
+									</span>
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent className="w-auto p-0">
+								<Calendar
+									mode="single"
+									selected={internalAction.date}
+									onSelect={(value) => {
+										setAction({
+											...internalAction,
+											date: value as Date,
+										});
+									}}
+									initialFocus
+								/>
+							</PopoverContent>
+						</Popover>
 
-					<Button
-						size={"sm"}
-						className="items-center"
-						onClick={() => {
-							fetcher.submit(
-								{
-									title: action.title as string,
-									description: action.description as string,
-									client: action.client as string,
-									category: action.category as string,
-									state: action.state as string,
-									date: formatISO(action.date),
-								},
-								{
-									method: "post",
-									action: "/handle-action",
-								}
-							);
-						}}
-						disabled={!isValidAction(action)}
-					>
-						Inserir
-						<Check size={16} className="ml-2" />
-					</Button>
+						<Button
+							size={"sm"}
+							className="items-center"
+							onClick={() => {
+								fetcher.submit(
+									{
+										title: internalAction.title as string,
+										description:
+											internalAction.description as string,
+										client: internalAction.client as string,
+										category:
+											internalAction.category as string,
+										state: internalAction.state as string,
+										date: formatISO(internalAction.date),
+									},
+									{
+										method: "post",
+										action: "/handle-action",
+									}
+								);
+							}}
+							disabled={!isValidAction(internalAction)}
+						>
+							Inserir
+							<Check size={16} className="ml-2" />
+						</Button>
+					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }
 
@@ -198,15 +225,15 @@ const FancyInputText = forwardRef<
 	HTMLDivElement,
 	{
 		placeholder?: string;
-		content?: string;
 		className?: string;
 		max?: number;
-		onBlur?: () => void;
-		onInput?: (value?: string) => void;
+		onBlur?: (value?: string) => void;
+		value?: string;
 	}
->(({ placeholder, content, className, max = 70, onBlur, onInput }, ref) => {
-	const [visible, setVisible] = useState(!content);
-	const [text, setText] = useState(content || "");
+>(({ placeholder, value, className, max = 70, onBlur }, ref) => {
+	const [visible, setVisible] = useState(!value);
+	const [text, setText] = useState(value || "");
+	const init = value;
 
 	return (
 		<div className="relative">
@@ -220,18 +247,17 @@ const FancyInputText = forwardRef<
 				onInput={(event) => {
 					setVisible(event.currentTarget.innerText === "");
 					setText(event.currentTarget.innerHTML);
-					if (onInput) {
-						onInput(event.currentTarget.innerHTML);
-					}
 				}}
 				tabIndex={0}
+				onBlur={(event) => {
+					if (onBlur) {
+						onBlur(event.currentTarget.innerHTML);
+					}
+				}}
 				onKeyDown={(event) => {
 					if (event.key === "Enter") {
-						console.clear();
-						if (onBlur) {
-							event.preventDefault();
-							onBlur();
-						}
+						event.preventDefault();
+						event.currentTarget.blur();
 					} else if (
 						event.currentTarget.innerText.length >= max &&
 						event.key !== "Backspace"
@@ -239,9 +265,8 @@ const FancyInputText = forwardRef<
 						event.preventDefault();
 					}
 				}}
-			>
-				{content}
-			</div>
+				dangerouslySetInnerHTML={{ __html: init as string }}
+			></div>
 			{text.length > max - 30 && (
 				<div
 					className={`${
