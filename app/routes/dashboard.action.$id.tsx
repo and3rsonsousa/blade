@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export default function ActionPage() {
 	const { action } = useLoaderData<typeof loader>();
 	return (
-		<div className="w-full mx-auto max-w-3xl grow shrink-0 ">
+		<div className="w-full mx-auto max-w-xl grow shrink-0 ">
 			<ActionDialog mode="page" action={action} />
 		</div>
 	);

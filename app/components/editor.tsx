@@ -1,16 +1,181 @@
-import { EditorContent, useEditor } from "@tiptap/react";
+import { type ToggleProps } from "@radix-ui/react-toggle";
+import {
+	BubbleMenu,
+	EditorContent,
+	FloatingMenu,
+	useEditor,
+} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import {
+	AlignCenterIcon,
+	AlignLeftIcon,
+	AlignRightIcon,
+	BoldIcon,
+	Heading1Icon,
+	Heading2Icon,
+	ItalicIcon,
+	ListIcon,
+	ListOrderedIcon,
+	PilcrowIcon,
+	StrikethroughIcon,
+} from "lucide-react";
+import { Toggle } from "./ui/toggle";
 
 const extensions = [StarterKit];
 
-export default function Editor({ content }: { content: string }) {
+export default function Editor({
+	content,
+	onBlur,
+}: {
+	content: string;
+	onBlur?: (value: string) => void;
+}) {
+	const size = 16;
+	const classes =
+		"bg-foreground/5 border border-foreground/5 backdrop-blur-md flex rounded-sm overflow-hidden divide-x divide-foreground/5";
 	const editor = useEditor({
 		content,
 		extensions,
+		editorProps: {
+			attributes: {
+				class: "outline-none",
+			},
+		},
 	});
+
 	return (
-		<div className="border border-red-500 h-full grow">
-			<EditorContent editor={editor} />;
+		<div className="h-full shrink-0 grow prose">
+			{editor && (
+				<>
+					<FloatingMenu className={classes} editor={editor}>
+						<div className="flex">
+							<ToggleButton
+								pressed={editor.isActive("heading", {
+									level: 2,
+								})}
+								onPressedChange={(pressed) =>
+									editor
+										.chain()
+										.focus()
+										.toggleHeading({ level: 2 })
+										.run()
+								}
+							>
+								<Heading1Icon size={size} />
+							</ToggleButton>
+							<ToggleButton
+								pressed={editor.isActive("heading", {
+									level: 3,
+								})}
+								onPressedChange={(pressed) =>
+									editor
+										.chain()
+										.focus()
+										.toggleHeading({ level: 3 })
+										.run()
+								}
+							>
+								<Heading2Icon size={size} />
+							</ToggleButton>
+						</div>
+						<div className="flex">
+							<ToggleButton
+								pressed={editor.isActive("bold")}
+								onPressedChange={(pressed) =>
+									editor.chain().focus().toggleBold().run()
+								}
+							>
+								<AlignLeftIcon size={size} />
+							</ToggleButton>
+							<ToggleButton
+								pressed={editor.isActive("bold")}
+								onPressedChange={(pressed) =>
+									editor.chain().focus().toggleBold().run()
+								}
+							>
+								<AlignCenterIcon size={size} />
+							</ToggleButton>
+							<ToggleButton
+								pressed={editor.isActive("bold")}
+								onPressedChange={(pressed) =>
+									editor.chain().focus().toggleBold().run()
+								}
+							>
+								<AlignRightIcon size={size} />
+							</ToggleButton>
+						</div>
+						<div className="flex">
+							<ToggleButton
+								pressed={editor.isActive("bold")}
+								onPressedChange={(pressed) =>
+									editor.chain().focus().toggleBold().run()
+								}
+							>
+								<ListIcon size={size} />
+							</ToggleButton>
+							<ToggleButton
+								pressed={editor.isActive("bold")}
+								onPressedChange={(pressed) =>
+									editor.chain().focus().toggleBold().run()
+								}
+							>
+								<ListOrderedIcon size={size} />
+							</ToggleButton>
+						</div>
+					</FloatingMenu>
+					<BubbleMenu editor={editor} className={classes}>
+						<ToggleButton
+							pressed={editor.isActive("bold")}
+							onPressedChange={(pressed) =>
+								editor.chain().focus().toggleBold().run()
+							}
+						>
+							<BoldIcon size={size} />
+						</ToggleButton>
+						<ToggleButton
+							pressed={editor.isActive("bold")}
+							onPressedChange={(pressed) =>
+								editor.chain().focus().toggleBold().run()
+							}
+						>
+							<ItalicIcon size={size} />
+						</ToggleButton>
+						<ToggleButton
+							pressed={editor.isActive("bold")}
+							onPressedChange={(pressed) =>
+								editor.chain().focus().toggleBold().run()
+							}
+						>
+							<StrikethroughIcon size={size} />
+						</ToggleButton>
+						<ToggleButton
+							pressed={editor.isActive("paragraph")}
+							onPressedChange={(pressed) =>
+								editor.chain().focus().setParagraph().run()
+							}
+						>
+							<PilcrowIcon size={size} />
+						</ToggleButton>
+					</BubbleMenu>
+				</>
+			)}
+			<EditorContent
+				editor={editor}
+				onBlur={(value) => {
+					if (onBlur) {
+						onBlur(editor?.getHTML() ?? "");
+					}
+				}}
+			/>
 		</div>
 	);
 }
+
+const ToggleButton = (props: ToggleProps) => {
+	return (
+		<Toggle
+			{...props}
+			className="p-2 px-3 h-auto rounded-none leading-none"
+		/>
+	);
+};

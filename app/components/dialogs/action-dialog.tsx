@@ -33,6 +33,7 @@ type ActionDialogType = {
 };
 
 export default function ActionDialog({ mode, action }: ActionDialogType) {
+	console.log({ action });
 	const [internalAction, setAction] = useState<InternalAction>({
 		title: action ? action.title : "",
 		description: action ? action.description : "",
@@ -45,7 +46,7 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 	const fetcher = useFetcher();
 
 	const description = useRef<HTMLDivElement>(null);
-	const category = useRef<HTMLButtonElement>(null);
+	const clientInput = useRef<HTMLButtonElement>(null);
 
 	const { categories, clients, states } = matches[1].data;
 
@@ -53,8 +54,11 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 		description.current?.focus();
 		setAction({ ...internalAction, title: value });
 	};
-	const onBlurDescription = () => {
-		category.current?.focus();
+	const onBlurDescription = (value?: string) => {
+		if (!action) {
+			clientInput.current?.focus();
+		}
+		setAction({ ...internalAction, description: value });
 	};
 	return (
 		<div className={`${mode === "page" ? "h-full flex flex-col" : ""}`}>
@@ -71,9 +75,12 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 					/>
 				</div>
 				{/* Descrição */}
-				<div className="text-sm max-sm:px-4 px-8 sm:pt-4">
+				<div className="text-sm max-sm:px-4 shrink-0 grow px-8 sm:pt-4">
 					{action ? (
-						<Editor content={action.description as string} />
+						<Editor
+							content={action.description as string}
+							onBlur={onBlurDescription}
+						/>
 					) : (
 						<FancyInputText
 							placeholder="Descreva sua ação aqui..."
@@ -83,10 +90,13 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 						/>
 					)}
 				</div>
+				<pre className="text-xs">
+					{JSON.stringify(internalAction, undefined, 2)}
+				</pre>
 			</div>
 			{/* Botões */}
 			<div>
-				<div className="mt-4 sm:flex grid-cols-2 justify-between border-t py-4 px-2 sm:px-6 gap-4 overflow-hidden">
+				<div className="mt-4 sm:flex grid-cols-2 justify-between border-t py-4 px-2 sm:px-6 gap-4 overflow-hidden ">
 					{/* Categoria e Cliente */}
 					<div className="flex gap-1 justify-between">
 						<SelectInput
@@ -95,10 +105,10 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 							onChange={(value) => {
 								setAction({ ...internalAction, client: value });
 							}}
+							ref={clientInput}
 						/>
 
 						<SelectInput
-							ref={category}
 							items={categories}
 							placeholder="Categoria"
 							selectedValue="1"
