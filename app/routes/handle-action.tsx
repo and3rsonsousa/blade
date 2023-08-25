@@ -30,8 +30,13 @@ export const action: ActionFunction = async ({ request }) => {
 			user_id: session?.user.id,
 		};
 
-		const { error } = await supabase.from("actions").insert(action);
-		return { error };
+		const { data, error } = await supabase
+			.from("actions")
+			.insert(action)
+			.select()
+			.single();
+
+		return { data, error };
 	} else if (actionToHandle === "update-action") {
 		const id = formData.get("id") as string;
 		const title = formData.get("title") as string;
@@ -58,7 +63,7 @@ export const action: ActionFunction = async ({ request }) => {
 			.eq("id", id)
 			.single();
 
-		console.log(format(new Date(), "H:m:s"));
+		console.log(format(new Date(), "'Atualizado às' H:m:s"));
 
 		return { error };
 	}

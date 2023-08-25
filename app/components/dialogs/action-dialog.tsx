@@ -3,7 +3,7 @@ import { useFetcher, useMatches } from "@remix-run/react";
 import { format, formatDistance, formatISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import { CalendarIcon, Check, ClockIcon } from "lucide-react";
-import { forwardRef, useRef, useState, type ReactNode, useEffect } from "react";
+import { forwardRef, useEffect, useRef, useState, type ReactNode } from "react";
 import { CategoryIcons } from "~/lib/icons";
 import useDebounce from "~/lib/useDebounce";
 import { cn } from "~/lib/utils";
@@ -54,12 +54,31 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 	}, 5000);
 
 	useEffect(() => {
-		if (!start) {
+		if (!start && action) {
 			updateAction();
 		} else {
 			setStart(false);
 		}
 	}, [internalAction]);
+
+	async function createAction() {
+		await fetcher.submit(
+			{
+				action: "create-action",
+				title: internalAction.title as string,
+				description: internalAction.description as string,
+				client: internalAction.client as string,
+				category: internalAction.category as string,
+				state: internalAction.state as string,
+				date: formatISO(internalAction.date),
+			},
+			{
+				method: "post",
+				action: "/handle-action",
+			}
+		);
+		console.log(fetcher);
+	}
 
 	function updateAction() {
 		fetcher.submit(
@@ -145,13 +164,18 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 							onChange={(value) => {
 								setAction({ ...internalAction, client: value });
 							}}
+							selectedValue={internalAction.client as string}
 							ref={clientInput}
 						/>
 
 						<SelectInput
 							items={categories}
 							placeholder="Categoria"
-							selectedValue="1"
+							selectedValue={
+								action
+									? (internalAction.category as string)
+									: "1"
+							}
 							itemContent={({ slug }) => {
 								return (
 									<CategoryIcons
@@ -171,7 +195,9 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 						<SelectInput
 							items={states}
 							placeholder="Status"
-							selectedValue="2"
+							selectedValue={
+								action ? (internalAction.state as string) : "2"
+							}
 							itemContent={(item) => {
 								return (
 									<div
@@ -242,25 +268,7 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 							size={"sm"}
 							className="items-center"
 							onClick={() => {
-								fetcher.submit(
-									{
-										action: action
-											? "update-action"
-											: "create-action",
-										title: internalAction.title as string,
-										description:
-											internalAction.description as string,
-										client: internalAction.client as string,
-										category:
-											internalAction.category as string,
-										state: internalAction.state as string,
-										date: formatISO(internalAction.date),
-									},
-									{
-										method: "post",
-										action: "/handle-action",
-									}
-								);
+								createAction();
 							}}
 							disabled={!isValidAction(internalAction)}
 						>
