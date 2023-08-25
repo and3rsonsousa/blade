@@ -1,11 +1,13 @@
 import { useFetcher, useMatches } from "@remix-run/react";
 
-import { format, formatISO } from "date-fns";
+import { format, formatDistance, formatISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import { CalendarIcon, Check } from "lucide-react";
-import { forwardRef, useRef, useState, type ReactNode } from "react";
+import { CalendarIcon, Check, ClockIcon } from "lucide-react";
+import { forwardRef, useRef, useState, type ReactNode, useEffect } from "react";
 import { CategoryIcons } from "~/lib/icons";
+import useDebounce from "~/lib/useDebounce";
 import { cn } from "~/lib/utils";
+import Editor from "../editor";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -16,7 +18,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../ui/select";
-import Editor from "../editor";
 
 type InternalAction = {
 	title?: string;
@@ -33,7 +34,6 @@ type ActionDialogType = {
 };
 
 export default function ActionDialog({ mode, action }: ActionDialogType) {
-	console.log({ action });
 	const [internalAction, setAction] = useState<InternalAction>({
 		title: action ? action.title : "",
 		description: action ? action.description : "",
@@ -42,13 +42,43 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 		state: action ? String(action.state) : "2",
 		date: action ? new Date(action.date) : new Date(),
 	});
+	const [start, setStart] = useState(true);
 	const matches = useMatches();
 	const fetcher = useFetcher();
-
 	const description = useRef<HTMLDivElement>(null);
 	const clientInput = useRef<HTMLButtonElement>(null);
-
 	const { categories, clients, states } = matches[1].data;
+
+	const descriptionDebounce = useDebounce((value) => {
+		setAction({ ...internalAction, description: value });
+	}, 5000);
+
+	useEffect(() => {
+		if (!start) {
+			updateAction();
+		} else {
+			setStart(false);
+		}
+	}, [internalAction]);
+
+	function updateAction() {
+		fetcher.submit(
+			{
+				action: "update-action",
+				id: action?.id as string,
+				title: internalAction.title as string,
+				description: internalAction.description as string,
+				client: internalAction.client as string,
+				category: internalAction.category as string,
+				state: internalAction.state as string,
+				date: formatISO(internalAction.date),
+			},
+			{
+				method: "post",
+				action: "/handle-action",
+			}
+		);
+	}
 
 	const onBlurTitle = (value?: string) => {
 		description.current?.focus();
@@ -60,6 +90,7 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 		}
 		setAction({ ...internalAction, description: value });
 	};
+
 	return (
 		<div className={`${mode === "page" ? "h-full flex flex-col" : ""}`}>
 			<div
@@ -67,6 +98,9 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 			>
 				{/* Título */}
 				<div className={`max-sm:p-4  p-8 pb-0 `}>
+					{action && (
+						<UpdatedTimeClock time={new Date(action.updated_at)} />
+					)}
 					<FancyInputText
 						placeholder="Nome da ação"
 						onBlur={onBlurTitle}
@@ -84,6 +118,7 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 						<Editor
 							content={action.description as string}
 							onBlur={onBlurDescription}
+							onKeyDown={descriptionDebounce}
 						/>
 					) : (
 						<FancyInputText
@@ -94,6 +129,7 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 						/>
 					)}
 				</div>
+
 				<pre className="text-xs whitespace-pre-wrap">
 					{JSON.stringify(internalAction, undefined, 2)}
 				</pre>
@@ -208,6 +244,9 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 							onClick={() => {
 								fetcher.submit(
 									{
+										action: action
+											? "update-action"
+											: "create-action",
 										title: internalAction.title as string,
 										description:
 											internalAction.description as string,
@@ -225,7 +264,7 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 							}}
 							disabled={!isValidAction(internalAction)}
 						>
-							Inserir
+							{action ? "Atualizar" : "Inserir"}
 							<Check size={16} className="ml-2" />
 						</Button>
 					</div>
@@ -242,9 +281,10 @@ const FancyInputText = forwardRef<
 		className?: string;
 		max?: number;
 		onBlur?: (value?: string) => void;
+		onKeyDown?: (value?: string) => void;
 		value?: string;
 	}
->(({ placeholder, value, className, max = 70, onBlur }, ref) => {
+>(({ placeholder, value, className, max = 70, onBlur, onKeyDown }, ref) => {
 	const [visible, setVisible] = useState(!value);
 	const [text, setText] = useState(value || "");
 	const init = value;
@@ -269,6 +309,9 @@ const FancyInputText = forwardRef<
 					}
 				}}
 				onKeyDown={(event) => {
+					if (onKeyDown) {
+						onKeyDown(event.currentTarget.innerHTML);
+					}
 					if (event.key === "Enter") {
 						event.preventDefault();
 						event.currentTarget.blur();
@@ -367,4 +410,21 @@ function isValidAction(action: InternalAction) {
 	if (!action.state) valid = false;
 
 	return valid;
+}
+
+function UpdatedTimeClock({ time }: { time: Date }) {
+	return (
+		<div className="text-muted-foreground text-xs items-center flex">
+			<ClockIcon className="mr-2" size={12} />
+
+			<div>
+				Atualizado{" "}
+				{formatDistance(new Date(time), new Date(), {
+					locale: ptBR,
+					addSuffix: true,
+					includeSeconds: true,
+				})}
+			</div>
+		</div>
+	);
 }

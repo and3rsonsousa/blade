@@ -28,9 +28,11 @@ const extensions = [StarterKit];
 export default function Editor({
 	content,
 	onBlur,
+	onKeyDown,
 }: {
 	content: string;
 	onBlur?: (value: string) => void;
+	onKeyDown?: (value: string) => void;
 }) {
 	const size = 16;
 	const classes =
@@ -183,6 +185,11 @@ export default function Editor({
 				onBlur={(value) => {
 					if (onBlur) {
 						onBlur(editor?.getHTML() ?? "");
+					}
+				}}
+				onKeyDown={(value) => {
+					if (onKeyDown) {
+						onKeyDown(editor?.getHTML() ?? "");
 					}
 				}}
 			/>

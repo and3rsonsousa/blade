@@ -1,14 +1,10 @@
 import { type ActionFunction } from "@remix-run/node";
+import { format, formatISO } from "date-fns";
 import supabaseServer from "~/lib/supabase.server";
 
 export const action: ActionFunction = async ({ request }) => {
-	const data = await request.formData();
-	const title = data.get("title") as string;
-	const description = data.get("description") as string;
-	const state = Number(data.get("state"));
-	const client = Number(data.get("client"));
-	const date = data.get("date") as string;
-	const category = Number(data.get("category"));
+	const formData = await request.formData();
+	const actionToHandle = formData.get("action") as string;
 
 	const response = new Response();
 	const supabase = supabaseServer({ request, response });
@@ -16,18 +12,54 @@ export const action: ActionFunction = async ({ request }) => {
 		data: { session },
 	} = await supabase.auth.getSession();
 
-	const action = {
-		title,
-		description,
-		state,
-		client,
-		date,
-		category,
-		user_id: session?.user.id,
-	};
+	if (actionToHandle === "create-action") {
+		const title = formData.get("title") as string;
+		const description = formData.get("description") as string;
+		const state = Number(formData.get("state"));
+		const client = Number(formData.get("client"));
+		const date = formData.get("date") as string;
+		const category = Number(formData.get("category"));
 
-	const { error } = await supabase.from("actions").insert(action);
-	console.log(error);
+		const action = {
+			title,
+			description,
+			state,
+			client,
+			date,
+			category,
+			user_id: session?.user.id,
+		};
 
-	return { error };
+		const { error } = await supabase.from("actions").insert(action);
+		return { error };
+	} else if (actionToHandle === "update-action") {
+		const id = formData.get("id") as string;
+		const title = formData.get("title") as string;
+		const description = formData.get("description") as string;
+		const state = Number(formData.get("state"));
+		const client = Number(formData.get("client"));
+		const date = formData.get("date") as string;
+		const category = Number(formData.get("category"));
+		const updated_at = String(formatISO(new Date()));
+
+		const action = {
+			title,
+			description,
+			state,
+			client,
+			date,
+			category,
+			updated_at,
+		};
+
+		const { error } = await supabase
+			.from("actions")
+			.update(action)
+			.eq("id", id)
+			.single();
+
+		console.log(format(new Date(), "H:m:s"));
+
+		return { error };
+	}
 };
