@@ -70,7 +70,11 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 					<FancyInputText
 						placeholder="Nome da ação"
 						onBlur={onBlurTitle}
-						className="text-2xl font-semibold"
+						className={
+							action
+								? `text-6xl font-bold tracking-tighter`
+								: `text-2xl font-semibold`
+						}
 						value={internalAction.title}
 					/>
 				</div>
@@ -90,7 +94,7 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 						/>
 					)}
 				</div>
-				<pre className="text-xs">
+				<pre className="text-xs whitespace-pre-wrap">
 					{JSON.stringify(internalAction, undefined, 2)}
 				</pre>
 			</div>

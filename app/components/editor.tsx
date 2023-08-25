@@ -13,6 +13,7 @@ import {
 	BoldIcon,
 	Heading1Icon,
 	Heading2Icon,
+	Heading3Icon,
 	ItalicIcon,
 	ListIcon,
 	ListOrderedIcon,
@@ -20,6 +21,7 @@ import {
 	StrikethroughIcon,
 } from "lucide-react";
 import { Toggle } from "./ui/toggle";
+import { cn } from "~/lib/utils";
 
 const extensions = [StarterKit];
 
@@ -32,7 +34,7 @@ export default function Editor({
 }) {
 	const size = 16;
 	const classes =
-		"bg-foreground/5 border border-foreground/5 backdrop-blur-md flex rounded-sm overflow-hidden divide-x divide-foreground/5";
+		"bg-foreground/5 border border-foreground/5 backdrop-blur-md flex rounded-sm divide-x divide-foreground/5";
 	const editor = useEditor({
 		content,
 		extensions,
@@ -50,20 +52,8 @@ export default function Editor({
 					<FloatingMenu className={classes} editor={editor}>
 						<div className="flex">
 							<ToggleButton
-								pressed={editor.isActive("heading", {
-									level: 2,
-								})}
-								onPressedChange={(pressed) =>
-									editor
-										.chain()
-										.focus()
-										.toggleHeading({ level: 2 })
-										.run()
-								}
-							>
-								<Heading1Icon size={size} />
-							</ToggleButton>
-							<ToggleButton
+								tabIndex={0}
+								className="rounded-l"
 								pressed={editor.isActive("heading", {
 									level: 3,
 								})}
@@ -75,7 +65,36 @@ export default function Editor({
 										.run()
 								}
 							>
+								<Heading1Icon size={size} />
+							</ToggleButton>
+
+							<ToggleButton
+								pressed={editor.isActive("heading", {
+									level: 4,
+								})}
+								onPressedChange={(pressed) =>
+									editor
+										.chain()
+										.focus()
+										.toggleHeading({ level: 4 })
+										.run()
+								}
+							>
 								<Heading2Icon size={size} />
+							</ToggleButton>
+							<ToggleButton
+								pressed={editor.isActive("heading", {
+									level: 5,
+								})}
+								onPressedChange={(pressed) =>
+									editor
+										.chain()
+										.focus()
+										.toggleHeading({ level: 5 })
+										.run()
+								}
+							>
+								<Heading3Icon size={size} />
 							</ToggleButton>
 						</div>
 						<div className="flex">
@@ -175,7 +194,10 @@ const ToggleButton = (props: ToggleProps) => {
 	return (
 		<Toggle
 			{...props}
-			className="p-2 px-3 h-auto rounded-none leading-none"
+			className={cn([
+				"p-2 px-3 h-auto rounded-none leading-none",
+				props.className,
+			])}
 		/>
 	);
 };
