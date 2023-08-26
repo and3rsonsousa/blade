@@ -271,7 +271,7 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 							size={"sm"}
 							className="items-center"
 							onClick={() => {
-								createAction();
+								action ? updateAction() : createAction();
 							}}
 							disabled={!isValidAction(internalAction)}
 						>

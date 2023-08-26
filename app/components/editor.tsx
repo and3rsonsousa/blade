@@ -35,8 +35,7 @@ export default function Editor({
 	onKeyDown?: (value: string) => void;
 }) {
 	const size = 16;
-	const classes =
-		"bg-foreground/5 border border-foreground/5 backdrop-blur-md flex rounded-sm divide-x divide-foreground/5";
+	const classes = "bg-content flex divide-x divide-foreground/5";
 	const editor = useEditor({
 		content,
 		extensions,

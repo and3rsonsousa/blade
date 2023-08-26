@@ -55,7 +55,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 					{action.title}
 				</div>
 			</ContextMenuTrigger>
-			<ContextMenuContent className="bg-foreground/5 border border-foreground/10 backdrop-blur-lg px-0 py-2 ">
+			<ContextMenuContent className="bg-content">
 				{action.state.slug !== "finished" && (
 					<>
 						<MenuItem>
@@ -97,11 +97,11 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 				</MenuItem>
 				<ContextMenuSeparator />
 				<ContextMenuSub>
-					<ContextMenuSubTrigger className="rounded-none text-xs items-center px-3 py-1.5 focus:bg-foreground/20 flex justify-between">
+					<ContextMenuSubTrigger className="menu-item">
 						{action.category.title}
 					</ContextMenuSubTrigger>
 					<ContextMenuPortal>
-						<ContextMenuSubContent className="w-48 bg-foreground/5 border border-foreground/10 backdrop-blur-lg px-0 py-2">
+						<ContextMenuSubContent className="w-48 bg-content">
 							{categories.map((category) => (
 								<MenuItem
 									key={category.id}
@@ -120,7 +120,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 					</ContextMenuPortal>
 				</ContextMenuSub>
 				<ContextMenuSub>
-					<ContextMenuSubTrigger className="rounded-none text-xs items-center px-3 py-1.5 focus:bg-foreground/20 flex justify-between">
+					<ContextMenuSubTrigger className="menu-item">
 						{action.state.title}
 					</ContextMenuSubTrigger>
 					<ContextMenuPortal>
@@ -149,8 +149,5 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 }
 
 const MenuItem = ({ ...props }: ContextMenuItemProps) => (
-	<ContextMenuItem
-		className="rounded-none text-xs items-center px-3 py-1.5 focus:bg-foreground/20 flex justify-between"
-		{...props}
-	/>
+	<ContextMenuItem className="menu-item" {...props} />
 );
