@@ -47,10 +47,17 @@ export const loader = async ({ request }: LoaderArgs) => {
 		data: { session },
 	} = await supabase.auth.getSession();
 
+	const { data: user } = await supabase
+		.from("people")
+		.select("*")
+		.eq("user_id", session?.user.id)
+		.single();
+
 	return json(
 		{
 			env,
 			session,
+			user,
 			requestInfo: {
 				hints: getHints(request),
 				userPrefs: {
@@ -65,7 +72,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 export default function App() {
 	const nonce = useNonce();
 	const theme = useTheme();
-	const { env, session } = useLoaderData<typeof loader>();
+	const { env, session, user } = useLoaderData<typeof loader>();
 	const revalidator = useRevalidator();
 	const [supabase] = useState(() =>
 		createBrowserClient<Database>(env.SUPABASE_URL!, env.SUPABASE_ANON_KEY!)
@@ -103,7 +110,7 @@ export default function App() {
 				<Links />
 			</head>
 			<body className="bg-background">
-				<Outlet context={{ supabase }} />
+				<Outlet context={{ supabase, user }} />
 				<ScrollRestoration />
 				<Scripts />
 				<LiveReload />

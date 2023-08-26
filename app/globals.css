@@ -150,9 +150,9 @@
 }
 
 .bg-content {
-	@apply bg-foreground/5 border rounded-lg border-foreground/10 backdrop-blur-lg px-0 py-2;
+	@apply bg-foreground/5 border rounded-lg border-foreground/10 backdrop-blur-xl px-0 py-2;
 }
 
 .menu-item {
-	@apply rounded-none text-xs items-center px-3 py-1.5 focus:bg-foreground/20 flex justify-between;
+	@apply rounded-none text-xs items-center px-3 py-1.5 focus:bg-foreground/20 flex justify-between text-foreground;
 }

@@ -28,8 +28,6 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 		matches[1].data;
 
 	async function updateAction(values: {}) {
-		console.log(values);
-
 		await fetcher.submit(
 			{ action: "update-action", ...values },
 			{
@@ -101,7 +99,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 						{action.category.title}
 					</ContextMenuSubTrigger>
 					<ContextMenuPortal>
-						<ContextMenuSubContent className="w-48 bg-content">
+						<ContextMenuSubContent className="bg-content">
 							{categories.map((category) => (
 								<MenuItem
 									key={category.id}
@@ -124,7 +122,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 						{action.state.title}
 					</ContextMenuSubTrigger>
 					<ContextMenuPortal>
-						<ContextMenuSubContent>
+						<ContextMenuSubContent className="bg-content">
 							{states.map((state) => (
 								<MenuItem
 									key={state.id}
