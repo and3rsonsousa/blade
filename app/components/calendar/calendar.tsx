@@ -20,7 +20,8 @@ import {
 	toDate,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Plus } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, Plus } from "lucide-react";
+import { useState } from "react";
 import { useCurrentDate } from "~/lib/useCurrentDate";
 import ActionDialog from "../dialogs/action-dialog";
 import { Button } from "../ui/button";
@@ -37,6 +38,7 @@ import CalendarDay from "./calendar-day";
 type CalendarType = { actions: Action[] };
 
 export default function Calendar({ actions }: CalendarType) {
+	const [open, setOpen] = useState(true);
 	const currentDate = useCurrentDate();
 	const navigate = useNavigate();
 
@@ -59,7 +61,7 @@ export default function Calendar({ actions }: CalendarType) {
 	});
 
 	return (
-		<div className="flex flex-col w-full">
+		<div className="flex flex-col w-full h-full">
 			<div className="flex shrink border-b items-center gap-2 justify-between p-2">
 				<div className="flex items-center gap-1 text-xl font-semibold">
 					<DropdownMenu>
@@ -164,6 +166,38 @@ export default function Calendar({ actions }: CalendarType) {
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
+					<div>
+						<Button
+							variant={"ghost"}
+							size={"sm"}
+							className="px-2"
+							onClick={() => {
+								navigate(
+									`?date=${format(
+										sub(currentDate, { months: 1 }),
+										"Y-M-d"
+									)}`
+								);
+							}}
+						>
+							<ChevronLeftIcon size={24} />
+						</Button>
+						<Button
+							variant={"ghost"}
+							size={"sm"}
+							className="px-2"
+							onClick={() => {
+								navigate(
+									`?date=${format(
+										add(currentDate, { months: 1 }),
+										"Y-M-d"
+									)}`
+								);
+							}}
+						>
+							<ChevronRightIcon size={24} />
+						</Button>
+					</div>
 				</div>
 			</div>
 			<div
@@ -176,7 +210,7 @@ export default function Calendar({ actions }: CalendarType) {
 				))}
 			</div>
 			<div className="fixed bottom-6 right-4">
-				<Popover>
+				<Popover open={open} onOpenChange={setOpen}>
 					<PopoverTrigger asChild>
 						<Button size={"icon"} className="rounded-full">
 							<Plus />
@@ -188,7 +222,7 @@ export default function Calendar({ actions }: CalendarType) {
 						sideOffset={16}
 						alignOffset={0}
 					>
-						<ActionDialog />
+						<ActionDialog closeDialog={() => setOpen(false)} />
 					</PopoverContent>
 				</Popover>
 			</div>

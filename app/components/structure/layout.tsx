@@ -38,7 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 				<div
 					className={`${
 						open ? "flex" : ""
-					} justify-between items-center`}
+					} justify-between relative items-center`}
 				>
 					<Link
 						to="/dashboard"
@@ -58,8 +58,10 @@ export default function Layout({ children }: { children: ReactNode }) {
 					</Link>
 					<Button
 						size={"icon"}
-						variant={"ghost"}
-						className="h-8 w-8 mr-2 ml-4"
+						variant={open ? "ghost" : "outline"}
+						className={`h-8 w-8 mr-2 ml-4 ${
+							!open && "absolute top-4 -right-6"
+						}`}
 						onClick={() => setOpen(!open)}
 					>
 						{open ? (

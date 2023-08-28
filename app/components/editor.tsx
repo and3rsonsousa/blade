@@ -35,7 +35,8 @@ export default function Editor({
 	onKeyDown?: (value: string) => void;
 }) {
 	const size = 16;
-	const classes = "bg-content flex divide-x divide-foreground/5";
+	const classes =
+		"bg-foreground/5 border border-foreground-10 flex divide-x divide-foreground/5 rounded-sm overflow-hidden";
 	const editor = useEditor({
 		content,
 		extensions,
@@ -50,7 +51,7 @@ export default function Editor({
 		<div className="h-full shrink-0 grow prose">
 			{editor && (
 				<>
-					<FloatingMenu className={classes} editor={editor}>
+					<FloatingMenu className={cn(classes)} editor={editor}>
 						<div className="flex">
 							<ToggleButton
 								tabIndex={0}

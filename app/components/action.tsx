@@ -12,6 +12,7 @@ import {
 	ContextMenuSubTrigger,
 	ContextMenuTrigger,
 } from "./ui/context-menu";
+import { removeTags } from "~/lib/utils";
 
 export type ActionFull = Action & {
 	category: Category;
@@ -50,7 +51,9 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 						navigate(`/dashboard/action/${action.id}`);
 					}}
 				>
-					{action.title}
+					<div className="text-ellipsis w-full shrink overflow-hidden whitespace-nowrap">
+						{removeTags(action.title)}
+					</div>
 				</div>
 			</ContextMenuTrigger>
 			<ContextMenuContent className="bg-content">

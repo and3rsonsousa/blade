@@ -29,3 +29,9 @@ export const themes: Array<Theme> = Object.values(Theme);
 export function isTheme(value: unknown): value is Theme {
 	return typeof value === "string" && themes.includes(value as Theme);
 }
+
+export function removeTags(str: string) {
+	if (str === null || str === "") return "";
+	else str = str.toString();
+	return str.replace(/(<([^>]+)>)/gi, "");
+}

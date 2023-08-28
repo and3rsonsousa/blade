@@ -47,7 +47,17 @@ export const action: ActionFunction = async ({ request }) => {
 		const category = Number(formData.get("category"));
 		const updated_at = String(formatISO(new Date()));
 
-		const action = {
+		type ActionToUpdate = {
+			title: string;
+			description: string;
+			state: number;
+			client: number;
+			date: string;
+			category: number;
+			updated_at: string;
+		};
+
+		const action: ActionToUpdate = {
 			title,
 			description,
 			state,
@@ -57,18 +67,31 @@ export const action: ActionFunction = async ({ request }) => {
 			updated_at,
 		};
 
-		const { error } = await supabase
+		Object.keys(action).forEach((key) => {
+			if (!action[key as keyof ActionToUpdate]) {
+				delete action[key as keyof ActionToUpdate];
+			}
+		});
+
+		const { data, error } = await supabase
 			.from("actions")
 			.update(action)
 			.eq("id", id)
 			.single();
 
-		return { error };
+		console.log({ action, id, data, error });
+		return { data, error };
+		return {};
 	} else if (actionToHandle === "delete-action") {
 		const id = formData.get("id") as string;
 
-		const { error } = await supabase.from("actions").delete().eq("id", id);
+		const { data, error } = await supabase
+			.from("actions")
+			.delete()
+			.eq("id", id)
+			.select()
+			.single();
 
-		return { error };
+		return { data, error };
 	}
 };

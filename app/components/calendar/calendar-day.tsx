@@ -3,7 +3,6 @@ import { Star } from "lucide-react";
 import { useCurrentDate } from "~/lib/useCurrentDate";
 import { cn } from "~/lib/utils";
 import { ActionLineCalendar, type ActionFull } from "../action";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 type CalendarDayType = { day: DayType; className?: string };
 
@@ -21,9 +20,9 @@ export default function CalendarDay({ day, className }: CalendarDayType) {
 		>
 			<div className="flex flex-col overflow-hidden relative ">
 				<div
-					className={`text-xs mb-2 mt-1 ml-1.5 w-6 h-6 ${
+					className={`text-xs w-6 h-6 mb-2 grid place-content-center ${
 						isToday(day.date)
-							? "font-bold z-10"
+							? "bg-primary rounded-full font-bold"
 							: !isSameMonth(currentDate, day.date)
 							? "opacity-25"
 							: ""
@@ -31,18 +30,16 @@ export default function CalendarDay({ day, className }: CalendarDayType) {
 				>
 					{day.date.getDate()}
 				</div>
-				{isToday(day.date) && (
-					<span className="h-6 w-6 bg-primary rounded-full block z-0 absolute "></span>
-				)}
-				<ScrollArea className="h-full">
-					{day.actions.map((action) => (
-						<ActionLineCalendar
-							action={action as ActionFull}
-							key={action.id}
-						/>
-					))}
-					<ScrollBar />
-				</ScrollArea>
+
+				{/* <ScrollArea className="h-full"> */}
+				{day.actions.map((action) => (
+					<ActionLineCalendar
+						action={action as ActionFull}
+						key={action.id}
+					/>
+				))}
+				{/* <ScrollBar />
+				</ScrollArea> */}
 			</div>
 			<div>
 				{false ? (

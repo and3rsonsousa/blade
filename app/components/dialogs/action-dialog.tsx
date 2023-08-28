@@ -5,8 +5,7 @@ import ptBR from "date-fns/locale/pt-BR";
 import { CalendarIcon, Check, ClockIcon } from "lucide-react";
 import { forwardRef, useEffect, useRef, useState, type ReactNode } from "react";
 import { CategoryIcons } from "~/lib/icons";
-import useDebounce from "~/lib/useDebounce";
-import { cn } from "~/lib/utils";
+import { cn, removeTags } from "~/lib/utils";
 import Editor from "../editor";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
@@ -31,9 +30,14 @@ type InternalAction = {
 type ActionDialogType = {
 	mode?: "page" | "popover";
 	action?: Action;
+	closeDialog?: () => void;
 };
 
-export default function ActionDialog({ mode, action }: ActionDialogType) {
+export default function ActionDialog({
+	mode,
+	action,
+	closeDialog,
+}: ActionDialogType) {
 	const [internalAction, setAction] = useState<InternalAction>({
 		title: action ? action.title : "",
 		description: action ? action.description : "",
@@ -42,27 +46,24 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 		state: action ? String(action.state) : "2",
 		date: action ? new Date(action.date) : new Date(),
 	});
-	const [start, setStart] = useState(true);
+
 	const matches = useMatches();
 	const fetcher = useFetcher();
 	const description = useRef<HTMLDivElement>(null);
 	const clientInput = useRef<HTMLButtonElement>(null);
 	const { categories, clients, states } = matches[1].data;
 
-	const descriptionDebounce = useDebounce((value) => {
-		setAction({ ...internalAction, description: value });
-	}, 5000);
-
 	useEffect(() => {
-		if (!start && action) {
-			updateAction();
-		} else {
-			setStart(false);
-		}
-	}, [internalAction]);
+		if (
+			fetcher.state === "idle" &&
+			fetcher.data &&
+			Object.keys(fetcher.data).find((k) => k === "data")
+		)
+			if (closeDialog) closeDialog();
+	}, [fetcher, closeDialog]);
 
-	async function createAction() {
-		await fetcher.submit(
+	function createAction() {
+		fetcher.submit(
 			{
 				action: "create-action",
 				title: internalAction.title as string,
@@ -98,19 +99,21 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 		);
 	}
 
-	const onBlurTitle = (value?: string) => {
-		description.current?.focus();
-		setAction({ ...internalAction, title: value });
-	};
-	const onBlurDescription = (value?: string) => {
-		if (!action) {
-			clientInput.current?.focus();
-		}
-		setAction({ ...internalAction, description: value });
-	};
-
 	return (
 		<div className={`${mode === "page" ? "h-full flex flex-col" : ""}`}>
+			<CmdEnter
+				fn={
+					isValidAction(internalAction)
+						? action
+							? updateAction
+							: createAction
+						: () => {
+								console.log(internalAction);
+
+								alert("Ação inválida");
+						  }
+				}
+			/>
 			<div
 				className={mode === "page" ? "grow shrink-0 flex flex-col" : ""}
 			>
@@ -120,8 +123,13 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 						<UpdatedTimeClock time={new Date(action.updated_at)} />
 					)}
 					<FancyInputText
+						onBlur={(value) => {
+							setAction({
+								...internalAction,
+								title: removeTags(value!),
+							});
+						}}
 						placeholder="Nome da ação"
-						onBlur={onBlurTitle}
 						className={
 							action
 								? `text-6xl font-bold tracking-tighter`
@@ -133,30 +141,27 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 				{/* Descrição */}
 				<div className="text-sm max-sm:px-4 shrink-0 grow px-8 sm:pt-4">
 					{action ? (
-						<Editor
-							content={action.description as string}
-							onBlur={onBlurDescription}
-							onKeyDown={descriptionDebounce}
-						/>
+						<Editor content={action.description as string} />
 					) : (
 						<FancyInputText
 							placeholder="Descreva sua ação aqui..."
-							onBlur={onBlurDescription}
+							onBlur={(value) => {
+								setAction({
+									...internalAction,
+									description: removeTags(value!),
+								});
+							}}
 							ref={description}
 							max={200}
 						/>
 					)}
 				</div>
-
-				{/* <pre className="text-xs whitespace-pre-wrap">
-					{JSON.stringify(internalAction, undefined, 2)}
-				</pre> */}
 			</div>
 			{/* Botões */}
 			<div>
-				<div className="mt-4 sm:flex grid-cols-2 justify-between border-t py-4 px-2 sm:px-6 gap-4 overflow-hidden">
+				<div className="mt-4 sm:grid grid-cols-5 justify-between border-t py-4 px-2 sm:px-6 gap-4 overflow-hidden">
 					{/* Categoria e Cliente */}
-					<div className="flex gap-1 justify-between w-full sm:justify-start">
+					<div className="flex gap-1 justify-between w-full sm:justify-start col-span-3">
 						<SelectInput
 							items={clients}
 							placeholder="Cliente"
@@ -214,7 +219,7 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 						/>
 					</div>
 					{/* Data e Botão */}
-					<div className="flex gap-2 justify-between sm:justify-end">
+					<div className="flex col-span-2 gap-2 w-full justify-between sm:justify-end">
 						<Popover>
 							<PopoverTrigger asChild>
 								<Button
@@ -268,8 +273,12 @@ export default function ActionDialog({ mode, action }: ActionDialogType) {
 						</Popover>
 
 						<Button
+							variant={
+								isValidAction(internalAction)
+									? "default"
+									: "secondary"
+							}
 							size={"sm"}
-							className="items-center"
 							onClick={() => {
 								action ? updateAction() : createAction();
 							}}
@@ -293,74 +302,83 @@ const FancyInputText = forwardRef<
 		max?: number;
 		onBlur?: (value?: string) => void;
 		onKeyDown?: (value?: string) => void;
+		onInput?: (value?: string) => void;
 		value?: string;
 	}
->(({ placeholder, value, className, max = 70, onBlur, onKeyDown }, ref) => {
-	const [visible, setVisible] = useState(!value);
-	const [text, setText] = useState(value || "");
-	const init = value;
+>(
+	(
+		{ placeholder, value, className, max = 70, onBlur, onKeyDown, onInput },
+		ref
+	) => {
+		const [visible, setVisible] = useState(!value);
+		const [text, setText] = useState(value || "");
+		const init = value;
 
-	return (
-		<div className="relative">
-			<div
-				className={cn([
-					"bg-transparent outline-none w-full",
-					className,
-				])}
-				ref={ref}
-				contentEditable="true"
-				onInput={(event) => {
-					setVisible(event.currentTarget.innerText === "");
-					setText(event.currentTarget.innerHTML);
-				}}
-				tabIndex={0}
-				onBlur={(event) => {
-					if (onBlur) {
-						onBlur(event.currentTarget.innerHTML);
-					}
-				}}
-				onKeyDown={(event) => {
-					if (onKeyDown) {
-						onKeyDown(event.currentTarget.innerHTML);
-					}
-					if (event.key === "Enter") {
-						event.preventDefault();
-						event.currentTarget.blur();
-					} else if (
-						event.currentTarget.innerText.length >= max &&
-						event.key !== "Backspace"
-					) {
-						event.preventDefault();
-					}
-				}}
-				dangerouslySetInnerHTML={{ __html: init as string }}
-			></div>
-			{text.length > max - 30 && (
-				<div
-					className={`${
-						text.length > max - 10
-							? "text-rose-700"
-							: text.length > max - 30
-							? "text-yellow-600"
-							: ""
-					} text-[10px] absolute -bottom-4 right-0`}
-				>
-					{text.length - max}
-				</div>
-			)}
-			{visible && (
+		return (
+			<div className="relative">
 				<div
 					className={cn([
-						"absolute pointer-events-none top-1/2 -translate-y-1/2 text-slate-500/50",
+						"bg-transparent outline-none w-full",
 						className,
 					])}
-				>
-					{placeholder}
-				</div>
-			)}
-		</div>
-	);
-});
+					ref={ref}
+					contentEditable="true"
+					onInput={(event) => {
+						setVisible(event.currentTarget.innerText === "");
+						setText(event.currentTarget.innerHTML);
+						if (onInput) {
+							onInput(event.currentTarget.innerHTML);
+						}
+					}}
+					tabIndex={0}
+					onBlur={(event) => {
+						if (onBlur) {
+							onBlur(event.currentTarget.innerHTML);
+						}
+					}}
+					onKeyDown={(event) => {
+						if (onKeyDown) {
+							onKeyDown(event.currentTarget.innerHTML);
+						}
+						if (event.key === "Enter") {
+							event.preventDefault();
+							event.currentTarget.blur();
+						} else if (
+							event.currentTarget.innerText.length >= max &&
+							event.key !== "Backspace"
+						) {
+							event.preventDefault();
+						}
+					}}
+					dangerouslySetInnerHTML={{ __html: init as string }}
+				></div>
+				{text.length > max - 30 && (
+					<div
+						className={`${
+							text.length > max - 10
+								? "text-rose-700"
+								: text.length > max - 30
+								? "text-yellow-600"
+								: ""
+						} text-[10px] absolute -bottom-4 right-0`}
+					>
+						{text.length - max}
+					</div>
+				)}
+				{visible && (
+					<div
+						className={cn([
+							"absolute pointer-events-none top-1/2 -translate-y-1/2 text-slate-500/50",
+							className,
+						])}
+					>
+						{placeholder}
+					</div>
+				)}
+			</div>
+		);
+	}
+);
 
 const SelectInput = forwardRef<
 	HTMLButtonElement,
@@ -425,18 +443,46 @@ function isValidAction(action: InternalAction) {
 }
 
 function UpdatedTimeClock({ time }: { time: Date }) {
+	const [text, setText] = useState(
+		formatDistance(new Date(time), new Date(), {
+			locale: ptBR,
+			addSuffix: true,
+			includeSeconds: true,
+		})
+	);
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setText(() =>
+				formatDistance(new Date(time), new Date(), {
+					locale: ptBR,
+					addSuffix: true,
+					includeSeconds: true,
+				})
+			);
+		}, 1000);
+
+		return () => clearInterval(interval);
+	}, [time]);
 	return (
 		<div className="text-muted-foreground text-xs items-center flex">
 			<ClockIcon className="mr-2" size={12} />
 
-			<div>
-				Atualizado{" "}
-				{formatDistance(new Date(time), new Date(), {
-					locale: ptBR,
-					addSuffix: true,
-					includeSeconds: true,
-				})}
-			</div>
+			<div>Atualizado {text}</div>
 		</div>
 	);
 }
+
+const CmdEnter = function ({ fn }: { fn: () => void }) {
+	useEffect(() => {
+		console.clear();
+
+		const listener = (event: KeyboardEvent) => {
+			if (event.metaKey && event.key === "Enter") {
+				fn();
+			}
+		};
+		window.addEventListener("keydown", listener);
+		return () => window.removeEventListener("keydown", listener);
+	}, []);
+	return <></>;
+};
