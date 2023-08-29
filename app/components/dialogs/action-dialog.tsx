@@ -24,13 +24,6 @@ import {
 	CommandItem,
 } from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "../ui/select";
 
 type InternalAction = {
 	title?: string;
@@ -422,7 +415,7 @@ const SelectInput = forwardRef<
 	const [open, setOpen] = useState(false);
 	console.log({ list });
 
-	return true ? (
+	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
@@ -482,39 +475,6 @@ const SelectInput = forwardRef<
 				</Command>
 			</PopoverContent>
 		</Popover>
-	) : (
-		<Select
-			value={selected}
-			onValueChange={(value) => {
-				setSelected(() => value);
-				if (onChange) onChange(value);
-			}}
-		>
-			<SelectTrigger
-				ref={ref}
-				className={`p-2 rounded-sm bg-transparent border-0 h-auto text-xs`}
-			>
-				{/* {itemContent ? (
-					itemContent(
-						items.filter((item) => selected === String(item.id))[0]
-					)
-				) : (
-					<SelectValue placeholder={placeholder} />
-					)} */}
-				<SelectValue placeholder={placeholder} />
-			</SelectTrigger>
-			<SelectContent>
-				{items.map((item) => (
-					<SelectItem
-						key={item.id}
-						value={String(item.id)}
-						className="text-xs px-3"
-					>
-						{item.title}
-					</SelectItem>
-				))}
-			</SelectContent>
-		</Select>
 	);
 });
 
