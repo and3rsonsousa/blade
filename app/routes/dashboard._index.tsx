@@ -10,8 +10,6 @@ export const meta: V2_MetaFunction = () => [
 	},
 ];
 
-export const config = { runtime: "edge" };
-
 export async function loader({ request }: LoaderArgs) {
 	const response = new Response();
 	const supabase = supabaseServer({
