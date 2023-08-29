@@ -2,6 +2,8 @@ import { Link } from "@remix-run/react";
 import Blade from "~/components/structure/blade";
 import { Button } from "~/components/ui/button";
 
+export const config = { runtime: "edge" };
+
 export default function Index() {
 	return (
 		<div className="grid min-h-screen place-content-center">
