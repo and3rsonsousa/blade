@@ -408,10 +408,19 @@ const SelectInput = forwardRef<
 	}
 >(({ placeholder, items, selectedValue, itemContent, onChange }, ref) => {
 	const list = items.map((item) => ({
-		value: item.id.toString(),
+		id: item.id,
+		value: item.title
+			.toLowerCase()
+			.normalize("NFD")
+			.replace(/[\u0300-\u036f]/g, ""),
 		label: item.title,
 	}));
-	const [selected, setSelected] = useState(selectedValue);
+	const [selected, setSelected] = useState(
+		selectedValue
+			? list.filter((item) => item.id.toString() === selectedValue)[0]
+					.value
+			: ""
+	);
 	const [open, setOpen] = useState(false);
 	console.log({ list });
 
@@ -425,8 +434,8 @@ const SelectInput = forwardRef<
 				>
 					<div className="w-full text-xs text-ellipsis overflow-hidden whitespace-nowrap">
 						{selected
-							? list.filter((item) => item.value === selected)[0]
-									.label
+							? list.find((item) => item.value === selected)
+									?.label
 							: placeholder}
 					</div>
 
@@ -452,10 +461,11 @@ const SelectInput = forwardRef<
 								className="bg-transparent rounded-none aria-selected:bg-foreground/20"
 								key={item.value}
 								onSelect={(value) => {
-									console.log(value);
-									setSelected(
-										value !== selected ? value : ""
-									);
+									if (value !== selected) {
+										setSelected(value);
+										if (onChange)
+											onChange(item.id.toString());
+									}
 									setOpen(false);
 								}}
 								value={item.value}

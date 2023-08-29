@@ -39,7 +39,7 @@ import { ScrollArea } from "../ui/scroll-area";
 type CalendarType = { actions: Action[] };
 
 export default function Calendar({ actions }: CalendarType) {
-	const [open, setOpen] = useState(true);
+	const [open, setOpen] = useState(false);
 	const currentDate = useCurrentDate();
 	const navigate = useNavigate();
 
