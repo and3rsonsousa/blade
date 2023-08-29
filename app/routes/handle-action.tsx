@@ -81,7 +81,6 @@ export const action: ActionFunction = async ({ request }) => {
 
 		console.log({ action, id, data, error });
 		return { data, error };
-		return {};
 	} else if (actionToHandle === "delete-action") {
 		const id = formData.get("id") as string;
 

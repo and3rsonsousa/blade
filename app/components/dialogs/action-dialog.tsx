@@ -9,6 +9,7 @@ import {
 	ChevronsUpDownIcon,
 	ClockIcon,
 	FrownIcon,
+	Loader2Icon,
 } from "lucide-react";
 import { forwardRef, useEffect, useRef, useState, type ReactNode } from "react";
 import { CategoryIcons } from "~/lib/icons";
@@ -61,6 +62,8 @@ export default function ActionDialog({
 	const description = useRef<HTMLDivElement>(null);
 	const clientInput = useRef<HTMLButtonElement>(null);
 	const { categories, clients, states } = matches[1].data;
+
+	const busy = fetcher.state !== "idle";
 
 	useEffect(() => {
 		if (
@@ -118,7 +121,6 @@ export default function ActionDialog({
 							: createAction
 						: () => {
 								console.log(internalAction);
-
 								alert("Ação inválida");
 						  }
 				}
@@ -128,9 +130,19 @@ export default function ActionDialog({
 			>
 				{/* Título */}
 				<div className={`max-sm:p-4  p-8 pb-0 `}>
-					{action && (
-						<UpdatedTimeClock time={new Date(action.updated_at)} />
-					)}
+					{action &&
+						(busy ? (
+							<div>
+								<Loader2Icon
+									size={16}
+									className="animate-spin text-primary"
+								/>
+							</div>
+						) : (
+							<UpdatedTimeClock
+								time={new Date(action.updated_at)}
+							/>
+						))}
 					<FancyInputText
 						onBlur={(value) => {
 							setAction({
@@ -150,7 +162,15 @@ export default function ActionDialog({
 				{/* Descrição */}
 				<div className="text-sm max-sm:px-4 shrink-0 grow px-8 sm:pt-4">
 					{action ? (
-						<Editor content={action.description as string} />
+						<Editor
+							content={action.description as string}
+							onBlur={(value) =>
+								setAction({
+									...internalAction,
+									description: value,
+								})
+							}
+						/>
 					) : (
 						<FancyInputText
 							placeholder="Descreva sua ação aqui..."
