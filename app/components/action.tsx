@@ -13,6 +13,7 @@ import {
 	ContextMenuTrigger,
 } from "./ui/context-menu";
 import { removeTags } from "~/lib/utils";
+import { motion } from "framer-motion";
 
 export type ActionFull = Action & {
 	category: Category;
@@ -39,113 +40,128 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 	}
 
 	return (
-		<ContextMenu>
-			<ContextMenuTrigger>
-				<div
-					className={`mb-1 pl-2 border-l-4 border-${
-						action.state.slug
-					}  py-1 text-xs hover:bg-muted bg-accent transition cursor-pointer text-muted-foreground w-full border-foreground/5 hover:text-foreground rounded ${
-						busy && "opacity-75 scale-95 "
-					}`}
-					onClick={() => {
-						navigate(`/dashboard/action/${action.id}`);
-					}}
-				>
-					<div className="text-ellipsis w-full shrink overflow-hidden whitespace-nowrap">
-						{removeTags(action.title)}
+		<motion.div
+			layout
+			initial={{ opacity: 0, scale: 0.8 }}
+			animate={{ opacity: 1, scale: 1 }}
+			exit={{ opacity: 0, scale: 0.8 }}
+			transition={{ duration: 0.4 }}
+		>
+			<ContextMenu>
+				<ContextMenuTrigger>
+					<div
+						className={`mb-1 pl-2 border-l-4 border-${
+							action.state.slug
+						}  py-1 text-xs hover:bg-muted bg-accent transition cursor-pointer text-muted-foreground w-full border-foreground/5 hover:text-foreground rounded ${
+							busy && "opacity-50"
+						}`}
+						onClick={() => {
+							navigate(`/dashboard/action/${action.id}`);
+						}}
+					>
+						<div className="text-ellipsis w-full shrink overflow-hidden whitespace-nowrap">
+							{removeTags(action.title)}
+						</div>
 					</div>
-				</div>
-			</ContextMenuTrigger>
-			<ContextMenuContent className="bg-content">
-				{action.state.slug !== "finished" && (
-					<>
-						<MenuItem>
-							<div>Concluído</div>
-							<div className="w-2 h-2 rounded-full bg-finished"></div>
-						</MenuItem>
-						<ContextMenuSeparator />
-					</>
-				)}
-				<MenuItem
-					onSelect={() => {
-						navigate(`/dashboard/action/${action.id}`);
-					}}
-				>
-					<div>Editar</div>
-					<PencilIcon size={12} />
-				</MenuItem>
-				<MenuItem onSelect={() => {}}>
-					<div>Duplicar</div>
-					<CopyIcon size={12} />
-				</MenuItem>
-				<MenuItem onSelect={() => {}}>
-					<div>Adiar</div>
-					<ClockIcon size={12} />
-				</MenuItem>
-				<MenuItem
-					onSelect={async () => {
-						await fetcher.submit(
-							{ action: "delete-action", id: action.id },
-							{
-								method: "post",
-								action: "/handle-action",
-							}
-						);
-					}}
-				>
-					<div>Deletar</div>
-					<TrashIcon size={12} />
-				</MenuItem>
-				<ContextMenuSeparator />
-				<ContextMenuSub>
-					<ContextMenuSubTrigger className="menu-item">
-						{action.category.title}
-					</ContextMenuSubTrigger>
-					<ContextMenuPortal>
-						<ContextMenuSubContent className="bg-content">
-							{categories.map((category) => (
-								<MenuItem
-									key={category.id}
-									onSelect={() => {
-										updateAction({
-											...action,
-											category: category.id,
-											state: action.state.id,
-										});
-									}}
-								>
-									{category.title}
-								</MenuItem>
-							))}
-						</ContextMenuSubContent>
-					</ContextMenuPortal>
-				</ContextMenuSub>
-				<ContextMenuSub>
-					<ContextMenuSubTrigger className="menu-item">
-						{action.state.title}
-					</ContextMenuSubTrigger>
-					<ContextMenuPortal>
-						<ContextMenuSubContent className="bg-content">
-							{states.map((state) => (
-								<MenuItem
-									key={state.id}
-									onSelect={() => {
-										updateAction({
-											...action,
-											state: state.id,
-											category: action.category.id,
-										});
-									}}
-								>
-									{state.title}
-								</MenuItem>
-							))}
-						</ContextMenuSubContent>
-					</ContextMenuPortal>
-				</ContextMenuSub>
-				<ContextMenuSeparator />
-			</ContextMenuContent>
-		</ContextMenu>
+				</ContextMenuTrigger>
+				<ContextMenuContent className="bg-content">
+					{action.state.slug !== "finished" && (
+						<>
+							<MenuItem>
+								<div>Concluído</div>
+								<div className="w-2 h-2 rounded-full bg-finished"></div>
+							</MenuItem>
+							<ContextMenuSeparator />
+						</>
+					)}
+					<MenuItem
+						onSelect={() => {
+							navigate(`/dashboard/action/${action.id}`);
+						}}
+					>
+						<div>Editar</div>
+						<PencilIcon size={12} />
+					</MenuItem>
+					<MenuItem
+						onSelect={() => {
+							fetcher.submit(
+								{ id: action.id, action: "duplicate-action" },
+								{ action: "/handle-action", method: "POST" }
+							);
+						}}
+					>
+						<div>Duplicar</div>
+						<CopyIcon size={12} />
+					</MenuItem>
+					<MenuItem onSelect={() => {}}>
+						<div>Adiar</div>
+						<ClockIcon size={12} />
+					</MenuItem>
+					<MenuItem
+						onSelect={async () => {
+							await fetcher.submit(
+								{ action: "delete-action", id: action.id },
+								{
+									method: "post",
+									action: "/handle-action",
+								}
+							);
+						}}
+					>
+						<div>Deletar</div>
+						<TrashIcon size={12} />
+					</MenuItem>
+					<ContextMenuSeparator />
+					<ContextMenuSub>
+						<ContextMenuSubTrigger className="menu-item">
+							{action.category.title}
+						</ContextMenuSubTrigger>
+						<ContextMenuPortal>
+							<ContextMenuSubContent className="bg-content">
+								{categories.map((category) => (
+									<MenuItem
+										key={category.id}
+										onSelect={() => {
+											updateAction({
+												...action,
+												category: category.id,
+												state: action.state.id,
+											});
+										}}
+									>
+										{category.title}
+									</MenuItem>
+								))}
+							</ContextMenuSubContent>
+						</ContextMenuPortal>
+					</ContextMenuSub>
+					<ContextMenuSub>
+						<ContextMenuSubTrigger className="menu-item">
+							{action.state.title}
+						</ContextMenuSubTrigger>
+						<ContextMenuPortal>
+							<ContextMenuSubContent className="bg-content">
+								{states.map((state) => (
+									<MenuItem
+										key={state.id}
+										onSelect={() => {
+											updateAction({
+												...action,
+												state: state.id,
+												category: action.category.id,
+											});
+										}}
+									>
+										{state.title}
+									</MenuItem>
+								))}
+							</ContextMenuSubContent>
+						</ContextMenuPortal>
+					</ContextMenuSub>
+					<ContextMenuSeparator />
+				</ContextMenuContent>
+			</ContextMenu>
+		</motion.div>
 	);
 }
 

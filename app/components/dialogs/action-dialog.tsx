@@ -30,12 +30,14 @@ type InternalAction = {
 type ActionDialogType = {
 	mode?: "page" | "popover";
 	action?: Action;
+	date?: Date;
 	closeDialog?: () => void;
 };
 
 export default function ActionDialog({
 	mode,
 	action,
+	date,
 	closeDialog,
 }: ActionDialogType) {
 	const [internalAction, setAction] = useState<InternalAction>({
@@ -44,7 +46,7 @@ export default function ActionDialog({
 		client: action ? String(action.client) : "",
 		category: action ? String(action.category) : "1",
 		state: action ? String(action.state) : "2",
-		date: action ? new Date(action.date) : new Date(),
+		date: action ? new Date(action.date) : date || new Date(),
 	});
 
 	const matches = useMatches();
@@ -313,6 +315,14 @@ const FancyInputText = forwardRef<
 		const [visible, setVisible] = useState(!value);
 		const [text, setText] = useState(value || "");
 		const init = value;
+		const onPaste = async (event: ClipboardEvent) => {
+			const data = await navigator.clipboard.readText();
+			navigator.clipboard.writeText(data);
+		};
+
+		useEffect(() => {
+			window.addEventListener("paste", onPaste);
+		}, []);
 
 		return (
 			<div className="relative">

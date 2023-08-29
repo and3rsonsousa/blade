@@ -34,6 +34,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Popover, PopoverContent } from "../ui/popover";
 import CalendarDay from "./calendar-day";
+import { ScrollArea } from "../ui/scroll-area";
 
 type CalendarType = { actions: Action[] };
 
@@ -61,7 +62,7 @@ export default function Calendar({ actions }: CalendarType) {
 	});
 
 	return (
-		<div className="flex flex-col w-full h-full">
+		<div className="flex flex-col w-full h-full overflow-hidden">
 			<div className="flex shrink border-b items-center gap-2 justify-between p-2">
 				<div className="flex items-center gap-1 text-xl font-semibold">
 					<DropdownMenu>
@@ -200,15 +201,17 @@ export default function Calendar({ actions }: CalendarType) {
 					</div>
 				</div>
 			</div>
-			<div
-				className={`sm:grid grid-cols-7 ${
-					calendar.length === 35 ? "grid-rows-5" : "grid-rows-6"
-				} grow shrink-0 sm:overflow-hidden`}
-			>
-				{calendar.map((day: DayType, i: number) => (
-					<CalendarDay day={day} key={i} />
-				))}
-			</div>
+			<ScrollArea className="h-full flex">
+				<div
+					className={`sm:grid grid-cols-7 h-full grow shrink-0 sm:overflow-hidden ${
+						calendar.length === 35 ? "grid-rows-5" : "grid-rows-6"
+					}`}
+				>
+					{calendar.map((day: DayType, i: number) => (
+						<CalendarDay day={day} key={i} />
+					))}
+				</div>
+			</ScrollArea>
 			<div className="fixed bottom-6 right-4">
 				<Popover open={open} onOpenChange={setOpen}>
 					<PopoverTrigger asChild>

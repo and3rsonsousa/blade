@@ -36,7 +36,7 @@ export default function Editor({
 }) {
 	const size = 16;
 	const classes =
-		"bg-foreground/5 border border-foreground-10 flex divide-x divide-foreground/5 rounded-sm overflow-hidden";
+		"bg-accent/50 border border-foreground-10 flex divide-x divide-foreground/5 backdrop-blur-lg rounded-sm overflow-hidden";
 	const editor = useEditor({
 		content,
 		extensions,

@@ -93,5 +93,27 @@ export const action: ActionFunction = async ({ request }) => {
 			.single();
 
 		return { data, error };
+	} else if (actionToHandle === "duplicate-action") {
+		const id = (await formData.get("id")) as string;
+		const { data: action } = await supabase
+			.from("actions")
+			.select("*")
+			.eq("id", id)
+			.single();
+		if (action) {
+			Object.keys(action).forEach((key) => {
+				if (["created_at", "updated_at", "id"].find((k) => k === key)) {
+					delete action[key as keyof Action];
+				}
+			});
+			const { data, error } = await supabase
+				.from("actions")
+				.insert(action)
+				.select()
+				.single();
+
+			return { data, error };
+		}
+		return {};
 	}
 };
