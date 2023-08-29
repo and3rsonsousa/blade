@@ -2,13 +2,27 @@ import { useFetcher, useMatches } from "@remix-run/react";
 
 import { format, formatDistance, formatISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import { CalendarIcon, Check, ClockIcon } from "lucide-react";
+import {
+	CalendarIcon,
+	Check,
+	CheckCircle2Icon,
+	ChevronsUpDownIcon,
+	ClockIcon,
+	FrownIcon,
+} from "lucide-react";
 import { forwardRef, useEffect, useRef, useState, type ReactNode } from "react";
 import { CategoryIcons } from "~/lib/icons";
 import { cn, removeTags } from "~/lib/utils";
 import Editor from "../editor";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+} from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
 	Select,
@@ -400,9 +414,75 @@ const SelectInput = forwardRef<
 		onChange?: (value?: string) => void;
 	}
 >(({ placeholder, items, selectedValue, itemContent, onChange }, ref) => {
+	const list = items.map((item) => ({
+		value: item.id.toString(),
+		label: item.title,
+	}));
 	const [selected, setSelected] = useState(selectedValue);
+	const [open, setOpen] = useState(false);
+	console.log({ list });
 
-	return (
+	return true ? (
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverTrigger asChild>
+				<Button
+					variant={"ghost"}
+					size={"sm"}
+					className="overflow-hidden"
+				>
+					<div className="w-full text-xs text-ellipsis overflow-hidden whitespace-nowrap">
+						{selected
+							? list.filter((item) => item.value === selected)[0]
+									.label
+							: placeholder}
+					</div>
+
+					<ChevronsUpDownIcon size={16} className="ml-2" />
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="bg-content">
+				<Command className="bg-transparent">
+					<CommandInput
+						placeholder="Digite a sua opção"
+						className="bg-transparent"
+					/>
+
+					<CommandEmpty className="text-left flex justify-center gap-2 items-center">
+						<div>
+							<FrownIcon size={24} />
+						</div>
+						<div>Nenhuma opção foi encontrada</div>
+					</CommandEmpty>
+					<CommandGroup className="p-0">
+						{list.map((item) => (
+							<CommandItem
+								className="bg-transparent rounded-none aria-selected:bg-foreground/20"
+								key={item.value}
+								onSelect={(value) => {
+									console.log(value);
+									setSelected(
+										value !== selected ? value : ""
+									);
+									setOpen(false);
+								}}
+								value={item.value}
+							>
+								<CheckCircle2Icon
+									className={cn(
+										"mr-2 h-4 w-4",
+										selected === item.value
+											? "opacity-100"
+											: "opacity-0"
+									)}
+								/>
+								{item.label}
+							</CommandItem>
+						))}
+					</CommandGroup>
+				</Command>
+			</PopoverContent>
+		</Popover>
+	) : (
 		<Select
 			value={selected}
 			onValueChange={(value) => {
