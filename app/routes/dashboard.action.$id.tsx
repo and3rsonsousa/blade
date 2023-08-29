@@ -1,9 +1,17 @@
-import { type LoaderFunction } from "@remix-run/node";
+import {
+	type V2_MetaFunction,
+	type LoaderFunction,
+	type LoaderArgs,
+	json,
+} from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import ActionDialog from "~/components/dialogs/action-dialog";
 import supabaseServer from "~/lib/supabase.server";
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({
+	request,
+	params,
+}: LoaderArgs) => {
 	const response = new Response();
 	const supabase = supabaseServer({ request, response });
 	const { data: action } = await supabase
@@ -12,8 +20,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 		.eq("id", params.id)
 		.single();
 
-	return { action };
+	return json({ action });
 };
+
+export const meta: V2_MetaFunction<typeof loader> = ({ data: { action } }) => [
+	{
+		title: `${action.title} /B`,
+	},
+];
 
 export default function ActionPage() {
 	const { action } = useLoaderData<typeof loader>();
