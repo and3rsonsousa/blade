@@ -16,6 +16,7 @@ import { removeTags } from "~/lib/utils";
 import { motion } from "framer-motion";
 
 export type ActionFull = Action & {
+	client: Client;
 	category: Category;
 	state: State;
 };
@@ -50,9 +51,9 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 			<ContextMenu>
 				<ContextMenuTrigger>
 					<div
-						className={`mb-1 pl-2 border-l-4 border-${
+						className={`mb-1 px-2 border-l-4 border-${
 							action.state.slug
-						}  py-1 text-xs hover:bg-muted bg-accent transition cursor-pointer text-muted-foreground w-full border-foreground/5 hover:text-foreground rounded ${
+						}  py-1 text-xs hover:bg-muted bg-accent transition cursor-pointer text-muted-foreground w-full border-foreground/5 hover:text-foreground rounded flex gap-1 ${
 							busy && "opacity-50"
 						}`}
 						onClick={() => {
@@ -61,6 +62,9 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 					>
 						<div className="text-ellipsis w-full shrink overflow-hidden whitespace-nowrap">
 							{removeTags(action.title)}
+						</div>
+						<div className="uppercase text-[10px] opacity-50">
+							{action.client.short}
 						</div>
 					</div>
 				</ContextMenuTrigger>

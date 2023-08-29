@@ -17,7 +17,7 @@ export async function loader({ request }: LoaderArgs) {
 		response,
 	});
 	const [{ data: actions }] = await Promise.all([
-		supabase.from("actions").select("*, category(*), state(*)"),
+		supabase.from("actions").select("*,client(*), category(*), state(*)"),
 	]);
 
 	return { actions };
