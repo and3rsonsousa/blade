@@ -8,11 +8,14 @@ import {
 import {
 	ChevronsLeft,
 	ChevronsRight,
+	CommandIcon,
 	MenuIcon,
 	PlusIcon,
+	SearchIcon,
 	UserIcon,
 } from "lucide-react";
-import { useState, type ReactNode, useEffect } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import ActionDialog from "../dialogs/action-dialog";
 import { Button } from "../ui/button";
 import {
 	DropdownMenu,
@@ -22,9 +25,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import Blade from "./blade";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import ActionDialog from "../dialogs/action-dialog";
+import Blade from "./blade";
 
 export default function Layout({ children }: { children: ReactNode }) {
 	const { user }: { user: Person } = useOutletContext();
@@ -153,13 +155,22 @@ export default function Layout({ children }: { children: ReactNode }) {
 						))}
 					</div>
 					<div className="p-3">
-						<Button
-							className="w-full"
-							size={"sm"}
-							variant={"ghost"}
-						>
-							Busca
-						</Button>
+						<div className="p-3">
+							<Button
+								className="w-full justify-between px-2"
+								size={"sm"}
+								variant={"secondary"}
+							>
+								<div className="flex items-center gap-2 text-sm">
+									<SearchIcon size={16} />
+									Busca
+								</div>
+								<div className="text-xs flex items-center gap-1 opacity-25">
+									<CommandIcon size={12} />
+									<div>+ K</div>
+								</div>
+							</Button>
+						</div>
 						<div className="flex gap-2 items-center px-3 py-2">
 							<UserIcon size={16} />
 							<div className="text-xs whitespace-nowrap text-ellipsis overflow-hidden">
@@ -167,78 +178,6 @@ export default function Layout({ children }: { children: ReactNode }) {
 							</div>
 						</div>
 					</div>
-					{/* <motion.svg
-						width="100"
-						height="100"
-						viewBox="0 0 100 100"
-						className=" -rotate-90 w-8 h-8"
-					>
-						<motion.circle
-							fill="transparent"
-							className={"text-slate-900"}
-							cx="50"
-							cy="50"
-							r="45"
-							strokeLinecap="round"
-							stroke="currentColor"
-							pathLength={"0.1"}
-							strokeWidth={10}
-							initial={{ pathLength: 0 }}
-							animate={{ pathLength: 1 }}
-						/>
-						<motion.circle
-							fill="transparent"
-							className={"text-emerald-500"}
-							cx="50"
-							cy="50"
-							r="45"
-							strokeLinecap="round"
-							stroke="currentColor"
-							pathLength={"0.1"}
-							strokeWidth={10}
-							initial={{ pathLength: 0 }}
-							animate={{ pathLength: 0.87 }}
-						/>
-						<motion.circle
-							fill="transparent"
-							className={"text-yellow-500"}
-							cx="50"
-							cy="50"
-							r="45"
-							strokeLinecap="round"
-							stroke="currentColor"
-							pathLength={"0.1"}
-							strokeWidth={10}
-							initial={{ pathLength: 0 }}
-							animate={{ pathLength: 0.61 }}
-						/>
-						<motion.circle
-							fill="transparent"
-							className={"text-red-600"}
-							cx="50"
-							cy="50"
-							r="45"
-							strokeLinecap="round"
-							stroke="currentColor"
-							pathLength={"0.1"}
-							strokeWidth={10}
-							initial={{ pathLength: 0 }}
-							animate={{ pathLength: 0.37 }}
-						/>
-						<motion.circle
-							fill="transparent"
-							className={"text-primary"}
-							cx="50"
-							cy="50"
-							r="45"
-							strokeLinecap="round"
-							stroke="currentColor"
-							pathLength={"0.1"}
-							strokeWidth={10}
-							initial={{ pathLength: 0 }}
-							animate={{ pathLength: 0.2 }}
-						/>
-					</motion.svg> */}
 				</div>
 			</div>
 
