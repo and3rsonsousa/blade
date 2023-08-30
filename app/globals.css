@@ -154,7 +154,7 @@
 }
 
 .menu-item {
-	@apply rounded-none text-xs items-center px-3 py-1.5 focus:bg-foreground/20 flex justify-between text-foreground;
+	@apply rounded-none text-xs items-center focus:bg-foreground/20 flex text-foreground;
 }
 
 .scroll-area__component > div {

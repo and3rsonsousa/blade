@@ -15,10 +15,10 @@ export const action: ActionFunction = async ({ request }) => {
 	if (actionToHandle === "create-action") {
 		const title = formData.get("title") as string;
 		const description = formData.get("description") as string;
-		const state_id = Number(formData.get("state"));
-		const client_id = Number(formData.get("client"));
+		const state_id = Number(formData.get("state_id"));
+		const client_id = Number(formData.get("client_id"));
 		const date = formData.get("date") as string;
-		const category_id = Number(formData.get("category"));
+		const category_id = Number(formData.get("category_id"));
 
 		const action = {
 			title,
@@ -41,10 +41,10 @@ export const action: ActionFunction = async ({ request }) => {
 		const id = formData.get("id") as string;
 		const title = formData.get("title") as string;
 		const description = formData.get("description") as string;
-		const state_id = Number(formData.get("state"));
-		const client_id = Number(formData.get("client"));
+		const state_id = Number(formData.get("state_id"));
+		const client_id = Number(formData.get("client_id"));
 		const date = formData.get("date") as string;
-		const category_id = Number(formData.get("category"));
+		const category_id = Number(formData.get("category_id"));
 		const updated_at = String(formatISO(new Date()));
 
 		type ActionToUpdate = {
@@ -79,7 +79,6 @@ export const action: ActionFunction = async ({ request }) => {
 			.eq("id", id)
 			.single();
 
-		console.log({ action, id, data, error });
 		return { data, error };
 	} else if (actionToHandle === "delete-action") {
 		const id = formData.get("id") as string;

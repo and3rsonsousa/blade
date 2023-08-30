@@ -36,7 +36,6 @@ const FancyCombobox = forwardRef<
 			: ""
 	);
 	const [open, setOpen] = useState(false);
-	console.log({ list });
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>

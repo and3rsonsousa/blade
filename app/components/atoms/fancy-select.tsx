@@ -14,38 +14,55 @@ const FancySelectInput = forwardRef<
 		placeholder?: string;
 		items: GenericItem[];
 		selectedValue?: string;
-		itemContent?: (item: GenericItem) => ReactNode;
+		itemValue?: (item?: GenericItem) => ReactNode;
+		itemMenu?: (item: GenericItem) => ReactNode;
 		onChange?: (value?: string) => void;
 	}
->(({ placeholder, items, selectedValue, itemContent, onChange }, ref) => {
-	const [selected, setSelected] = useState(selectedValue);
+>(
+	(
+		{ placeholder, items, selectedValue, itemValue, itemMenu, onChange },
+		ref
+	) => {
+		const [selected, setSelected] = useState(selectedValue);
 
-	return (
-		<Select
-			defaultValue={selected}
-			onValueChange={(value) => {
-				setSelected(value);
-				if (onChange) onChange(value);
-			}}
-		>
-			<SelectTrigger className="p-2 h-auto bg-transparent border-none hover:bg-foreground/10">
-				{/* <Button>{placeholder}</Button> */}
-				<SelectValue placeholder={placeholder || "Escolha uma opção"} />
-			</SelectTrigger>
-			<SelectContent className="bg-content">
-				{items.map((item) => (
-					<SelectItem
-						key={item.id}
-						value={String(item.id)}
-						className="menu-item"
-					>
-						{item.title}
-					</SelectItem>
-				))}
-			</SelectContent>
-		</Select>
-	);
-});
+		return (
+			<Select
+				defaultValue={selected}
+				onValueChange={(value) => {
+					setSelected(value);
+					if (onChange) onChange(value);
+				}}
+			>
+				<SelectTrigger className="p-2 h-auto w-auto bg-transparent border-none hover:bg-foreground/10">
+					{itemValue ? (
+						itemValue(
+							items.find((item) => String(item.id) === selected)
+						)
+					) : (
+						<SelectValue
+							placeholder={placeholder || "Escolha uma opção"}
+						/>
+					)}
+				</SelectTrigger>
+				<SelectContent className="bg-content">
+					{items.map((item) =>
+						itemMenu ? (
+							itemMenu(item)
+						) : (
+							<SelectItem
+								key={item.id}
+								value={String(item.id)}
+								className="menu-item"
+							>
+								{item.title}
+							</SelectItem>
+						)
+					)}
+				</SelectContent>
+			</Select>
+		);
+	}
+);
 
 FancySelectInput.displayName = "FancySelectInput";
 export default FancySelectInput;

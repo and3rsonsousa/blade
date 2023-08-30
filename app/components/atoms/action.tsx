@@ -63,12 +63,12 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 						<div className="text-ellipsis w-full shrink overflow-hidden whitespace-nowrap">
 							{removeTags(action.title)}
 						</div>
-						<div className="uppercase text-[10px] opacity-50">
+						<div className="uppercase text-[8px] opacity-75">
 							{action.clients.short}
 						</div>
 					</div>
 				</ContextMenuTrigger>
-				<ContextMenuContent className="bg-content">
+				<ContextMenuContent className="bg-content mx-2">
 					{action.states.slug !== "finished" && (
 						<>
 							<MenuItem>

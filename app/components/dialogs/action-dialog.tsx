@@ -2,19 +2,20 @@ import { useFetcher, useMatches } from "@remix-run/react";
 
 import { format, formatISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import { CalendarIcon, Check, Loader2Icon } from "lucide-react";
+import { Check, Loader2Icon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { CategoryIcons } from "~/lib/icons";
 import { cn, removeTags } from "~/lib/utils";
 import UpdatedTimeClock from "../atoms/update-time-clock";
 
+import FancySelectInput from "~/components/atoms/fancy-select";
 import CmdEnter from "../atoms/cmdenter";
 import Editor from "../atoms/editor";
 import FancyInputText from "../atoms/fancy-input";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import FancySelectInput from "~/components/atoms/fancy-select";
+import { SelectItem } from "../ui/select";
 
 type InternalAction = {
 	title?: string;
@@ -110,7 +111,6 @@ export default function ActionDialog({
 							? updateAction
 							: createAction
 						: () => {
-								console.log(internalAction);
 								alert("Ação inválida");
 						  }
 				}
@@ -206,12 +206,28 @@ export default function ActionDialog({
 									? (internalAction.category_id as string)
 									: "1"
 							}
-							itemContent={({ slug }) => {
+							itemValue={(item) => {
 								return (
-									<CategoryIcons
-										id={slug}
-										className="w-4 h-4"
-									/>
+									item && (
+										<CategoryIcons
+											id={item.slug}
+											className="w-4 h-4  mr-1"
+										/>
+									)
+								);
+							}}
+							itemMenu={(item) => {
+								return (
+									<SelectItem value={String(item.id)}>
+										<div className="flex gap-2">
+											<CategoryIcons
+												id={item.slug}
+												className="w-4 h-4"
+											/>
+
+											{item.title}
+										</div>
+									</SelectItem>
 								);
 							}}
 							onChange={(value) =>
@@ -230,11 +246,23 @@ export default function ActionDialog({
 									? (internalAction.state_id as string)
 									: "2"
 							}
-							itemContent={(item) => {
+							itemMenu={(item) => (
+								<SelectItem value={String(item.id)}>
+									<div className="flex gap-2 items-center">
+										<div
+											className={`border-${item.slug} border-2 h-2 w-2 rounded-full`}
+										></div>
+										<div>{item.title}</div>
+									</div>
+								</SelectItem>
+							)}
+							itemValue={(item) => {
 								return (
-									<div
-										className={`bg-${item.slug} h-3 w-3 rounded-full mr-2`}
-									></div>
+									item && (
+										<div
+											className={`border-${item.slug} border-[3px] h-3 w-3 rounded-full mr-1`}
+										></div>
+									)
 								);
 							}}
 							onChange={(value) =>
@@ -246,20 +274,18 @@ export default function ActionDialog({
 						/>
 					</div>
 					{/* Data e Botão */}
-					<div className="flex col-span-2 gap-2 w-full justify-between sm:justify-end">
+					<div className="flex col-span-2 gap-1 w-full justify-between sm:justify-end">
 						<Popover>
 							<PopoverTrigger asChild>
 								<Button
 									variant={"ghost"}
 									size={"sm"}
 									className={cn(
-										"justify-start text-xs text-left font-normal",
+										"justify-start px-2 text-xs text-left font-normal",
 										!internalAction.date &&
 											"text-muted-foreground"
 									)}
 								>
-									<CalendarIcon className="mr-2 h-3 w-3" />
-
 									<span className="sm:hidden">
 										{internalAction.date
 											? format(
@@ -300,8 +326,16 @@ export default function ActionDialog({
 						</Popover>
 
 						<Button
+							variant={"ghost"}
+							size={"sm"}
+							className="text-xs text-left font-normal px-2"
+						>
+							11h12
+						</Button>
+
+						<Button
 							variant={
-								isValidAction(internalAction)
+								isValidAction(internalAction) || busy
 									? "default"
 									: "secondary"
 							}
@@ -309,10 +343,19 @@ export default function ActionDialog({
 							onClick={() => {
 								action ? updateAction() : createAction();
 							}}
-							disabled={!isValidAction(internalAction)}
+							disabled={!isValidAction(internalAction) || busy}
 						>
-							{action ? "Atualizar" : "Inserir"}
-							<Check size={16} className="ml-2" />
+							{busy ? (
+								<Loader2Icon
+									size={16}
+									className="animate-spin"
+								/>
+							) : (
+								<>
+									{action ? "Atualizar" : "Inserir"}
+									<Check size={16} className="ml-2" />
+								</>
+							)}
 						</Button>
 					</div>
 				</div>
