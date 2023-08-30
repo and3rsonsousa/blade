@@ -1,6 +1,5 @@
-import { LoaderArgs, type LoaderFunction } from "@remix-run/node";
+import { type LoaderArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { redirect } from "react-router";
 
 import Calendar from "~/components/calendar/calendar-view";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
