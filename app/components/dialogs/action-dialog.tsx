@@ -1,4 +1,4 @@
-import { useFetcher, useMatches } from "@remix-run/react";
+import { useFetcher, useMatches, useParams } from "@remix-run/react";
 
 import { formatISO } from "date-fns";
 import { Check, Loader2Icon } from "lucide-react";
@@ -39,20 +39,29 @@ export default function ActionDialog({
 }: ActionDialogType) {
 	const baseDate = new Date();
 	baseDate.setHours(11, 12);
+	const matches = useMatches();
+	const fetcher = useFetcher();
+	const { categories, clients, states } = matches[1].data;
+	const { slug } = useParams();
+
+	const client = slug
+		? (clients as Client[])
+				.find((client) => client.slug === slug)
+				?.id.toString()
+		: undefined;
+
+	//
 	const [internalAction, setAction] = useState<InternalAction>({
 		title: action ? action.title : "",
 		description: action ? action.description : "",
-		client_id: action ? String(action.client_id) : "",
+		client_id: action ? String(action.client_id) : client ? client : "",
 		category_id: action ? String(action.category_id) : "1",
 		state_id: action ? String(action.state_id) : "2",
 		date: action ? new Date(action.date) : date || baseDate,
 	});
 
-	const matches = useMatches();
-	const fetcher = useFetcher();
 	const description = useRef<HTMLDivElement>(null);
 	const clientInput = useRef<HTMLButtonElement>(null);
-	const { categories, clients, states } = matches[1].data;
 
 	const busy = fetcher.state !== "idle";
 
