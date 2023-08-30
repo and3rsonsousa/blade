@@ -1,23 +1,21 @@
 import { useFetcher, useMatches } from "@remix-run/react";
 
-import { format, formatISO } from "date-fns";
-import ptBR from "date-fns/locale/pt-BR";
+import { formatISO } from "date-fns";
 import { Check, Loader2Icon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { CategoryIcons } from "~/lib/icons";
-import { cn, removeTags } from "~/lib/utils";
+import { removeTags } from "~/lib/utils";
 import UpdatedTimeClock from "../atoms/update-time-clock";
 
 import FancySelectInput from "~/components/atoms/fancy-select";
 import CmdEnter from "../atoms/cmdenter";
 import Editor from "../atoms/editor";
+import FancyDatetimePicker from "../atoms/fancy-datetime";
 import FancyInputText from "../atoms/fancy-input";
 import { Button } from "../ui/button";
-import { Calendar } from "../ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { SelectItem } from "../ui/select";
 
-type InternalAction = {
+export type InternalAction = {
 	title?: string;
 	description?: string | null;
 	client_id?: string | null;
@@ -39,13 +37,15 @@ export default function ActionDialog({
 	date,
 	closeDialog,
 }: ActionDialogType) {
+	const baseDate = new Date();
+	baseDate.setHours(11, 12);
 	const [internalAction, setAction] = useState<InternalAction>({
 		title: action ? action.title : "",
 		description: action ? action.description : "",
 		client_id: action ? String(action.client_id) : "",
 		category_id: action ? String(action.category_id) : "1",
 		state_id: action ? String(action.state_id) : "2",
-		date: action ? new Date(action.date) : date || new Date(),
+		date: action ? new Date(action.date) : date || baseDate,
 	});
 
 	const matches = useMatches();
@@ -275,63 +275,12 @@ export default function ActionDialog({
 					</div>
 					{/* Data e Botão */}
 					<div className="flex col-span-2 gap-1 w-full justify-between sm:justify-end">
-						<Popover>
-							<PopoverTrigger asChild>
-								<Button
-									variant={"ghost"}
-									size={"sm"}
-									className={cn(
-										"justify-start px-2 text-xs text-left font-normal",
-										!internalAction.date &&
-											"text-muted-foreground"
-									)}
-								>
-									<span className="sm:hidden">
-										{internalAction.date
-											? format(
-													internalAction.date,
-													"d 'de' MMMM 'de' Y",
-													{
-														locale: ptBR,
-													}
-											  )
-											: ""}
-									</span>
-									<span className="max-sm:hidden">
-										{internalAction.date
-											? format(
-													internalAction.date,
-													"d/MMM",
-													{
-														locale: ptBR,
-													}
-											  )
-											: ""}
-									</span>
-								</Button>
-							</PopoverTrigger>
-							<PopoverContent className="w-auto p-0">
-								<Calendar
-									mode="single"
-									selected={internalAction.date}
-									onSelect={(value) => {
-										setAction({
-											...internalAction,
-											date: value as Date,
-										});
-									}}
-									initialFocus
-								/>
-							</PopoverContent>
-						</Popover>
-
-						<Button
-							variant={"ghost"}
-							size={"sm"}
-							className="text-xs text-left font-normal px-2"
-						>
-							11h12
-						</Button>
+						<FancyDatetimePicker
+							date={internalAction.date}
+							onSelect={(value) => {
+								setAction({ ...internalAction, date: value });
+							}}
+						/>
 
 						<Button
 							variant={

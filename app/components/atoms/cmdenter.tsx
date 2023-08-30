@@ -2,8 +2,6 @@ import { useEffect } from "react";
 
 const CmdEnter = function ({ fn }: { fn: () => void }) {
 	useEffect(() => {
-		console.clear();
-
 		const listener = (event: KeyboardEvent) => {
 			if (event.metaKey && event.key === "Enter") {
 				fn();
