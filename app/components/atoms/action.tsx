@@ -130,8 +130,8 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 										onSelect={() => {
 											updateAction({
 												...action,
-												category: category.id,
-												state: action.state_id,
+												category_id: category.id,
+												state_id: action.state_id,
 											});
 										}}
 									>
@@ -153,8 +153,8 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 										onSelect={() => {
 											updateAction({
 												...action,
-												state: state.id,
-												category: action.category_id,
+												state_id: state.id,
+												category_id: action.category_id,
 											});
 										}}
 									>
