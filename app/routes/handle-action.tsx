@@ -15,18 +15,18 @@ export const action: ActionFunction = async ({ request }) => {
 	if (actionToHandle === "create-action") {
 		const title = formData.get("title") as string;
 		const description = formData.get("description") as string;
-		const state = Number(formData.get("state"));
-		const client = Number(formData.get("client"));
+		const state_id = Number(formData.get("state"));
+		const client_id = Number(formData.get("client"));
 		const date = formData.get("date") as string;
-		const category = Number(formData.get("category"));
+		const category_id = Number(formData.get("category"));
 
 		const action = {
 			title,
 			description,
-			state,
-			client,
+			state_id,
+			client_id,
 			date,
-			category,
+			category_id,
 			user_id: session?.user.id,
 		};
 
@@ -41,29 +41,29 @@ export const action: ActionFunction = async ({ request }) => {
 		const id = formData.get("id") as string;
 		const title = formData.get("title") as string;
 		const description = formData.get("description") as string;
-		const state = Number(formData.get("state"));
-		const client = Number(formData.get("client"));
+		const state_id = Number(formData.get("state"));
+		const client_id = Number(formData.get("client"));
 		const date = formData.get("date") as string;
-		const category = Number(formData.get("category"));
+		const category_id = Number(formData.get("category"));
 		const updated_at = String(formatISO(new Date()));
 
 		type ActionToUpdate = {
 			title: string;
 			description: string;
-			state: number;
-			client: number;
+			state_id: number;
+			client_id: number;
 			date: string;
-			category: number;
+			category_id: number;
 			updated_at: string;
 		};
 
 		const action: ActionToUpdate = {
 			title,
 			description,
-			state,
-			client,
+			state_id,
+			client_id,
 			date,
-			category,
+			category_id,
 			updated_at,
 		};
 

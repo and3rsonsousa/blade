@@ -16,9 +16,9 @@ import { removeTags } from "~/lib/utils";
 import { motion } from "framer-motion";
 
 export type ActionFull = Action & {
-	client: Client;
-	category: Category;
-	state: State;
+	clients: Client;
+	categories: Category;
+	states: State;
 };
 
 export function ActionLineCalendar({ action }: { action: ActionFull }) {
@@ -52,7 +52,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 				<ContextMenuTrigger>
 					<div
 						className={`mb-1 px-2 border-l-4 border-${
-							action.state.slug
+							action.states.slug
 						}  py-1 text-xs hover:bg-muted bg-accent transition cursor-pointer text-muted-foreground w-full border-foreground/5 hover:text-foreground rounded flex gap-1 ${
 							busy && "opacity-50"
 						}`}
@@ -64,12 +64,12 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 							{removeTags(action.title)}
 						</div>
 						<div className="uppercase text-[10px] opacity-50">
-							{action.client.short}
+							{action.clients.short}
 						</div>
 					</div>
 				</ContextMenuTrigger>
 				<ContextMenuContent className="bg-content">
-					{action.state.slug !== "finished" && (
+					{action.states.slug !== "finished" && (
 						<>
 							<MenuItem>
 								<div>Concluído</div>
@@ -120,7 +120,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 					<ContextMenuSeparator />
 					<ContextMenuSub>
 						<ContextMenuSubTrigger className="menu-item">
-							{action.category.title}
+							{action.categories.title}
 						</ContextMenuSubTrigger>
 						<ContextMenuPortal>
 							<ContextMenuSubContent className="bg-content">
@@ -131,7 +131,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 											updateAction({
 												...action,
 												category: category.id,
-												state: action.state.id,
+												state: action.state_id,
 											});
 										}}
 									>
@@ -143,7 +143,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 					</ContextMenuSub>
 					<ContextMenuSub>
 						<ContextMenuSubTrigger className="menu-item">
-							{action.state.title}
+							{action.states.title}
 						</ContextMenuSubTrigger>
 						<ContextMenuPortal>
 							<ContextMenuSubContent className="bg-content">
@@ -154,7 +154,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 											updateAction({
 												...action,
 												state: state.id,
-												category: action.category.id,
+												category: action.category_id,
 											});
 										}}
 									>

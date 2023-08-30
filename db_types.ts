@@ -11,57 +11,57 @@ export interface Database {
     Tables: {
       actions: {
         Row: {
-          category: number
-          client: number
+          category_id: number
+          client_id: number
           created_at: string
           date: string
           description: string | null
           id: string
-          state: number
+          state_id: number
           title: string
           updated_at: string
           user_id: string
         }
         Insert: {
-          category: number
-          client: number
+          category_id: number
+          client_id: number
           created_at?: string
           date?: string
           description?: string | null
           id?: string
-          state: number
+          state_id: number
           title: string
           updated_at?: string
           user_id?: string
         }
         Update: {
-          category?: number
-          client?: number
+          category_id?: number
+          client_id?: number
           created_at?: string
           date?: string
           description?: string | null
           id?: string
-          state?: number
+          state_id?: number
           title?: string
           updated_at?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "actions_category_fkey"
-            columns: ["category"]
+            foreignKeyName: "actions_category_id_fkey"
+            columns: ["category_id"]
             referencedRelation: "categories"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "actions_client_fkey"
-            columns: ["client"]
+            foreignKeyName: "actions_client_id_fkey"
+            columns: ["client_id"]
             referencedRelation: "clients"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "actions_state_fkey"
-            columns: ["state"]
+            foreignKeyName: "actions_state_id_fkey"
+            columns: ["state_id"]
             referencedRelation: "states"
             referencedColumns: ["id"]
           },

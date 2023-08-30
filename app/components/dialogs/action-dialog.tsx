@@ -19,9 +19,9 @@ import FancySelectInput from "~/components/atoms/fancy-select";
 type InternalAction = {
 	title?: string;
 	description?: string | null;
-	client?: string | null;
-	category?: string;
-	state?: string;
+	client_id?: string | null;
+	category_id?: string;
+	state_id?: string;
 	date: Date;
 };
 
@@ -41,9 +41,9 @@ export default function ActionDialog({
 	const [internalAction, setAction] = useState<InternalAction>({
 		title: action ? action.title : "",
 		description: action ? action.description : "",
-		client: action ? String(action.client) : "",
-		category: action ? String(action.category) : "1",
-		state: action ? String(action.state) : "2",
+		client_id: action ? String(action.client_id) : "",
+		category_id: action ? String(action.category_id) : "1",
+		state_id: action ? String(action.state_id) : "2",
 		date: action ? new Date(action.date) : date || new Date(),
 	});
 
@@ -70,9 +70,9 @@ export default function ActionDialog({
 				action: "create-action",
 				title: internalAction.title as string,
 				description: internalAction.description as string,
-				client: internalAction.client as string,
-				category: internalAction.category as string,
-				state: internalAction.state as string,
+				client_id: internalAction.client_id as string,
+				category_id: internalAction.category_id as string,
+				state_id: internalAction.state_id as string,
 				date: formatISO(internalAction.date),
 			},
 			{
@@ -89,9 +89,9 @@ export default function ActionDialog({
 				id: action?.id as string,
 				title: internalAction.title as string,
 				description: internalAction.description as string,
-				client: internalAction.client as string,
-				category: internalAction.category as string,
-				state: internalAction.state as string,
+				client_id: internalAction.client_id as string,
+				category_id: internalAction.category_id as string,
+				state_id: internalAction.state_id as string,
 				date: formatISO(internalAction.date),
 			},
 			{
@@ -185,11 +185,14 @@ export default function ActionDialog({
 							items={clients}
 							placeholder="Cliente"
 							onChange={(value) => {
-								setAction({ ...internalAction, client: value });
+								setAction({
+									...internalAction,
+									client_id: value,
+								});
 							}}
 							selectedValue={
 								action
-									? (internalAction.client as string)
+									? (internalAction.client_id as string)
 									: undefined
 							}
 							ref={clientInput}
@@ -200,7 +203,7 @@ export default function ActionDialog({
 							placeholder="Categoria"
 							selectedValue={
 								action
-									? (internalAction.category as string)
+									? (internalAction.category_id as string)
 									: "1"
 							}
 							itemContent={({ slug }) => {
@@ -214,7 +217,7 @@ export default function ActionDialog({
 							onChange={(value) =>
 								setAction({
 									...internalAction,
-									category: value,
+									category_id: value,
 								})
 							}
 						/>
@@ -223,7 +226,9 @@ export default function ActionDialog({
 							items={states}
 							placeholder="Status"
 							selectedValue={
-								action ? (internalAction.state as string) : "2"
+								action
+									? (internalAction.state_id as string)
+									: "2"
 							}
 							itemContent={(item) => {
 								return (
@@ -233,7 +238,10 @@ export default function ActionDialog({
 								);
 							}}
 							onChange={(value) =>
-								setAction({ ...internalAction, state: value })
+								setAction({
+									...internalAction,
+									state_id: value,
+								})
 							}
 						/>
 					</div>
@@ -316,10 +324,10 @@ export default function ActionDialog({
 function isValidAction(action: InternalAction) {
 	let valid = true;
 	if (!action.title) valid = false;
-	if (!action.client) valid = false;
-	if (!action.category) valid = false;
+	if (!action.client_id) valid = false;
+	if (!action.category_id) valid = false;
 	if (!action.date) valid = false;
-	if (!action.state) valid = false;
+	if (!action.state_id) valid = false;
 
 	return valid;
 }
