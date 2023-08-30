@@ -1,13 +1,12 @@
-import { type LoaderArgs, type LoaderFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { LoaderArgs, type LoaderFunction } from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
+import { redirect } from "react-router";
 
 import Calendar from "~/components/calendar/calendar-view";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import supabaseServer from "~/lib/supabase.server";
 
-export const loader: LoaderFunction = async ({
-	request,
-	params,
-}: LoaderArgs) => {
+export async function loader({ request, params }: LoaderArgs) {
 	const response = new Response();
 	const supabase = supabaseServer({ request, response });
 
@@ -20,20 +19,26 @@ export const loader: LoaderFunction = async ({
 		const { data: actions } = await supabase
 			.from("actions")
 			.select("*, clients(*), categories(*), states(*)")
-			.eq("client_id", client.id);
+			.eq("client_id", client!.id);
 
 		return { client, actions };
 	}
-
-	return {};
-};
+}
 
 export default function ClientID() {
 	const { client, actions } = useLoaderData<typeof loader>();
 	return (
 		<div className="h-full w-full overflow-hidden">
-			<div>
-				<h3 className="px-4 pt-3 m-0">{client.title} </h3>
+			<div className="px-4 pt-3 gap-2 flex items-center">
+				<Avatar>
+					<AvatarFallback>{client.short}</AvatarFallback>
+				</Avatar>
+				<Link
+					to={`/dashboard/${client.slug}`}
+					className="m-0 font-semibold text-xl"
+				>
+					{client.title}{" "}
+				</Link>
 			</div>
 			{actions && <Calendar actions={actions} />}
 		</div>
