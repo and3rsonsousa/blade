@@ -154,30 +154,44 @@ export default function Layout({ children }: { children: ReactNode }) {
 							</Link>
 						))}
 					</div>
-					<div className="p-3">
+					{open ? (
 						<div className="p-3">
-							<Button
-								className="w-full justify-between px-2"
-								size={"sm"}
-								variant={"secondary"}
-							>
-								<div className="flex items-center gap-2 text-sm">
-									<SearchIcon size={16} />
-									Busca
+							<div className="p-3">
+								<Button
+									className="w-full justify-between px-2"
+									size={"sm"}
+									variant={"secondary"}
+								>
+									<div className="flex items-center gap-2 text-sm">
+										<SearchIcon size={16} />
+										Busca
+									</div>
+									<div className="text-xs flex items-center gap-1 opacity-25">
+										<CommandIcon size={12} />
+										<div>+ K</div>
+									</div>
+								</Button>
+							</div>
+							<div className="flex gap-2 items-center px-3 py-2">
+								<UserIcon size={16} />
+								<div className="text-xs whitespace-nowrap text-ellipsis overflow-hidden">
+									{user.name}
 								</div>
-								<div className="text-xs flex items-center gap-1 opacity-25">
-									<CommandIcon size={12} />
-									<div>+ K</div>
-								</div>
-							</Button>
-						</div>
-						<div className="flex gap-2 items-center px-3 py-2">
-							<UserIcon size={16} />
-							<div className="text-xs whitespace-nowrap text-ellipsis overflow-hidden">
-								{user.name}
 							</div>
 						</div>
-					</div>
+					) : (
+						<div className="flex flex-col items-center gap-2 pb-4">
+							<Button
+								variant={"secondary"}
+								className="p-2 h-auto"
+							>
+								<SearchIcon size={16} />
+							</Button>
+							<Button variant={"ghost"} className="p-2 h-auto">
+								<UserIcon size={16} />
+							</Button>
+						</div>
+					)}
 				</div>
 			</div>
 
