@@ -27,7 +27,7 @@ const FancySelectInput = forwardRef<
 
 		return (
 			<Select
-				defaultValue={selected}
+				defaultValue={selected !== "" ? selected : undefined}
 				onValueChange={(value) => {
 					setSelected(value);
 					if (onChange) onChange(value);
