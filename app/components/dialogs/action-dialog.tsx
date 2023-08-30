@@ -18,7 +18,7 @@ import { SelectItem } from "../ui/select";
 export type InternalAction = {
 	title?: string;
 	description?: string | null;
-	client_id?: string | null;
+	client_id?: string;
 	category_id?: string;
 	state_id?: string;
 	date: Date;
@@ -44,17 +44,23 @@ export default function ActionDialog({
 	const { categories, clients, states } = matches[1].data;
 	const { slug } = useParams();
 
-	const client = slug
+	const client_id = slug
 		? (clients as Client[])
 				.find((client) => client.slug === slug)
 				?.id.toString()
 		: undefined;
 
+	console.log({ client_id, slug });
+
 	//
 	const [internalAction, setAction] = useState<InternalAction>({
 		title: action ? action.title : "",
 		description: action ? action.description : "",
-		client_id: action ? String(action.client_id) : client ? client : "",
+		client_id: action
+			? String(action.client_id)
+			: client_id
+			? client_id
+			: "",
 		category_id: action ? String(action.category_id) : "1",
 		state_id: action ? String(action.state_id) : "2",
 		date: action ? new Date(action.date) : date || baseDate,
@@ -199,22 +205,14 @@ export default function ActionDialog({
 									client_id: value,
 								});
 							}}
-							selectedValue={
-								action
-									? (internalAction.client_id as string)
-									: undefined
-							}
+							selectedValue={internalAction.client_id}
 							ref={clientInput}
 						/>
 
 						<FancySelectInput
 							items={categories}
 							placeholder="Categoria"
-							selectedValue={
-								action
-									? (internalAction.category_id as string)
-									: "1"
-							}
+							selectedValue={internalAction.category_id}
 							itemValue={(item) => {
 								return (
 									item && (
@@ -250,11 +248,7 @@ export default function ActionDialog({
 						<FancySelectInput
 							items={states}
 							placeholder="Status"
-							selectedValue={
-								action
-									? (internalAction.state_id as string)
-									: "2"
-							}
+							selectedValue={internalAction.state_id}
 							itemMenu={(item) => (
 								<SelectItem value={String(item.id)}>
 									<div className="flex gap-2 items-center">
