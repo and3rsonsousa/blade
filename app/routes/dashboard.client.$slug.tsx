@@ -31,7 +31,7 @@ export const loader: LoaderFunction = async ({
 export default function ClientID() {
 	const { client, actions } = useLoaderData<typeof loader>();
 	return (
-		<div className="h-full overflow-hidden">
+		<div className="h-full w-full overflow-hidden">
 			<div>
 				<h3 className="px-4 pt-3 m-0">{client.title} </h3>
 			</div>
