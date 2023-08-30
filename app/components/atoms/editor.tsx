@@ -20,8 +20,9 @@ import {
 	PilcrowIcon,
 	StrikethroughIcon,
 } from "lucide-react";
-import { Toggle } from "./ui/toggle";
+
 import { cn } from "~/lib/utils";
+import { Toggle } from "../ui/toggle";
 
 const extensions = [StarterKit];
 

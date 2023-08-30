@@ -1,4 +1,3 @@
-import { PopoverTrigger } from "@radix-ui/react-popover";
 import { useNavigate } from "@remix-run/react";
 import {
 	add,
@@ -20,10 +19,8 @@ import {
 	toDate,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ChevronLeftIcon, ChevronRightIcon, Plus } from "lucide-react";
-import { useState } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useCurrentDate } from "~/lib/useCurrentDate";
-import ActionDialog from "../dialogs/action-dialog";
 import { Button } from "../ui/button";
 import {
 	DropdownMenu,
@@ -32,14 +29,12 @@ import {
 	DropdownMenuRadioItem,
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Popover, PopoverContent } from "../ui/popover";
-import CalendarDay from "./calendar-day";
 import { ScrollArea } from "../ui/scroll-area";
+import CalendarDay from "./calendar-day";
 
 type CalendarType = { actions: Action[] };
 
 export default function Calendar({ actions }: CalendarType) {
-	const [open, setOpen] = useState(false);
 	const currentDate = useCurrentDate();
 	const navigate = useNavigate();
 
@@ -203,32 +198,13 @@ export default function Calendar({ actions }: CalendarType) {
 			</div>
 			<ScrollArea className="h-full flex">
 				<div
-					className={`sm:grid grid-cols-7 h-full grow shrink-0 sm:overflow-hidden ${
-						calendar.length === 35 ? "grid-rows-5" : "grid-rows-6"
-					}`}
+					className={`sm:grid grid-cols-7 h-full grow shrink-0 sm:overflow-hidden`}
 				>
 					{calendar.map((day: DayType, i: number) => (
 						<CalendarDay day={day} key={i} />
 					))}
 				</div>
 			</ScrollArea>
-			<div className="fixed bottom-6 right-4">
-				<Popover open={open} onOpenChange={setOpen}>
-					<PopoverTrigger asChild>
-						<Button size={"icon"} className="rounded-full">
-							<Plus />
-						</Button>
-					</PopoverTrigger>
-					<PopoverContent
-						className="w-[86vw] sm:w-[540px] bg-content"
-						align="end"
-						sideOffset={16}
-						alignOffset={0}
-					>
-						<ActionDialog closeDialog={() => setOpen(false)} />
-					</PopoverContent>
-				</Popover>
-			</div>
 		</div>
 	);
 }

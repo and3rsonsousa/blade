@@ -3,7 +3,7 @@ import { PlusIcon, Star } from "lucide-react";
 import { useState } from "react";
 import { useCurrentDate } from "~/lib/useCurrentDate";
 import { cn } from "~/lib/utils";
-import { ActionLineCalendar, type ActionFull } from "../action";
+import { ActionLineCalendar, type ActionFull } from "../atoms/action";
 import ActionDialog from "../dialogs/action-dialog";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";

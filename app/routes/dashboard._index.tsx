@@ -2,7 +2,7 @@ import { type LoaderArgs, type V2_MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import supabaseServer from "~/lib/supabase.server";
-import Calendar from "~/components/calendar/calendar";
+import Calendar from "~/components/calendar/calendar-view";
 
 export const meta: V2_MetaFunction = () => [
 	{

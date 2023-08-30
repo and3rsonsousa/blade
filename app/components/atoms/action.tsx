@@ -11,7 +11,7 @@ import {
 	ContextMenuSubContent,
 	ContextMenuSubTrigger,
 	ContextMenuTrigger,
-} from "./ui/context-menu";
+} from "../ui/context-menu";
 import { removeTags } from "~/lib/utils";
 import { motion } from "framer-motion";
 
@@ -103,13 +103,15 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 					</MenuItem>
 					<MenuItem
 						onSelect={async () => {
-							await fetcher.submit(
-								{ action: "delete-action", id: action.id },
-								{
-									method: "post",
-									action: "/handle-action",
-								}
-							);
+							if (confirm("Deseja deletar essa ação?")) {
+								await fetcher.submit(
+									{ action: "delete-action", id: action.id },
+									{
+										method: "post",
+										action: "/handle-action",
+									}
+								);
+							}
 						}}
 					>
 						<div>Deletar</div>

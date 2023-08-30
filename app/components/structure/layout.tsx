@@ -5,8 +5,14 @@ import {
 	useOutletContext,
 	useParams,
 } from "@remix-run/react";
-import { ChevronsLeft, ChevronsRight, MenuIcon, UserIcon } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import {
+	ChevronsLeft,
+	ChevronsRight,
+	MenuIcon,
+	PlusIcon,
+	UserIcon,
+} from "lucide-react";
+import { useState, type ReactNode, useEffect } from "react";
 import { Button } from "../ui/button";
 import {
 	DropdownMenu,
@@ -17,6 +23,8 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import Blade from "./blade";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import ActionDialog from "../dialogs/action-dialog";
 
 export default function Layout({ children }: { children: ReactNode }) {
 	const { user }: { user: Person } = useOutletContext();
@@ -24,9 +32,22 @@ export default function Layout({ children }: { children: ReactNode }) {
 	const params = useParams();
 	const navigate = useNavigate();
 	const [open, setOpen] = useState(true);
+	const [openActionDialog, setOpenActionDialog] = useState(false);
 
 	const slug = params["slug"];
 	const { clients }: { clients: Client[] } = matches[1].data;
+
+	useEffect(() => {
+		const keyDown = (event: KeyboardEvent) => {
+			if (event.metaKey && event.shiftKey) {
+				if (event.key === "a") setOpenActionDialog(true);
+				if (event.key === "b") setOpen((value) => !value);
+			}
+		};
+		window.addEventListener("keydown", keyDown);
+
+		return () => window.removeEventListener("keydown", keyDown);
+	}, []);
 
 	return (
 		<div className="h-screen w-screen flex flex-col md:flex-row">
@@ -222,6 +243,29 @@ export default function Layout({ children }: { children: ReactNode }) {
 			</div>
 
 			{children}
+
+			<div className="fixed bottom-6 right-4">
+				<Popover
+					open={openActionDialog}
+					onOpenChange={setOpenActionDialog}
+				>
+					<PopoverTrigger asChild>
+						<Button size={"icon"} className="rounded-full">
+							<PlusIcon />
+						</Button>
+					</PopoverTrigger>
+					<PopoverContent
+						className="w-[86vw] sm:w-[540px] bg-content"
+						align="end"
+						sideOffset={16}
+						alignOffset={0}
+					>
+						<ActionDialog
+							closeDialog={() => setOpenActionDialog(false)}
+						/>
+					</PopoverContent>
+				</Popover>
+			</div>
 		</div>
 	);
 }

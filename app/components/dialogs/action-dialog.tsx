@@ -1,30 +1,20 @@
 import { useFetcher, useMatches } from "@remix-run/react";
 
-import { format, formatDistance, formatISO } from "date-fns";
+import { format, formatISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import {
-	CalendarIcon,
-	Check,
-	CheckCircle2Icon,
-	ChevronsUpDownIcon,
-	ClockIcon,
-	FrownIcon,
-	Loader2Icon,
-} from "lucide-react";
-import { forwardRef, useEffect, useRef, useState, type ReactNode } from "react";
+import { CalendarIcon, Check, Loader2Icon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { CategoryIcons } from "~/lib/icons";
 import { cn, removeTags } from "~/lib/utils";
-import Editor from "../editor";
+import UpdatedTimeClock from "../atoms/update-time-clock";
+
+import CmdEnter from "../atoms/cmdenter";
+import Editor from "../atoms/editor";
+import FancyInputText from "../atoms/fancy-input";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-} from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import FancySelectInput from "~/components/atoms/fancy-select";
 
 type InternalAction = {
 	title?: string;
@@ -188,10 +178,10 @@ export default function ActionDialog({
 			</div>
 			{/* Botões */}
 			<div>
-				<div className="mt-4 sm:grid grid-cols-5 justify-between border-t py-4 px-2 sm:px-6 gap-4 overflow-hidden">
+				<div className="mt-4 sm:grid grid-cols-5 justify-between border-t border-foreground/10 py-4 px-2 sm:px-6 gap-4 overflow-hidden">
 					{/* Categoria e Cliente */}
 					<div className="flex gap-1 justify-between w-full sm:justify-start col-span-3">
-						<SelectInput
+						<FancySelectInput
 							items={clients}
 							placeholder="Cliente"
 							onChange={(value) => {
@@ -205,7 +195,7 @@ export default function ActionDialog({
 							ref={clientInput}
 						/>
 
-						<SelectInput
+						<FancySelectInput
 							items={categories}
 							placeholder="Categoria"
 							selectedValue={
@@ -229,7 +219,7 @@ export default function ActionDialog({
 							}
 						/>
 
-						<SelectInput
+						<FancySelectInput
 							items={states}
 							placeholder="Status"
 							selectedValue={
@@ -323,194 +313,6 @@ export default function ActionDialog({
 	);
 }
 
-const FancyInputText = forwardRef<
-	HTMLDivElement,
-	{
-		placeholder?: string;
-		className?: string;
-		max?: number;
-		onBlur?: (value?: string) => void;
-		onKeyDown?: (value?: string) => void;
-		onInput?: (value?: string) => void;
-		value?: string;
-	}
->(
-	(
-		{ placeholder, value, className, max = 70, onBlur, onKeyDown, onInput },
-		ref
-	) => {
-		const [visible, setVisible] = useState(!value);
-		const [text, setText] = useState(value || "");
-		const init = value;
-		const onPaste = async (event: ClipboardEvent) => {
-			const data = await navigator.clipboard.readText();
-			navigator.clipboard.writeText(data);
-		};
-
-		useEffect(() => {
-			window.addEventListener("paste", onPaste);
-		}, []);
-
-		return (
-			<div className="relative">
-				<div
-					className={cn([
-						"bg-transparent outline-none w-full",
-						className,
-					])}
-					ref={ref}
-					contentEditable="true"
-					onInput={(event) => {
-						setVisible(event.currentTarget.innerText === "");
-						setText(event.currentTarget.innerHTML);
-						if (onInput) {
-							onInput(event.currentTarget.innerHTML);
-						}
-					}}
-					tabIndex={0}
-					onBlur={(event) => {
-						if (onBlur) {
-							onBlur(event.currentTarget.innerHTML);
-						}
-					}}
-					onKeyDown={(event) => {
-						if (onKeyDown) {
-							onKeyDown(event.currentTarget.innerHTML);
-						}
-						if (event.key === "Enter") {
-							event.preventDefault();
-							event.currentTarget.blur();
-						} else if (
-							event.currentTarget.innerText.length >= max &&
-							event.key !== "Backspace"
-						) {
-							event.preventDefault();
-						}
-					}}
-					dangerouslySetInnerHTML={{ __html: init as string }}
-				></div>
-				{text.length > max - 30 && (
-					<div
-						className={`${
-							text.length > max - 10
-								? "text-rose-700"
-								: text.length > max - 30
-								? "text-yellow-600"
-								: ""
-						} text-[10px] absolute -bottom-4 right-0`}
-					>
-						{text.length - max}
-					</div>
-				)}
-				{visible && (
-					<div
-						className={cn([
-							"absolute pointer-events-none top-1/2 -translate-y-1/2 text-slate-500/50",
-							className,
-						])}
-					>
-						{placeholder}
-					</div>
-				)}
-			</div>
-		);
-	}
-);
-
-const SelectInput = forwardRef<
-	HTMLButtonElement,
-	{
-		placeholder?: string;
-		items: GenericItem[];
-		selectedValue?: string;
-		itemContent?: (item: GenericItem) => ReactNode;
-		onChange?: (value?: string) => void;
-	}
->(({ placeholder, items, selectedValue, itemContent, onChange }, ref) => {
-	const list = items.map((item) => ({
-		id: item.id,
-		value: item.title
-			.toLowerCase()
-			.normalize("NFD")
-			.replace(/[\u0300-\u036f]/g, ""),
-		label: item.title,
-	}));
-	const [selected, setSelected] = useState(
-		selectedValue
-			? list.filter((item) => item.id.toString() === selectedValue)[0]
-					.value
-			: ""
-	);
-	const [open, setOpen] = useState(false);
-	console.log({ list });
-
-	return (
-		<Popover open={open} onOpenChange={setOpen}>
-			<PopoverTrigger asChild>
-				<Button
-					variant={"ghost"}
-					size={"sm"}
-					className="overflow-hidden"
-				>
-					<div className="w-full text-xs text-ellipsis overflow-hidden whitespace-nowrap">
-						{selected
-							? list.find((item) => item.value === selected)
-									?.label
-							: placeholder}
-					</div>
-
-					<ChevronsUpDownIcon size={16} className="ml-2" />
-				</Button>
-			</PopoverTrigger>
-			<PopoverContent className="bg-content">
-				<Command className="bg-transparent">
-					<CommandInput
-						placeholder="Digite a sua opção"
-						className="bg-transparent"
-					/>
-
-					<CommandEmpty className="text-left flex justify-center gap-2 items-center">
-						<div>
-							<FrownIcon size={24} />
-						</div>
-						<div>Nenhuma opção foi encontrada</div>
-					</CommandEmpty>
-					<CommandGroup className="p-0">
-						{list.map((item) => (
-							<CommandItem
-								className="bg-transparent rounded-none aria-selected:bg-foreground/20"
-								key={item.value}
-								onSelect={(value) => {
-									if (value !== selected) {
-										setSelected(value);
-										if (onChange)
-											onChange(item.id.toString());
-									}
-									setOpen(false);
-								}}
-								value={item.value}
-							>
-								<CheckCircle2Icon
-									className={cn(
-										"mr-2 h-4 w-4",
-										selected === item.value
-											? "opacity-100"
-											: "opacity-0"
-									)}
-								/>
-								{item.label}
-							</CommandItem>
-						))}
-					</CommandGroup>
-				</Command>
-			</PopoverContent>
-		</Popover>
-	);
-});
-
-FancyInputText.displayName = "FancyInputText";
-SelectInput.displayName = "SelectInput";
-
 function isValidAction(action: InternalAction) {
 	let valid = true;
 	if (!action.title) valid = false;
@@ -521,48 +323,3 @@ function isValidAction(action: InternalAction) {
 
 	return valid;
 }
-
-function UpdatedTimeClock({ time }: { time: Date }) {
-	const [text, setText] = useState(
-		formatDistance(new Date(time), new Date(), {
-			locale: ptBR,
-			addSuffix: true,
-			includeSeconds: true,
-		})
-	);
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setText(() =>
-				formatDistance(new Date(time), new Date(), {
-					locale: ptBR,
-					addSuffix: true,
-					includeSeconds: true,
-				})
-			);
-		}, 1000);
-
-		return () => clearInterval(interval);
-	}, [time]);
-	return (
-		<div className="text-muted-foreground text-xs items-center flex">
-			<ClockIcon className="mr-2" size={12} />
-
-			<div>Atualizado {text}</div>
-		</div>
-	);
-}
-
-const CmdEnter = function ({ fn }: { fn: () => void }) {
-	useEffect(() => {
-		console.clear();
-
-		const listener = (event: KeyboardEvent) => {
-			if (event.metaKey && event.key === "Enter") {
-				fn();
-			}
-		};
-		window.addEventListener("keydown", listener);
-		return () => window.removeEventListener("keydown", listener);
-	}, []);
-	return <></>;
-};
