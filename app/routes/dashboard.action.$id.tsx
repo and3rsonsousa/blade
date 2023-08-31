@@ -6,6 +6,7 @@ import {
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import ActionDialog from "~/components/dialogs/action-dialog";
+import LayoutClient from "~/components/structure/layout-client";
 import supabaseServer from "~/lib/supabase.server";
 
 export const loader: LoaderFunction = async ({
@@ -16,7 +17,7 @@ export const loader: LoaderFunction = async ({
 	const supabase = supabaseServer({ request, response });
 	const { data: action } = await supabase
 		.from("actions")
-		.select("*")
+		.select("*, clients(*)")
 		.eq("id", params.id)
 		.single();
 
@@ -31,9 +32,12 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data: { action } }) => [
 
 export default function ActionPage() {
 	const { action } = useLoaderData<typeof loader>();
+
 	return (
-		<div className="w-full mx-auto max-w-2xl grow shrink-0 ">
-			<ActionDialog mode="page" action={action} />
-		</div>
+		<LayoutClient client={action.clients}>
+			<div className="w-full mx-auto max-w-2xl grow shrink-0 ">
+				<ActionDialog mode="page" action={action} />
+			</div>
+		</LayoutClient>
 	);
 }

@@ -1,6 +1,16 @@
 import { type ContextMenuItemProps } from "@radix-ui/react-context-menu";
 import { useFetcher, useMatches, useNavigate } from "@remix-run/react";
-import { ClockIcon, CopyIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { add, formatISO } from "date-fns";
+import { motion } from "framer-motion";
+import {
+	ClockIcon,
+	CopyIcon,
+	Loader2Icon,
+	PencilIcon,
+	TrashIcon,
+} from "lucide-react";
+import { CategoryIcons } from "~/lib/icons";
+import { removeTags } from "~/lib/utils";
 import {
 	ContextMenu,
 	ContextMenuContent,
@@ -12,9 +22,6 @@ import {
 	ContextMenuSubTrigger,
 	ContextMenuTrigger,
 } from "../ui/context-menu";
-import { removeTags } from "~/lib/utils";
-import { motion } from "framer-motion";
-import { CategoryIcons } from "~/lib/icons";
 
 export type ActionFull = Action & {
 	clients: Client;
@@ -48,13 +55,14 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 			animate={{ opacity: 1, scale: 1 }}
 			exit={{ opacity: 0, scale: 0.8 }}
 			transition={{ duration: 0.4 }}
+			className="relative"
 		>
 			<ContextMenu>
 				<ContextMenuTrigger>
 					<div
 						className={`mb-1 px-2 border-l-4 border-${
 							action.states.slug
-						}  py-1 text-xs hover:bg-muted bg-accent transition cursor-pointer text-muted-foreground w-full border-foreground/5 hover:text-foreground rounded flex gap-1 ${
+						}  py-1 text-xs hover:bg-muted relative bg-accent transition cursor-pointer text-muted-foreground w-full border-foreground/5 hover:text-foreground rounded flex gap-1 ${
 							busy && "opacity-50"
 						}`}
 						onClick={() => {
@@ -64,17 +72,41 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 						<div className="text-ellipsis w-full shrink overflow-hidden whitespace-nowrap">
 							{removeTags(action.title)}
 						</div>
-						<div className="uppercase text-[8px] opacity-75">
-							{action.clients.short}
+						<div className="uppercase text-[8px] opacity-75 w-5">
+							{action.clients.short.length > 3 ? (
+								<div className="leading-[8px] text-center">
+									{action.clients.short.substring(0, 2)}
+									<br />
+									{action.clients.short.substring(2)}
+								</div>
+							) : (
+								action.clients.short
+							)}
 						</div>
 					</div>
 				</ContextMenuTrigger>
 				<ContextMenuContent className="bg-content mx-2">
 					{action.states.slug !== "finished" && (
 						<>
-							<MenuItem>
-								<div>Concluído</div>
-								<div className="w-2 h-2 rounded-full bg-finished"></div>
+							<MenuItem
+								onSelect={async () => {
+									await fetcher.submit(
+										{
+											action: "update-action",
+											id: action.id,
+											state_id: 6,
+										},
+										{
+											method: "POST",
+											action: "/handle-action",
+										}
+									);
+								}}
+							>
+								<div className="flex items-center gap-2">
+									<div className="w-2 h-2 border-2 rounded-full border-finished"></div>
+									<div>Concluído</div>
+								</div>
 							</MenuItem>
 							<ContextMenuSeparator />
 						</>
@@ -84,8 +116,10 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 							navigate(`/dashboard/action/${action.id}`);
 						}}
 					>
-						<div>Editar</div>
-						<PencilIcon size={12} />
+						<div className="flex items-center gap-2">
+							<PencilIcon size={12} />
+							<div>Editar</div>
+						</div>
 					</MenuItem>
 					<MenuItem
 						onSelect={() => {
@@ -95,13 +129,88 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 							);
 						}}
 					>
-						<div>Duplicar</div>
-						<CopyIcon size={12} />
+						<div className="flex items-center gap-2">
+							<CopyIcon size={12} />
+							<div>Duplicar</div>
+						</div>
 					</MenuItem>
-					<MenuItem onSelect={() => {}}>
-						<div>Adiar</div>
-						<ClockIcon size={12} />
-					</MenuItem>
+					<ContextMenuSub>
+						<ContextMenuSubTrigger className="menu-item">
+							<div className="flex gap-2 items-center">
+								<ClockIcon size={12} />
+								<div>Adiar</div>
+							</div>
+						</ContextMenuSubTrigger>
+						<ContextMenuPortal>
+							<ContextMenuSubContent className="bg-content">
+								{[
+									{
+										title: "1 Hora",
+										id: 1,
+										values: { hours: 1 },
+									},
+									{
+										title: "3 Horas",
+										id: 2,
+										values: { hours: 3 },
+									},
+									{
+										title: "1 Dia",
+										id: 3,
+										values: { days: 1 },
+									},
+									{
+										title: "3 Dias",
+										id: 4,
+										values: { days: 3 },
+									},
+									{
+										title: "5 Dias",
+										id: 5,
+										values: { days: 5 },
+									},
+									{
+										title: "1 Semana",
+										id: 6,
+										values: { weeks: 1 },
+									},
+									{
+										title: "1 Mês",
+										id: 7,
+										values: { months: 1 },
+									},
+								].map((period) => (
+									<ContextMenuItem
+										key={period.id}
+										className="menu-item"
+										onSelect={async () => {
+											await fetcher.submit(
+												{
+													action: "update-action",
+													id: action.id,
+													date: formatISO(
+														add(
+															new Date(
+																action.date
+															),
+															period.values
+														)
+													),
+												},
+												{
+													action: "/handle-action",
+													method: "POST",
+												}
+											);
+										}}
+									>
+										{period.title}
+									</ContextMenuItem>
+								))}
+							</ContextMenuSubContent>
+						</ContextMenuPortal>
+					</ContextMenuSub>
+
 					<MenuItem
 						onSelect={async () => {
 							if (confirm("Deseja deletar essa ação?")) {
@@ -115,13 +224,21 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 							}
 						}}
 					>
-						<div>Deletar</div>
-						<TrashIcon size={12} />
+						<div className="flex items-center gap-2">
+							<TrashIcon size={12} />
+							<div>Deletar</div>
+						</div>
 					</MenuItem>
 					<ContextMenuSeparator />
 					<ContextMenuSub>
 						<ContextMenuSubTrigger className="menu-item">
-							{action.categories.title}
+							<div className="flex items-center gap-2">
+								<CategoryIcons
+									id={action.categories.slug}
+									className="w-3 h-3"
+								/>
+								{action.categories.title}
+							</div>
 						</ContextMenuSubTrigger>
 						<ContextMenuPortal>
 							<ContextMenuSubContent className="bg-content">
@@ -150,7 +267,12 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 					</ContextMenuSub>
 					<ContextMenuSub>
 						<ContextMenuSubTrigger className="menu-item">
-							{action.states.title}
+							<div className="flex items-center gap-2">
+								<div
+									className={`h-2 w-2 border-2 rounded-full border-${action.states.slug}`}
+								></div>
+								{action.states.title}
+							</div>
 						</ContextMenuSubTrigger>
 						<ContextMenuPortal>
 							<ContextMenuSubContent className="bg-content">
@@ -176,9 +298,16 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 							</ContextMenuSubContent>
 						</ContextMenuPortal>
 					</ContextMenuSub>
-					<ContextMenuSeparator />
 				</ContextMenuContent>
 			</ContextMenu>
+			{busy && (
+				<div className="absolute inset-0 grid place-content-center">
+					<Loader2Icon
+						size={12}
+						className="text-primary animate-spin"
+					/>
+				</div>
+			)}
 		</motion.div>
 	);
 }
