@@ -217,6 +217,7 @@ export default function ActionDialog({
 										<CategoryIcons
 											id={item.slug}
 											className="w-4 h-4  mr-1"
+											key={item.id}
 										/>
 									)
 								);
@@ -262,6 +263,7 @@ export default function ActionDialog({
 									item && (
 										<div
 											className={`border-${item.slug} border-[3px] h-3 w-3 rounded-full mr-1`}
+											key={item.id}
 										></div>
 									)
 								);

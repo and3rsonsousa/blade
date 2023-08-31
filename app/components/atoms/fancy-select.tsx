@@ -50,7 +50,7 @@ const FancySelectInput = forwardRef<
 							itemMenu(item)
 						) : (
 							<SelectItem
-								key={item.id}
+								key={`${item.id}-${Date.now()}`}
 								value={String(item.id)}
 								className="menu-item"
 							>

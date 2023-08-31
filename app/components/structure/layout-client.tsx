@@ -9,8 +9,6 @@ export default function LayoutClient({
 	client: Client;
 	children: ReactNode;
 }) {
-	console.log({ client });
-
 	return (
 		<div className="h-full w-full overflow-hidden flex flex-col">
 			<div className="px-4 py-3 gap-2 flex items-center border-b">
