@@ -37,9 +37,7 @@ export default function UpdatedTimeClock({ time }: { time: Date }) {
 
 			{/* <div>Atualizado {text}</div> */}
 			<div>{formatISO(time)}</div>
-			<div>
-				{formatInTimeZone(time, "America/Fortaleza", "Y-M-d H:m:s")}
-			</div>
+			<div>{formatISO(zonedTimeToUtc(time, "America/Fortaleza"))}</div>
 			<div>{formatISO(new Date())}</div>
 		</div>
 	);
