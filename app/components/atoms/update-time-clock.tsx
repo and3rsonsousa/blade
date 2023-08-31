@@ -1,5 +1,5 @@
-import { format, formatDistanceToNow, formatISO } from "date-fns";
-import { formatInTimeZone, zonedTimeToUtc } from "date-fns-tz";
+import { formatDistanceToNow, formatISO } from "date-fns";
+import { zonedTimeToUtc } from "date-fns-tz";
 import { ptBR } from "date-fns/locale";
 import { ClockIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -38,7 +38,7 @@ export default function UpdatedTimeClock({ time }: { time: Date }) {
 			{/* <div>Atualizado {text}</div> */}
 			<div>{formatISO(time)}</div>
 			<div>{formatISO(zonedTimeToUtc(time, "America/Fortaleza"))}</div>
-			<div>{formatISO(new Date())}</div>
+			<div>{formatISO(new Date())} </div>
 		</div>
 	);
 }

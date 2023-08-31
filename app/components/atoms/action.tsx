@@ -70,12 +70,13 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 						}}
 					>
 						<div
-							className="text-ellipsis w-full shrink overflow-hidden whitespace-nowrap select-none"
+							className="w-full shrink overflow-hidden text-ellipsis whitespace-nowrap select-none"
 							dangerouslySetInnerHTML={{
 								__html: removeTags(action.title),
 							}}
 						></div>
-						<div className="uppercase text-[8px] opacity-75 w-5">
+
+						<div className="uppercase w-5 text-[8px] opacity-75">
 							{action.clients.short.length > 3 ? (
 								<div className="leading-[8px] text-center">
 									{action.clients.short.substring(0, 2)}

@@ -39,7 +39,7 @@ export default function FancyDatetimePicker({
 						"justify-start px-2 text-xs text-left font-normal"
 					)}
 				>
-					<span className="sm:hidden">
+					<span className="sm:hidden whitespace-nowrap">
 						{_date
 							? format(
 									_date,
@@ -52,7 +52,7 @@ export default function FancyDatetimePicker({
 							  )
 							: ""}
 					</span>
-					<span className="max-sm:hidden">
+					<span className="max-sm:hidden whitespace-nowrap">
 						{_date
 							? format(
 									_date,

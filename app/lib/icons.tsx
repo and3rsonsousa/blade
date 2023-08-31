@@ -1,8 +1,8 @@
 import {
-	CheckCircleIcon,
 	CircleDashedIcon,
 	DollarSignIcon,
 	ImageIcon,
+	ListChecksIcon,
 	PlayIcon,
 	PrinterIcon,
 	UsersIcon,
@@ -15,7 +15,7 @@ const iconsList: { [key: string]: LucideIcon } = {
 	post: ImageIcon,
 	video: PlayIcon,
 	stories: CircleDashedIcon,
-	todo: CheckCircleIcon,
+	todo: ListChecksIcon,
 	finance: DollarSignIcon,
 	print: PrinterIcon,
 	meeting: UsersIcon,
