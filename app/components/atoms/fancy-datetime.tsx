@@ -41,14 +41,14 @@ export default function FancyDatetimePicker({
 				>
 					<span className="sm:hidden">
 						{_date
-							? format(_date, "d 'de' MMMM 'de' Y", {
+							? format(_date, "d 'de' MMMM 'de' Y 'às' H'h'm", {
 									locale: ptBR,
 							  })
 							: ""}
 					</span>
 					<span className="max-sm:hidden">
 						{_date
-							? format(_date, "d/MMM", {
+							? format(_date, "d/MMM 'às' H'h'm", {
 									locale: ptBR,
 							  })
 							: ""}
