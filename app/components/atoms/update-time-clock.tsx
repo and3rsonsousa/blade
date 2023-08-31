@@ -1,24 +1,31 @@
-import { formatDistance } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
+import { zonedTimeToUtc } from "date-fns-tz";
 import { ptBR } from "date-fns/locale";
 import { ClockIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function UpdatedTimeClock({ time }: { time: Date }) {
 	const [text, setText] = useState(
-		formatDistance(new Date(time), new Date(), {
-			locale: ptBR,
-			addSuffix: true,
-			includeSeconds: true,
-		})
+		formatDistanceToNow(
+			zonedTimeToUtc(new Date(time), "America/Fortaleza"),
+			{
+				locale: ptBR,
+				addSuffix: true,
+				includeSeconds: true,
+			}
+		)
 	);
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setText(() =>
-				formatDistance(new Date(time), new Date(), {
-					locale: ptBR,
-					addSuffix: true,
-					includeSeconds: true,
-				})
+				formatDistanceToNow(
+					zonedTimeToUtc(new Date(time), "America/Fortaleza"),
+					{
+						locale: ptBR,
+						addSuffix: true,
+						includeSeconds: true,
+					}
+				)
 			);
 		}, 1000);
 

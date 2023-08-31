@@ -41,16 +41,28 @@ export default function FancyDatetimePicker({
 				>
 					<span className="sm:hidden">
 						{_date
-							? format(_date, "d 'de' MMMM 'de' Y 'às' H'h'm", {
-									locale: ptBR,
-							  })
+							? format(
+									_date,
+									_date.getMinutes() === 0
+										? "d 'de' MMMM 'de' Y 'às' H'h'"
+										: "d 'de' MMMM 'de' Y 'às' H'h'm",
+									{
+										locale: ptBR,
+									}
+							  )
 							: ""}
 					</span>
 					<span className="max-sm:hidden">
 						{_date
-							? format(_date, "d/MMM 'às' H'h'm", {
-									locale: ptBR,
-							  })
+							? format(
+									_date,
+									_date.getMinutes() === 0
+										? "d/MMM 'às' H'h'"
+										: "d/MMM 'às' H'h'm",
+									{
+										locale: ptBR,
+									}
+							  )
 							: ""}
 					</span>
 				</Button>
