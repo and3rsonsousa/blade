@@ -1,8 +1,9 @@
 import { type SerializeFrom } from "@remix-run/node";
-import { useRouteLoaderData } from "@remix-run/react";
-import { type loader as rootLoader } from "~/root";
-import { type ClassValue, clsx } from "clsx";
+import { useMatches, useRouteLoaderData } from "@remix-run/react";
+import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { type ActionFull } from "~/components/atoms/action";
+import { type loader as rootLoader } from "~/root";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -34,4 +35,20 @@ export function removeTags(str: string) {
 	if (str === null || str === "") return "";
 	else str = str.toString();
 	return str.replace(/(<([^>]+)>)/gi, "");
+}
+
+export function useOrderedActions(actions: ActionFull[]) {
+	const newActions = actions.sort((a, b) => a.states.order - b.states.order);
+	return newActions;
+}
+
+export function useGroupedActions(actions: ActionFull[]) {
+	const { categories }: { categories: Category[] } = useMatches()[1].data;
+
+	const actionsByCategory = categories.map((category) => ({
+		category: category,
+		actions: actions.filter((action) => action.category_id === category.id),
+	}));
+
+	return actionsByCategory;
 }

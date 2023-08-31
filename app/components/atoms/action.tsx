@@ -14,6 +14,7 @@ import {
 } from "../ui/context-menu";
 import { removeTags } from "~/lib/utils";
 import { motion } from "framer-motion";
+import { CategoryIcons } from "~/lib/icons";
 
 export type ActionFull = Action & {
 	clients: Client;
@@ -135,7 +136,13 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 											});
 										}}
 									>
-										{category.title}
+										<div className="flex items-center gap-2">
+											<CategoryIcons
+												id={category.slug}
+												className="w-3 h-3"
+											/>
+											{category.title}
+										</div>
 									</MenuItem>
 								))}
 							</ContextMenuSubContent>
@@ -158,7 +165,12 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 											});
 										}}
 									>
-										{state.title}
+										<div className="flex items-center gap-2">
+											<div
+												className={`h-2 w-2 rounded-full border-2 border-${state.slug}`}
+											></div>
+											{state.title}
+										</div>
 									</MenuItem>
 								))}
 							</ContextMenuSubContent>

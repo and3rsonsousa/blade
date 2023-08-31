@@ -26,10 +26,7 @@ export async function loader({ request }: LoaderArgs) {
 				.from("clients")
 				.select("*")
 				.order("title", { ascending: true }),
-			supabase
-				.from("states")
-				.select("*")
-				.order("id", { ascending: true }),
+			supabase.from("states").select("*").order("order"),
 		]);
 
 	return json({ categories, clients, states });

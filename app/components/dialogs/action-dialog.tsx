@@ -50,8 +50,6 @@ export default function ActionDialog({
 				?.id.toString()
 		: undefined;
 
-	console.log({ client_id, slug });
-
 	//
 	const [internalAction, setAction] = useState<InternalAction>({
 		title: action ? action.title : "",

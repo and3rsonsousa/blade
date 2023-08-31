@@ -132,7 +132,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 				</div>
 				<div className="hidden grow shrink-0 md:flex flex-col justify-between">
 					<div
-						className={`flex flex-col gap-2 text-xs ${
+						className={`flex flex-col gap-1 text-xs ${
 							open ? "px-2" : "px-1"
 						} font-medium text-muted-foreground`}
 					>

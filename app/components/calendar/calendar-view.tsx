@@ -31,6 +31,8 @@ import {
 } from "../ui/dropdown-menu";
 import { ScrollArea } from "../ui/scroll-area";
 import CalendarDay from "./calendar-day";
+import { useGroupedActions, useOrderedActions } from "~/lib/utils";
+import { type ActionFull } from "../atoms/action";
 
 type CalendarType = { actions: Action[] };
 
@@ -43,10 +45,14 @@ export default function Calendar({ actions }: CalendarType) {
 	const days = eachDayOfInterval({ start, end });
 	const calendar: DaysType = [];
 
+	const orderedActions = useOrderedActions(actions as ActionFull[]);
+	const groupedActions = useGroupedActions(actions as ActionFull[]);
+	groupedActions.filter((i) => true);
+
 	days.forEach((day) => {
 		calendar.push({
 			date: day,
-			actions: actions?.filter((action) => {
+			actions: orderedActions?.filter((action) => {
 				const date = toDate(new Date(action.date));
 				if (format(date, "y-M-d") === format(day, "y-M-d")) {
 					return true;
@@ -110,58 +116,56 @@ export default function Calendar({ actions }: CalendarType) {
 					</DropdownMenu>
 
 					<div>de</div>
-					<div>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button variant={"ghost"} size={"sm"}>
-									<span className="first-letter:capitalize">
-										{format(currentDate, "Y")}
-									</span>
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent className="bg-content">
-								<DropdownMenuRadioGroup
-									value={currentDate.getFullYear().toString()}
-								>
-									{eachYearOfInterval({
-										start: sub(currentDate, { years: 1 }),
-										end: add(currentDate, { years: 1 }),
-									}).map((year) => (
-										<DropdownMenuRadioItem
-											value={year
-												.getFullYear()
-												.toString()}
-											key={year.getFullYear()}
-											className={`text-sm ${
-												isSameYear(currentDate, year)
-													? "bg-foreground/10"
-													: ""
-											}`}
-											onSelect={() => {
-												navigate(
-													`?date=${format(
-														setYear(
-															currentDate,
-															Number(
-																year.getFullYear()
-															)
-														),
-														"Y-M-d"
-													)}`
-												);
-											}}
-										>
-											<span className="first-letter:capitalize">
-												{format(year, "Y", {
-													locale: ptBR,
-												})}
-											</span>
-										</DropdownMenuRadioItem>
-									))}
-								</DropdownMenuRadioGroup>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
+
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant={"ghost"} size={"sm"}>
+								<span className="first-letter:capitalize">
+									{format(currentDate, "Y")}
+								</span>
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent className="bg-content">
+							<DropdownMenuRadioGroup
+								value={currentDate.getFullYear().toString()}
+							>
+								{eachYearOfInterval({
+									start: sub(currentDate, { years: 1 }),
+									end: add(currentDate, { years: 1 }),
+								}).map((year) => (
+									<DropdownMenuRadioItem
+										value={year.getFullYear().toString()}
+										key={year.getFullYear()}
+										className={`text-sm ${
+											isSameYear(currentDate, year)
+												? "bg-foreground/10"
+												: ""
+										}`}
+										onSelect={() => {
+											navigate(
+												`?date=${format(
+													setYear(
+														currentDate,
+														Number(
+															year.getFullYear()
+														)
+													),
+													"Y-M-d"
+												)}`
+											);
+										}}
+									>
+										<span className="first-letter:capitalize">
+											{format(year, "Y", {
+												locale: ptBR,
+											})}
+										</span>
+									</DropdownMenuRadioItem>
+								))}
+							</DropdownMenuRadioGroup>
+						</DropdownMenuContent>
+					</DropdownMenu>
+
 					<div>
 						<Button
 							variant={"ghost"}
@@ -176,7 +180,7 @@ export default function Calendar({ actions }: CalendarType) {
 								);
 							}}
 						>
-							<ChevronLeftIcon size={24} />
+							<ChevronLeftIcon size={16} />
 						</Button>
 						<Button
 							variant={"ghost"}
@@ -191,10 +195,20 @@ export default function Calendar({ actions }: CalendarType) {
 								);
 							}}
 						>
-							<ChevronRightIcon size={24} />
+							<ChevronRightIcon size={16} />
 						</Button>
 					</div>
 				</div>
+			</div>
+			<div className="grid grid-cols-7 text-xs border-b font-bold uppercase tracking-wider">
+				{eachDayOfInterval({
+					start: startOfWeek(currentDate),
+					end: endOfWeek(currentDate),
+				}).map((day) => (
+					<div key={day.getDate()} className="p-1">
+						{format(day, "eeeeee", { locale: ptBR })}
+					</div>
+				))}
 			</div>
 			<ScrollArea className="h-full flex">
 				<div

@@ -18,16 +18,12 @@ export default function FancyDatetimePicker({
 	const hourRef = useRef<HTMLInputElement>(null);
 	const minuteRef = useRef<HTMLInputElement>(null);
 	function updateDate(value?: Date) {
-		console.log(_date);
-
 		const tempDate = value || _date;
-		console.log(tempDate);
 
 		tempDate.setHours(
 			Number(hourRef.current?.value),
 			Number(minuteRef.current?.value)
 		);
-		console.log(tempDate);
 
 		onSelect(tempDate);
 		setDate(tempDate);
