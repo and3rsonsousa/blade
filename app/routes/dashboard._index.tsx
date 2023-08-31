@@ -19,7 +19,8 @@ export async function loader({ request }: LoaderArgs) {
 	const [{ data: actions }] = await Promise.all([
 		supabase
 			.from("actions")
-			.select("*,clients(*), categories(*), states(*)"),
+			.select("*,clients(*), categories(*), states(*)")
+			.order("date", { ascending: true }),
 	]);
 
 	return { actions };

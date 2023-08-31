@@ -18,7 +18,8 @@ export async function loader({ request, params }: LoaderArgs) {
 		const { data: actions } = await supabase
 			.from("actions")
 			.select("*, clients(*), categories(*), states(*)")
-			.eq("client_id", client!.id);
+			.eq("client_id", client!.id)
+			.order("date", { ascending: true });
 
 		return { client, actions };
 	}
