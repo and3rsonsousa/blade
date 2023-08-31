@@ -69,7 +69,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 							navigate(`/dashboard/action/${action.id}`);
 						}}
 					>
-						<div className="text-ellipsis w-full shrink overflow-hidden whitespace-nowrap">
+						<div className="text-ellipsis w-full shrink overflow-hidden whitespace-nowrap select-none">
 							{removeTags(action.title)}
 						</div>
 						<div className="uppercase text-[8px] opacity-75 w-5">
