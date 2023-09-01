@@ -35,7 +35,7 @@ export default function ActionPage() {
 
 	return (
 		<LayoutClient client={action.clients}>
-			<div className="w-full mx-auto max-w-2xl grow shrink-0 ">
+			<div className="w-full mx-auto max-w-2xl grow overflow-hidden h-full">
 				<ActionDialog mode="page" action={action} />
 			</div>
 		</LayoutClient>

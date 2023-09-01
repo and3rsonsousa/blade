@@ -32,16 +32,16 @@ export default function UpdatedTimeClock({ time }: { time: Date }) {
 		return () => clearInterval(interval);
 	}, [time]);
 	return (
-		<div className="text-muted-foreground text-xs items-center">
+		<div className="text-muted-foreground flex text-xs items-center">
 			<ClockIcon className="mr-2" size={12} />
-			{true ? (
-				<>
+			{false ? (
+				<div>
 					<div>{formatISO(time)}</div>
 					<div>
 						{formatISO(zonedTimeToUtc(time, "America/Fortaleza"))}
 					</div>
 					<div>{formatISO(new Date())} </div>
-				</>
+				</div>
 			) : (
 				<div>Atualizado {text}</div>
 			)}

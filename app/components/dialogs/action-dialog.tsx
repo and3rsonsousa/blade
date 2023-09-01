@@ -14,6 +14,7 @@ import FancyDatetimePicker from "../atoms/fancy-datetime";
 import FancyInputText from "../atoms/fancy-input";
 import { Button } from "../ui/button";
 import { SelectItem } from "../ui/select";
+import { ScrollArea } from "../ui/scroll-area";
 
 export type InternalAction = {
 	title?: string;
@@ -116,7 +117,11 @@ export default function ActionDialog({
 	}
 
 	return (
-		<div className={`${mode === "page" ? "h-full flex flex-col" : ""}`}>
+		<div
+			className={`${
+				mode === "page" ? "flex flex-col h-full overflow-hidden" : ""
+			}`}
+		>
 			<CmdEnter
 				fn={
 					isValidAction(internalAction)
@@ -129,7 +134,11 @@ export default function ActionDialog({
 				}
 			/>
 			<div
-				className={mode === "page" ? "grow shrink-0 flex flex-col" : ""}
+				className={
+					mode === "page"
+						? "flex flex-col overflow-hidden h-full"
+						: ""
+				}
 			>
 				{/* Título */}
 				<div className={`max-sm:p-4  p-8 pb-0 `}>
@@ -163,17 +172,19 @@ export default function ActionDialog({
 					/>
 				</div>
 				{/* Descrição */}
-				<div className="text-sm max-sm:px-4 shrink-0 grow px-8 sm:pt-4">
+				<div className="text-sm max-sm:px-4 grow px-8 sm:pt-4 overflow-hidden">
 					{action ? (
-						<Editor
-							content={action.description as string}
-							onBlur={(value) =>
-								setAction({
-									...internalAction,
-									description: value,
-								})
-							}
-						/>
+						<ScrollArea className="h-full">
+							<Editor
+								content={action.description as string}
+								onBlur={(value) =>
+									setAction({
+										...internalAction,
+										description: value,
+									})
+								}
+							/>
+						</ScrollArea>
 					) : (
 						<FancyInputText
 							placeholder="Descreva sua ação aqui..."
@@ -190,7 +201,7 @@ export default function ActionDialog({
 				</div>
 			</div>
 			{/* Botões */}
-			<div>
+			<div className="shrink-0">
 				<div className="mt-4 sm:grid grid-cols-5 justify-between border-t border-foreground/10 py-4 px-2 sm:px-6 gap-4 overflow-hidden">
 					{/* Categoria e Cliente */}
 					<div className="flex gap-1 justify-between w-full sm:justify-start col-span-3">
