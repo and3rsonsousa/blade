@@ -59,10 +59,20 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 		>
 			<ContextMenu>
 				<ContextMenuTrigger>
-					<div
+					{/* <div
 						className={`mb-1 px-2 border-l-4 border-${
 							action.states.slug
 						}  py-1 text-xs hover:bg-muted relative bg-accent transition cursor-pointer text-muted-foreground w-full border-foreground/5 hover:text-foreground rounded flex gap-1 ${
+							busy && "opacity-50"
+						}`}
+						onClick={() => {
+							navigate(`/dashboard/action/${action.id}`);
+						}}
+					> */}
+					<div
+						className={`bg-${
+							action.states.slug
+						}-action py-2 border-l-2 pl-2 text-[11px] leading-none  relative  transition cursor-pointer  w-full flex gap-1 ${
 							busy && "opacity-50"
 						}`}
 						onClick={() => {

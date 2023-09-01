@@ -154,6 +154,25 @@
 	@apply border-finished-600;
 }
 
+.bg-idea-action {
+	@apply text-slate-400 hover:border-idea-500 hover:bg-idea-900/50 border-idea-800 hover:text-idea-300;
+}
+.bg-do-action {
+	@apply text-slate-400 hover:border-do-500 hover:bg-do-900/50 border-do-800 hover:text-do-300;
+}
+.bg-doing-action {
+	@apply text-slate-400 hover:border-doing-500 hover:bg-doing-900/50 border-doing-800 hover:text-doing-300;
+}
+.bg-review-action {
+	@apply text-slate-400 hover:border-review-500 hover:bg-review-900/50 border-review-800 hover:text-review-300;
+}
+.bg-done-action {
+	@apply text-slate-400 hover:border-done-500 hover:bg-done-900/50 border-done-800 hover:text-done-300;
+}
+.bg-finished-action {
+	@apply text-slate-400 hover:border-finished-500 hover:bg-finished-900/50 border-finished-800 hover:text-finished-300;
+}
+
 .bg-content {
 	@apply bg-foreground/5 border rounded-lg border-foreground/10 backdrop-blur-xl px-0 py-2;
 }
