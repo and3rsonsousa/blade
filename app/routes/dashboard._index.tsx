@@ -20,7 +20,8 @@ export async function loader({ request }: LoaderArgs) {
 		supabase
 			.from("actions")
 			.select("*,clients(*), categories(*), states(*)")
-			.order("date", { ascending: true }),
+			.order("date", { ascending: true })
+			.order("created_at", { ascending: true }),
 	]);
 
 	return { actions };

@@ -1,4 +1,5 @@
 import { isSameMonth, isToday } from "date-fns";
+import { AnimatePresence } from "framer-motion";
 import { PlusIcon, Star } from "lucide-react";
 import { useState } from "react";
 import { useCurrentDate } from "~/lib/useCurrentDate";
@@ -7,7 +8,6 @@ import { ActionLineCalendar, type ActionFull } from "../atoms/action";
 import ActionDialog from "../dialogs/action-dialog";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { AnimatePresence } from "framer-motion";
 
 type CalendarDayType = { day: DayType; className?: string };
 

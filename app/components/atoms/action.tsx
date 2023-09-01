@@ -1,6 +1,6 @@
 import { type ContextMenuItemProps } from "@radix-ui/react-context-menu";
 import { useFetcher, useMatches, useNavigate } from "@remix-run/react";
-import { add, formatISO } from "date-fns";
+import { add, format, formatISO } from "date-fns";
 import { motion } from "framer-motion";
 import {
 	ClockIcon,
@@ -75,8 +75,11 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 								__html: removeTags(action.title),
 							}}
 						></div>
+						<div className="text-[10px] tracking-tighter">
+							{format(new Date(action.date), "H:m")}
+						</div>
 
-						<div className="uppercase w-5 text-[8px] opacity-75">
+						{/* <div className="uppercase w-5 text-[8px] opacity-75">
 							{action.clients.short.length > 3 ? (
 								<div className="leading-[8px] text-center">
 									{action.clients.short.substring(0, 2)}
@@ -86,7 +89,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 							) : (
 								action.clients.short
 							)}
-						</div>
+						</div> */}
 					</div>
 				</ContextMenuTrigger>
 				<ContextMenuContent className="bg-content mx-2">
