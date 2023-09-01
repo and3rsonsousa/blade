@@ -3,16 +3,29 @@ import { AnimatePresence } from "framer-motion";
 import { PlusIcon, Star } from "lucide-react";
 import { useState } from "react";
 import { useCurrentDate } from "~/lib/useCurrentDate";
-import { cn } from "~/lib/utils";
+import { cn, getGroupedActions } from "~/lib/utils";
 import { ActionLineCalendar, type ActionFull } from "../atoms/action";
 import ActionDialog from "../dialogs/action-dialog";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { useMatches } from "@remix-run/react";
 
-type CalendarDayType = { day: DayType; className?: string };
+type CalendarDayType = {
+	day: DayType;
+	className?: string;
+	isGrouped?: boolean;
+};
 
-export default function CalendarDay({ day, className }: CalendarDayType) {
+export default function CalendarDay({
+	day,
+	className,
+	isGrouped,
+}: CalendarDayType) {
 	const currentDate = useCurrentDate();
+	const matches = useMatches();
+
+	const { categories } = matches[1].data;
+
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -60,12 +73,36 @@ export default function CalendarDay({ day, className }: CalendarDayType) {
 					</div>
 				</div>
 				<AnimatePresence initial={false} mode="popLayout">
-					{day.actions.map((action) => (
-						<ActionLineCalendar
-							action={action as ActionFull}
-							key={action.id}
-						/>
-					))}
+					{isGrouped
+						? getGroupedActions(
+								day.actions as ActionFull[],
+								categories
+						  ).map(
+								({ category, actions }) =>
+									actions.length > 0 && (
+										<div key={category.id} className="mb-2">
+											<div
+												className={`text-[8px] uppercase font-bold tracking-wider mb-1`}
+											>
+												{category.title}
+											</div>
+											{actions.map((action) => (
+												<ActionLineCalendar
+													action={
+														action as ActionFull
+													}
+													key={action.id}
+												/>
+											))}
+										</div>
+									)
+						  )
+						: day.actions.map((action) => (
+								<ActionLineCalendar
+									action={action as ActionFull}
+									key={action.id}
+								/>
+						  ))}
 				</AnimatePresence>
 			</div>
 

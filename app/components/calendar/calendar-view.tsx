@@ -19,15 +19,17 @@ import {
 	toDate,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from "lucide-react";
+import {
+	AlignJustifyIcon,
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	FilterIcon,
+	ListTreeIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { CategoryIcons } from "~/lib/icons";
 import { useCurrentDate } from "~/lib/useCurrentDate";
-import {
-	getFilterdActions,
-	getGroupedActions,
-	getOrderedActions,
-} from "~/lib/utils";
+import { getFilterdActions, getOrderedActions } from "~/lib/utils";
 import { type ActionFull } from "../atoms/action";
 import { Button } from "../ui/button";
 import {
@@ -38,6 +40,7 @@ import {
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { ScrollArea } from "../ui/scroll-area";
+import { Toggle } from "../ui/toggle";
 import CalendarDay from "./calendar-day";
 
 type CalendarType = { actions: Action[] };
@@ -48,6 +51,7 @@ export default function Calendar({ actions }: CalendarType) {
 	const matches = useMatches();
 
 	const [filter, setFilter] = useState({ category: "all", state: "" });
+	const [isGrouped, setGrouped] = useState(true);
 
 	const { categories }: { categories: Category[] } = matches[1].data;
 
@@ -62,11 +66,6 @@ export default function Calendar({ actions }: CalendarType) {
 			: (actions as ActionFull[]);
 
 	const orderedActions = getOrderedActions(filteredActions);
-	const groupedActions = getGroupedActions(
-		actions as ActionFull[],
-		categories
-	);
-	groupedActions.filter((i) => true);
 
 	days.forEach((day) => {
 		calendar.push({
@@ -224,6 +223,19 @@ export default function Calendar({ actions }: CalendarType) {
 						</div>
 					</div>
 					<div className="flex items-center gap-2">
+						<Toggle
+							variant={"default"}
+							size={"sm"}
+							pressed={isGrouped}
+							onPressedChange={setGrouped}
+						>
+							{isGrouped ? (
+								<ListTreeIcon size={16} />
+							) : (
+								<AlignJustifyIcon size={16} />
+							)}
+						</Toggle>
+						{/* Filtro */}
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<Button
@@ -298,7 +310,7 @@ export default function Calendar({ actions }: CalendarType) {
 					className={`sm:grid grid-cols-7 h-full grow shrink-0 sm:overflow-hidden`}
 				>
 					{calendar.map((day: DayType, i: number) => (
-						<CalendarDay day={day} key={i} />
+						<CalendarDay day={day} key={i} isGrouped={isGrouped} />
 					))}
 				</div>
 			</ScrollArea>
