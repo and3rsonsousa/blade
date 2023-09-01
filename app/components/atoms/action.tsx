@@ -72,7 +72,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 					<div
 						className={`bg-${
 							action.states.slug
-						}-action py-2 border-l-2 pl-2 text-[11px] leading-none  relative  transition cursor-pointer  w-full flex gap-1 ${
+						}-action py-1.5 border-l-2 pl-2 text-[11px] leading-none  relative  transition cursor-pointer  w-full flex gap-1 ${
 							busy && "opacity-50"
 						}`}
 						onClick={() => {
