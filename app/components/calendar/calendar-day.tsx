@@ -66,7 +66,11 @@ export default function CalendarDay({
 							>
 								<ActionDialog
 									closeDialog={() => setOpen(false)}
-									date={day.date}
+									date={(() => {
+										let date = day.date;
+										date.setHours(11, 12);
+										return date;
+									})()}
 								/>
 							</PopoverContent>
 						</Popover>
