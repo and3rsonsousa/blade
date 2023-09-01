@@ -34,7 +34,7 @@ export default function UpdatedTimeClock({ time }: { time: Date }) {
 	return (
 		<div className="text-muted-foreground text-xs items-center">
 			<ClockIcon className="mr-2" size={12} />
-			{isDebbuging ? (
+			{true ? (
 				<>
 					<div>{formatISO(time)}</div>
 					<div>

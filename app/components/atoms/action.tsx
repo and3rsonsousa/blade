@@ -85,7 +85,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 								__html: removeTags(action.title),
 							}}
 						></div>
-						{isDebbuging ? (
+						{true ? (
 							<div className="text-[10px] tracking-tighter">
 								{format(new Date(action.date), "H:m")}
 							</div>
