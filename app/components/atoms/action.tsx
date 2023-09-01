@@ -22,6 +22,11 @@ import {
 	ContextMenuSubTrigger,
 	ContextMenuTrigger,
 } from "../ui/context-menu";
+import {
+	HoverCard,
+	HoverCardContent,
+	HoverCardTrigger,
+} from "../ui/hover-card";
 
 export type ActionFull = Action & {
 	clients: Client;
@@ -69,40 +74,75 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 							navigate(`/dashboard/action/${action.id}`);
 						}}
 					> */}
-					<div
-						className={`bg-${
-							action.states.slug
-						}-action py-1.5 border-l-2 pl-2 text-[11px] leading-none  relative  transition cursor-pointer  w-full flex gap-1 ${
-							busy && "opacity-50"
-						}`}
-						onClick={() => {
-							navigate(`/dashboard/action/${action.id}`);
-						}}
-					>
-						<div
-							className="w-full shrink overflow-hidden text-ellipsis whitespace-nowrap select-none"
-							dangerouslySetInnerHTML={{
-								__html: removeTags(action.title),
-							}}
-						></div>
-						{true ? (
-							<div className="text-[10px] tracking-tighter">
-								{format(new Date(action.date), "H:m")}
-							</div>
-						) : (
-							<div className="uppercase w-5 text-[8px] opacity-75">
-								{action.clients.short.length > 3 ? (
-									<div className="leading-[8px] text-center">
-										{action.clients.short.substring(0, 2)}
-										<br />
-										{action.clients.short.substring(2)}
+					<HoverCard>
+						<HoverCardTrigger>
+							<div
+								className={`bg-${
+									action.states.slug
+								}-action py-1.5 border-l-2 pl-2 text-[11px] leading-none  relative  transition cursor-pointer  w-full flex gap-1 ${
+									busy && "opacity-50"
+								}`}
+								onClick={() => {
+									navigate(`/dashboard/action/${action.id}`);
+								}}
+							>
+								<div
+									className="w-full shrink overflow-hidden text-ellipsis whitespace-nowrap select-none"
+									dangerouslySetInnerHTML={{
+										__html: removeTags(action.title),
+									}}
+								></div>
+								{true ? (
+									<div className="text-[10px] tracking-tighter">
+										{format(new Date(action.date), "H:m")}
 									</div>
 								) : (
-									action.clients.short
+									<div className="uppercase w-5 text-[8px] opacity-75">
+										{action.clients.short.length > 3 ? (
+											<div className="leading-[8px] text-center">
+												{action.clients.short.substring(
+													0,
+													2
+												)}
+												<br />
+												{action.clients.short.substring(
+													2
+												)}
+											</div>
+										) : (
+											action.clients.short
+										)}
+									</div>
 								)}
 							</div>
-						)}
-					</div>
+						</HoverCardTrigger>
+						<HoverCardContent className="bg-content">
+							<div className="px-4 text-xs space-y-1">
+								<div className="text-sm font-medium">
+									{action.title}
+								</div>
+
+								<div className="flex justify-between uppercase text-[10px] gap-2">
+									<div className="overflow-hidden text-ellipsis whitespace-nowrap">
+										{action.clients.title}
+									</div>
+									<div>{action.categories.title}</div>
+									<div className="whitespace-nowrap">
+										{format(
+											new Date(action.date),
+											"d/M 'às' H'h'".concat(
+												new Date(
+													action.date
+												).getMinutes() !== 0
+													? "m"
+													: ""
+											)
+										)}
+									</div>
+								</div>
+							</div>
+						</HoverCardContent>
+					</HoverCard>
 				</ContextMenuTrigger>
 				<ContextMenuContent className="bg-content mx-2">
 					{action.states.slug !== "finished" && (
@@ -319,6 +359,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 					</ContextMenuSub>
 				</ContextMenuContent>
 			</ContextMenu>
+
 			{busy && (
 				<div className="absolute inset-0 grid place-content-center">
 					<Loader2Icon
