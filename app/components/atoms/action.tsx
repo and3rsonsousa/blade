@@ -85,21 +85,23 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
 								__html: removeTags(action.title),
 							}}
 						></div>
-						<div className="text-[10px] tracking-tighter">
-							{format(new Date(action.date), "H:m")}
-						</div>
-
-						{/* <div className="uppercase w-5 text-[8px] opacity-75">
-							{action.clients.short.length > 3 ? (
-								<div className="leading-[8px] text-center">
-									{action.clients.short.substring(0, 2)}
-									<br />
-									{action.clients.short.substring(2)}
-								</div>
-							) : (
-								action.clients.short
-							)}
-						</div> */}
+						{isDebbuging ? (
+							<div className="text-[10px] tracking-tighter">
+								{format(new Date(action.date), "H:m")}
+							</div>
+						) : (
+							<div className="uppercase w-5 text-[8px] opacity-75">
+								{action.clients.short.length > 3 ? (
+									<div className="leading-[8px] text-center">
+										{action.clients.short.substring(0, 2)}
+										<br />
+										{action.clients.short.substring(2)}
+									</div>
+								) : (
+									action.clients.short
+								)}
+							</div>
+						)}
 					</div>
 				</ContextMenuTrigger>
 				<ContextMenuContent className="bg-content mx-2">

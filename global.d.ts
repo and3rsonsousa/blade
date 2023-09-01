@@ -14,4 +14,6 @@ declare global {
 		actions: Action[];
 	};
 	type DaysType = DayType[];
+
+	const isDebbuging = true;
 }
