@@ -1,43 +1,43 @@
 import {
-	type V2_MetaFunction,
-	type LoaderFunction,
-	type LoaderArgs,
-	json,
-} from "@remix-run/node";
+  type V2_MetaFunction,
+  type LoaderFunction,
+  type LoaderArgs,
+  json,
+} from "@vercel/remix";
 import { useLoaderData } from "@remix-run/react";
 import ActionDialog from "~/components/dialogs/action-dialog";
 import LayoutClient from "~/components/structure/layout-client";
 import supabaseServer from "~/lib/supabase.server";
 
 export const loader: LoaderFunction = async ({
-	request,
-	params,
+  request,
+  params,
 }: LoaderArgs) => {
-	const response = new Response();
-	const supabase = supabaseServer({ request, response });
-	const { data: action } = await supabase
-		.from("actions")
-		.select("*, clients(*)")
-		.eq("id", params.id)
-		.single();
+  const response = new Response();
+  const supabase = supabaseServer({ request, response });
+  const { data: action } = await supabase
+    .from("actions")
+    .select("*, clients(*)")
+    .eq("id", params.id)
+    .single();
 
-	return json({ action });
+  return json({ action });
 };
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data: { action } }) => [
-	{
-		title: `${action.title} /B`,
-	},
+  {
+    title: `${action.title} /B`,
+  },
 ];
 
 export default function ActionPage() {
-	const { action } = useLoaderData<typeof loader>();
+  const { action } = useLoaderData<typeof loader>();
 
-	return (
-		<LayoutClient client={action.clients}>
-			<div className="w-full mx-auto max-w-2xl grow overflow-hidden h-full">
-				<ActionDialog mode="page" action={action} />
-			</div>
-		</LayoutClient>
-	);
+  return (
+    <LayoutClient client={action.clients}>
+      <div className="mx-auto h-full w-full max-w-2xl grow overflow-hidden">
+        <ActionDialog mode="page" action={action} />
+      </div>
+    </LayoutClient>
+  );
 }

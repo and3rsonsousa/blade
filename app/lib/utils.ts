@@ -1,4 +1,4 @@
-import { type SerializeFrom } from "@remix-run/node";
+import { type SerializeFrom } from "@vercel/remix";
 import { useRouteLoaderData } from "@remix-run/react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";

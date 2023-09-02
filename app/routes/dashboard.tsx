@@ -1,5 +1,5 @@
 import { type LoaderArgs, redirect, json } from "@vercel/remix";
-// import { type LoaderArgs, redirect, json } from "@remix-run/node";
+// import { type LoaderArgs, redirect, json } from "@vercel/remix";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import Layout from "~/components/structure/layout";
 import supabaseServer from "~/lib/supabase.server";
