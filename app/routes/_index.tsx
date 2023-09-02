@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import { LogInIcon } from "lucide-react";
 import Blade from "~/components/structure/blade";
 import { Button } from "~/components/ui/button";
 
@@ -21,7 +22,10 @@ export default function Index() {
 				</div>
 				<div>
 					<Button variant={"default"} asChild>
-						<Link to="/dashboard">Entrar</Link>
+						<Link to="/dashboard">
+							Acessar{" "}
+							<LogInIcon size={24} className="ml-2 -mr-1" />
+						</Link>
 					</Button>
 				</div>
 			</div>

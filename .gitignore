@@ -11,3 +11,5 @@ node_modules
 /public/build
 /api/index.js
 /api/index.js.map
+
+server.ts

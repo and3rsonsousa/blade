@@ -1,3 +1,12 @@
 {
-	"remix-forge.componentFolder": "/app/components/ui"
+	"remix-forge.componentFolder": "/app/components/ui",
+	
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+
+
 }
