@@ -12,4 +12,4 @@ node_modules
 /api/index.js
 /api/index.js.map
 
-server.ts
+noserver.ts
