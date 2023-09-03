@@ -3,6 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 
 import supabaseServer from "~/lib/supabase.server";
 import Calendar from "~/components/calendar/calendar-view";
+import MenuPages from "~/components/atoms/menu-pages";
 
 export const meta: V2_MetaFunction = () => [
   {
@@ -31,8 +32,11 @@ export default function DashboardIndex() {
   const { actions } = useLoaderData<typeof loader>();
 
   return (
-    <>
+    <div className="flex h-full w-full flex-col overflow-hidden">
+      <div className="flex items-center justify-end border-b px-4 py-3">
+        <MenuPages />
+      </div>
       <Calendar actions={actions as Action[]} />
-    </>
+    </div>
   );
 }

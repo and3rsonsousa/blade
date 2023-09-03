@@ -17,6 +17,7 @@ export interface Database {
           date: string
           description: string | null
           id: string
+          priority_id: string
           state_id: number
           title: string
           updated_at: string
@@ -29,6 +30,7 @@ export interface Database {
           date?: string
           description?: string | null
           id?: string
+          priority_id: string
           state_id: number
           title: string
           updated_at?: string
@@ -41,6 +43,7 @@ export interface Database {
           date?: string
           description?: string | null
           id?: string
+          priority_id?: string
           state_id?: number
           title?: string
           updated_at?: string
@@ -57,6 +60,12 @@ export interface Database {
             foreignKeyName: "actions_client_id_fkey"
             columns: ["client_id"]
             referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_priority_id_fkey"
+            columns: ["priority_id"]
+            referencedRelation: "priority"
             referencedColumns: ["id"]
           },
           {
@@ -148,6 +157,27 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      priority: {
+        Row: {
+          created_at: string
+          id: string
+          slug: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          slug: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          slug?: string
+          title?: string
+        }
+        Relationships: []
       }
       states: {
         Row: {
