@@ -17,26 +17,30 @@ export async function loader({ request }: LoaderArgs) {
     request,
     response,
   });
-  const [{ data: actions }] = await Promise.all([
+  const [{ data: actions }, { data: celebrations }] = await Promise.all([
     supabase
       .from("actions")
       .select("*,clients(*), categories(*), states(*)")
       .order("date", { ascending: true })
       .order("created_at", { ascending: true }),
+    supabase.from("celebration").select("*").order("date", { ascending: true }),
   ]);
 
-  return { actions };
+  return { actions, celebrations };
 }
 
 export default function DashboardIndex() {
-  const { actions } = useLoaderData<typeof loader>();
+  const { actions, celebrations } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
       <div className="flex items-center justify-end border-b px-4 py-3">
         <MenuPages />
       </div>
-      <Calendar actions={actions as Action[]} />
+      <Calendar
+        actions={actions as Action[]}
+        celebrations={celebrations as Celebration[]}
+      />
     </div>
   );
 }

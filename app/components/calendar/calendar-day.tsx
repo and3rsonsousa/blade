@@ -1,122 +1,120 @@
-import { isSameMonth, isToday } from "date-fns";
+import { useMatches } from "@remix-run/react";
+import { format, isSameMonth, isToday, parseISO } from "date-fns";
 import { AnimatePresence } from "framer-motion";
-import { PlusIcon, Star } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useCurrentDate } from "~/lib/useCurrentDate";
 import { cn, getGroupedActions } from "~/lib/utils";
 import { ActionLineCalendar, type ActionFull } from "../atoms/action";
+import CelebrationLine from "../atoms/celebration";
 import ActionDialog from "../dialogs/action-dialog";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { useMatches } from "@remix-run/react";
 
 type CalendarDayType = {
-	day: DayType;
-	className?: string;
-	isGrouped?: boolean;
+  day: DayType;
+  className?: string;
+  isGrouped?: boolean;
 };
 
 export default function CalendarDay({
-	day,
-	className,
-	isGrouped,
+  day,
+  className,
+  isGrouped,
 }: CalendarDayType) {
-	const currentDate = useCurrentDate();
-	const matches = useMatches();
+  const currentDate = useCurrentDate();
+  const matches = useMatches();
 
-	const { categories } = matches[1].data;
+  const { categories } = matches[1].data;
+  const [open, setOpen] = useState(false);
 
-	const [open, setOpen] = useState(false);
+  console.log(
+    format(day.date, "Y-M-d"),
+    day.celebrations.length > 0
+      ? format(parseISO(day.celebrations[0].date), "Y-M-d")
+      : "",
+  );
 
-	return (
-		<div
-			className={cn([
-				`px-6 py-2 sm:p-1  sm:flex sm:flex-col relative justify-between group ${
-					day.actions.length === 0 ? "max-sm:hidden" : ""
-				}`,
-				className,
-			])}
-		>
-			<div className="flex flex-col relative ">
-				<div className="flex justify-between">
-					<div
-						className={`text-xs w-6 h-6 -translate-x-1 mb-2 grid place-content-center ${
-							isToday(day.date)
-								? "bg-primary rounded-full font-bold"
-								: !isSameMonth(currentDate, day.date)
-								? "opacity-25"
-								: ""
-						}`}
-					>
-						{day.date.getDate()}
-					</div>
-					<div className="group-hover:opacity-100 opacity-0">
-						<Popover open={open} onOpenChange={setOpen}>
-							<PopoverTrigger asChild>
-								<Button
-									className="p-1 h-6 w-6 rounded"
-									variant={"secondary"}
-								>
-									<PlusIcon size={12} />
-								</Button>
-							</PopoverTrigger>
-							<PopoverContent
-								className="w-[86vw] sm:w-[540px] bg-content m-2"
-								align="end"
-							>
-								<ActionDialog
-									closeDialog={() => setOpen(false)}
-									date={(() => {
-										let date = day.date;
-										date.setHours(11, 12);
-										return date;
-									})()}
-								/>
-							</PopoverContent>
-						</Popover>
-					</div>
-				</div>
-				<AnimatePresence initial={false} mode="popLayout">
-					{isGrouped
-						? getGroupedActions(
-								day.actions as ActionFull[],
-								categories
-						  ).map(
-								({ category, actions }) =>
-									actions.length > 0 && (
-										<div key={category.id} className="mb-2">
-											<div
-												className={`text-[8px] uppercase font-bold tracking-wider mb-1`}
-											>
-												{category.title}
-											</div>
-											{actions.map((action) => (
-												<ActionLineCalendar
-													action={
-														action as ActionFull
-													}
-													key={action.id}
-												/>
-											))}
-										</div>
-									)
-						  )
-						: day.actions.map((action) => (
-								<ActionLineCalendar
-									action={action as ActionFull}
-									key={action.id}
-								/>
-						  ))}
-				</AnimatePresence>
-			</div>
+  return (
+    <div
+      className={cn([
+        `group relative justify-between  px-6 py-2 sm:flex sm:flex-col sm:p-1 ${
+          day.actions.length === 0 ? "max-sm:hidden" : ""
+        }`,
+        className,
+      ])}
+    >
+      <div className="relative flex flex-col ">
+        <div className="flex justify-between">
+          <div
+            className={`mb-2 grid h-6 w-6 -translate-x-1 place-content-center text-xs ${
+              isToday(day.date)
+                ? "rounded-full bg-primary font-bold"
+                : !isSameMonth(currentDate, day.date)
+                ? "opacity-25"
+                : ""
+            }`}
+          >
+            {day.date.getDate()}
+          </div>
+          <div className="opacity-0 group-hover:opacity-100">
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button className="h-6 w-6 rounded p-1" variant={"secondary"}>
+                  <PlusIcon size={12} />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="bg-content m-2 w-[86vw] sm:w-[540px]"
+                align="end"
+              >
+                <ActionDialog
+                  closeDialog={() => setOpen(false)}
+                  date={(() => {
+                    let date = day.date;
+                    date.setHours(11, 12);
+                    return date;
+                  })()}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+        <AnimatePresence initial={false} mode="popLayout">
+          {isGrouped
+            ? getGroupedActions(day.actions as ActionFull[], categories).map(
+                ({ category, actions }) =>
+                  actions.length > 0 && (
+                    <div key={category.id} className="mb-2">
+                      <div
+                        className={`mb-1 text-[8px] font-bold uppercase tracking-wider`}
+                      >
+                        {category.title}
+                      </div>
+                      {actions.map((action) => (
+                        <ActionLineCalendar
+                          action={action as ActionFull}
+                          key={action.id}
+                        />
+                      ))}
+                    </div>
+                  ),
+              )
+            : day.actions.map((action) => (
+                <ActionLineCalendar
+                  action={action as ActionFull}
+                  key={action.id}
+                />
+              ))}
+        </AnimatePresence>
+      </div>
 
-			<div>
-				{false ? (
-					<div className="flex gap-1 shrink-0 grow-0 text-[10px] text-slate-600 items-center mt-2">
-						<Star size={12} /> <div>Feriado</div>
-					</div>
-				) : null}
-			</div>
-		</div>
-	);
+      <div>
+        {day.celebrations.length > 0 &&
+          day.celebrations.map((celebration) => (
+            <CelebrationLine celebration={celebration} key={celebration.id} />
+          ))}
+      </div>
+    </div>
+  );
 }

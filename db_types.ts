@@ -103,6 +103,30 @@ export interface Database {
         }
         Relationships: []
       }
+      celebration: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          is_holiday: boolean | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          is_holiday?: boolean | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          is_holiday?: boolean | null
+          title?: string
+        }
+        Relationships: []
+      }
       clients: {
         Row: {
           created_at: string

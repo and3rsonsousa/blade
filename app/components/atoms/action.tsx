@@ -1,6 +1,6 @@
 import { type ContextMenuItemProps } from "@radix-ui/react-context-menu";
 import { useFetcher, useMatches, useNavigate } from "@remix-run/react";
-import { add, format, formatISO } from "date-fns";
+import { add, format, formatISO, parseISO } from "date-fns";
 import { motion } from "framer-motion";
 import {
   ClockIcon,
@@ -94,7 +94,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
                 ></div>
                 {true ? (
                   <div className="text-[10px] tracking-tighter">
-                    {format(new Date(action.date), "H:m")}
+                    {format(parseISO(action.date), "H:m")}
                   </div>
                 ) : (
                   <div className="w-5 text-[8px] uppercase opacity-75">
@@ -122,9 +122,9 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
                   <div>{action.categories.title}</div>
                   <div className="whitespace-nowrap">
                     {format(
-                      new Date(action.date),
+                      parseISO(action.date),
                       "d/M 'às' H'h'".concat(
-                        new Date(action.date).getMinutes() !== 0 ? "m" : "",
+                        parseISO(action.date).getMinutes() !== 0 ? "m" : "",
                       ),
                     )}
                   </div>
@@ -237,7 +237,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
                           action: "update-action",
                           id: action.id,
                           date: formatISO(
-                            add(new Date(action.date), period.values),
+                            add(parseISO(action.date), period.values),
                           ),
                         },
                         {

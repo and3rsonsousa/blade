@@ -9,9 +9,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 export default function FancyDatetimePicker({
   date,
   onSelect,
+  time = true,
 }: {
   date: Date;
   onSelect: (value: Date) => void;
+  time?: boolean;
 }) {
   const [_date, setDate] = useState(date);
 
@@ -42,8 +44,8 @@ export default function FancyDatetimePicker({
               ? format(
                   _date,
                   _date.getMinutes() === 0
-                    ? "d 'de' MMMM 'de' Y 'às' H'h'"
-                    : "d 'de' MMMM 'de' Y 'às' H'h'm",
+                    ? "d 'de' MMMM 'de' Y".concat(time ? "'às' H'h'" : "")
+                    : "d 'de' MMMM 'de' Y".concat(time ? " 'às' H'h'm" : ""),
                   {
                     locale: ptBR,
                   },
@@ -55,8 +57,8 @@ export default function FancyDatetimePicker({
               ? format(
                   _date,
                   _date.getMinutes() === 0
-                    ? "d/MMM 'às' H'h'"
-                    : "d/MMM 'às' H'h'm",
+                    ? "d/MMM".concat(time ? " 'às' H'h'" : "")
+                    : "d/MMM".concat(time ? " 'às' H'h'm" : ""),
                   {
                     locale: ptBR,
                   },

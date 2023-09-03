@@ -1,10 +1,13 @@
+import { useMatches } from "@remix-run/react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import {
   CalendarDaysIcon,
   CalendarIcon,
   CalendarPlusIcon,
   FilePlusIcon,
 } from "lucide-react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -14,16 +17,19 @@ import {
   CommandList,
   CommandShortcut,
 } from "../ui/command";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { useMatches } from "@remix-run/react";
 
 export default function CommandBox({
   options,
 }: {
   options: {
-    openActionDialog: boolean;
-    setOpenActionDialog: Dispatch<SetStateAction<boolean>>;
+    action: {
+      open: boolean;
+      setOpen: Dispatch<SetStateAction<boolean>>;
+    };
+    celebration: {
+      open: boolean;
+      setOpen: Dispatch<SetStateAction<boolean>>;
+    };
   };
 }) {
   const [open, setOpen] = useState(false);
@@ -51,7 +57,7 @@ export default function CommandBox({
         <CommandGroup heading="Ações">
           <CommandItem
             onSelect={() => {
-              options.setOpenActionDialog(true);
+              options.action.setOpen(true);
               setOpen(false);
             }}
           >
@@ -59,7 +65,12 @@ export default function CommandBox({
             Criar uma nova Ação para hoje
             <CommandShortcut>⌘⇧A</CommandShortcut>
           </CommandItem>
-          <CommandItem>
+          <CommandItem
+            onSelect={() => {
+              options.celebration.setOpen(true);
+              setOpen(false);
+            }}
+          >
             <CalendarPlusIcon className="mr-2" />
             Nova Data Comemorativa
             <CommandShortcut>⌘⇧D</CommandShortcut>

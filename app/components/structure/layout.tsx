@@ -6,6 +6,7 @@ import {
   useParams,
 } from "@remix-run/react";
 import {
+  CalendarPlusIcon,
   ChevronsLeft,
   ChevronsRight,
   CommandIcon,
@@ -28,6 +29,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Blade from "./blade";
 import CommandBox from "./commnad-box";
+import CelebrationDialog from "../dialogs/celebration-dialog";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user }: { user: Person } = useOutletContext();
@@ -36,6 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [openActionDialog, setOpenActionDialog] = useState(false);
+  const [openCelebrationDialog, setOpenCelebrationDialog] = useState(false);
 
   const slug = params["slug"];
   const { clients }: { clients: Client[] } = matches[1].data;
@@ -176,6 +179,31 @@ export default function Layout({ children }: { children: ReactNode }) {
       {children}
 
       <div className="fixed bottom-6 right-4">
+        <Popover
+          open={openCelebrationDialog}
+          onOpenChange={setOpenCelebrationDialog}
+        >
+          <PopoverTrigger asChild>
+            <Button
+              size={"icon"}
+              className="mr-2 h-8 w-8 rounded-full"
+              variant={"secondary"}
+            >
+              <CalendarPlusIcon size={16} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="bg-content w-[86vw] sm:w-[540px]"
+            align="end"
+            sideOffset={24}
+            alignOffset={-64}
+          >
+            <CelebrationDialog
+              closeDialog={() => setOpenCelebrationDialog(false)}
+            />
+          </PopoverContent>
+        </Popover>
+
         <Popover open={openActionDialog} onOpenChange={setOpenActionDialog}>
           <PopoverTrigger asChild>
             <Button size={"icon"} className="rounded-full">
@@ -191,8 +219,16 @@ export default function Layout({ children }: { children: ReactNode }) {
             <ActionDialog closeDialog={() => setOpenActionDialog(false)} />
           </PopoverContent>
         </Popover>
-        <CommandBox options={{ openActionDialog, setOpenActionDialog }} />
       </div>
+      <CommandBox
+        options={{
+          action: { open: openActionDialog, setOpen: setOpenActionDialog },
+          celebration: {
+            open: openCelebrationDialog,
+            setOpen: setOpenCelebrationDialog,
+          },
+        }}
+      />
     </div>
   );
 }

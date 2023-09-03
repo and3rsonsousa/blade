@@ -28,6 +28,7 @@ export const action: ActionFunction = async ({ request }) => {
       date,
       category_id,
       user_id: session?.user.id,
+      priority_id: "af6ceef7-7c70-44c9-b187-ee9d376c15c1",
     };
 
     const { data, error } = await supabase
@@ -113,5 +114,33 @@ export const action: ActionFunction = async ({ request }) => {
       return { data, error };
     }
     return {};
+  } else if (actionToHandle === "create-celebration") {
+    const title = formData.get("title") as string;
+    const date = formData.get("date") as string;
+    const is_holiday = Boolean(formData.get("is_holiday"));
+
+    const celebration = {
+      title,
+      date,
+      is_holiday,
+    };
+
+    const { data, error } = await supabase
+      .from("celebration")
+      .insert(celebration)
+      .select()
+      .single();
+
+    return { data, error };
+  } else if (actionToHandle === "delete-celebration") {
+    const id = formData.get("id");
+    const { data, error } = await supabase
+      .from("celebration")
+      .delete()
+      .eq("id", id)
+      .select()
+      .single();
+
+    return { data, error };
   }
 };
