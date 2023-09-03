@@ -1,9 +1,8 @@
-import { type LoaderArgs, redirect, json } from "@vercel/remix";
+import { json, redirect, type LoaderArgs } from "@vercel/remix";
 // import { type LoaderArgs, redirect, json } from "@vercel/remix";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import Layout from "~/components/structure/layout";
 import supabaseServer from "~/lib/supabase.server";
-import CommandBox from "~/components/structure/commnad-box";
 
 export const config = { runtime: "edge" };
 
@@ -35,7 +34,6 @@ export default function Dashboard() {
   return (
     <Layout>
       <Outlet context={{ ...context }} />
-      <CommandBox />
     </Layout>
   );
 }

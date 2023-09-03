@@ -4,7 +4,7 @@ import {
   CalendarPlusIcon,
   FilePlusIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -18,7 +18,14 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useMatches } from "@remix-run/react";
 
-export default function CommandBox() {
+export default function CommandBox({
+  options,
+}: {
+  options: {
+    openActionDialog: boolean;
+    setOpenActionDialog: Dispatch<SetStateAction<boolean>>;
+  };
+}) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const matches = useMatches();
@@ -42,9 +49,14 @@ export default function CommandBox() {
       <CommandList>
         <CommandEmpty>Sem resultados</CommandEmpty>
         <CommandGroup heading="Ações">
-          <CommandItem>
+          <CommandItem
+            onSelect={() => {
+              options.setOpenActionDialog(true);
+              setOpen(false);
+            }}
+          >
             <FilePlusIcon className="mr-2" />
-            Nova Ação
+            Criar uma nova Ação para hoje
             <CommandShortcut>⌘⇧A</CommandShortcut>
           </CommandItem>
           <CommandItem>
@@ -52,9 +64,11 @@ export default function CommandBox() {
             Nova Data Comemorativa
             <CommandShortcut>⌘⇧D</CommandShortcut>
           </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Views">
           <CommandItem>
             <CalendarIcon className="mr-2" />
-            Ver o dia de Hoje
+            Calendário
           </CommandItem>
           <CommandItem>
             <CalendarDaysIcon className="mr-2" />
