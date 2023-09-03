@@ -1,5 +1,5 @@
 import { type ContextMenuItemProps } from "@radix-ui/react-context-menu";
-import { useFetcher, useMatches, useNavigate } from "@remix-run/react";
+import { Link, useFetcher, useMatches, useNavigate } from "@remix-run/react";
 import { add, format, formatISO, parseISO } from "date-fns";
 import { motion } from "framer-motion";
 import {
@@ -22,6 +22,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "../ui/context-menu";
+import { Button } from "../ui/button";
 // import {
 //   HoverCard,
 //   HoverCardContent,
@@ -363,3 +364,47 @@ export function ActionLineCalendar({
 const MenuItem = ({ ...props }: ContextMenuItemProps) => (
   <ContextMenuItem className="menu-item" {...props} />
 );
+
+export function ActionListItem({ action }: { action: ActionFull }) {
+  return (
+    <div
+      className={`group flex cursor-pointer items-center justify-between rounded border-l-4 bg-card pl-3 pr-1 text-slate-400 transition hover:bg-accent hover:text-foreground border-${action.states.slug}`}
+    >
+      <div className="flex items-center gap-2 py-1">
+        <CategoryIcons
+          id={action.categories.slug}
+          className="h-4 w-4 text-slate-500"
+        />
+        <div>{action.title}</div>
+      </div>
+      <div className="flex py-1 opacity-0 transition group-hover:opacity-100">
+        <Button variant={"ghost"} className="h-8 w-8 p-0" asChild>
+          <Link to={`/dashboard/action/${action.id}`}>
+            <PencilIcon size={12} />
+          </Link>
+        </Button>
+        <Button variant={"ghost"} className="h-8 w-8 p-0" onClick={() => {}}>
+          <TrashIcon size={12} />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export function ActionStatus({ action }: { action: ActionFull }) {
+  return (
+    <div
+      className={`flex w-full cursor-pointer items-center justify-between overflow-hidden rounded border-l-4 bg-card px-2 text-slate-400 transition hover:bg-accent hover:text-foreground border-${action.states.slug}`}
+    >
+      <div className="flex items-center gap-2 py-1">
+        <CategoryIcons
+          id={action.categories.slug}
+          className="h-4 w-4 text-slate-500"
+        />
+        <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap  text-xs">
+          {action.title}
+        </div>
+      </div>
+    </div>
+  );
+}

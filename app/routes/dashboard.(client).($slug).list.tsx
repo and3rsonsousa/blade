@@ -35,7 +35,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
   {
-    title: `${data!.client ? data!.client.short.toUpperCase() : ""} /B`,
+    title: `${data!.client ? data!.client.short.toUpperCase() : ""} / Lista /B`,
   },
 ];
 
