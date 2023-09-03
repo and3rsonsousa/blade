@@ -53,6 +53,7 @@ export default function Calendar({ actions, celebrations }: CalendarType) {
 
   const [filter, setFilter] = useState({ category: "all", state: "" });
   const [isGrouped, setGrouped] = useState(true);
+  const [dropAction, setDropAction] = useState<Action | ActionFull>();
 
   const { categories }: { categories: Category[] } = matches[1].data;
 
@@ -285,7 +286,13 @@ export default function Calendar({ actions, celebrations }: CalendarType) {
           className={`h-full shrink-0 grow grid-cols-7 sm:grid sm:overflow-hidden`}
         >
           {calendar.map((day: DayType, i: number) => (
-            <CalendarDay day={day} key={i} isGrouped={isGrouped} />
+            <CalendarDay
+              day={day}
+              key={i}
+              isGrouped={isGrouped}
+              dropAction={dropAction}
+              setDropAction={(action) => setDropAction(action)}
+            />
           ))}
         </div>
       </ScrollArea>

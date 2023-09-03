@@ -22,11 +22,11 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "../ui/context-menu";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "../ui/hover-card";
+// import {
+//   HoverCard,
+//   HoverCardContent,
+//   HoverCardTrigger,
+// } from "../ui/hover-card";
 
 export type ActionFull = Action & {
   clients: Client;
@@ -34,12 +34,18 @@ export type ActionFull = Action & {
   states: State;
 };
 
-export function ActionLineCalendar({ action }: { action: ActionFull }) {
+export function ActionLineCalendar({
+  action,
+  setDropAction,
+}: {
+  action: ActionFull;
+  setDropAction: (action: ActionFull | Action) => void;
+}) {
   const navigate = useNavigate();
   const fetcher = useFetcher();
-  const busy = fetcher.state !== "idle";
-
   const matches = useMatches();
+
+  const busy = fetcher.state !== "idle";
   const { categories, states }: { categories: Category[]; states: State[] } =
     matches[1].data;
 
@@ -61,22 +67,26 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.4 }}
       className="relative"
+      draggable
+      onDrag={(event: MouseEvent) => {
+        setDropAction(action);
+      }}
     >
       <ContextMenu>
         <ContextMenuTrigger>
-          <HoverCard>
-            <HoverCardTrigger>
-              <div
-                className={`mb-0.5 border-l-4 px-2 border-${
-                  action.states.slug
-                }  relative flex w-full cursor-pointer gap-1 rounded bg-card py-1 text-xs text-slate-400 transition hover:bg-accent hover:text-foreground ${
-                  busy && "opacity-50"
-                }`}
-                onClick={() => {
-                  navigate(`/dashboard/action/${action.id}`);
-                }}
-              >
-                {/* <div
+          {/* <HoverCard>
+            <HoverCardTrigger> */}
+          <div
+            className={`mb-0.5 border-l-4 px-2 border-${
+              action.states.slug
+            }  relative flex w-full cursor-pointer gap-1 rounded bg-card py-1 text-xs text-slate-400 transition hover:bg-accent hover:text-foreground ${
+              busy && "opacity-50"
+            }`}
+            onClick={() => {
+              navigate(`/dashboard/action/${action.id}`);
+            }}
+          >
+            {/* <div
                 className={`bg-${
                   action.states.slug
                 }-action relative flex w-full cursor-pointer gap-1 border-l-2 px-1 py-1.5  text-[11px] leading-none transition ${
@@ -86,31 +96,31 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
                   navigate(`/dashboard/action/${action.id}`);
                 }}
               > */}
-                <div
-                  className="w-full shrink select-none overflow-hidden text-ellipsis whitespace-nowrap"
-                  dangerouslySetInnerHTML={{
-                    __html: removeTags(action.title),
-                  }}
-                ></div>
-                {true ? (
-                  <div className="text-[10px] tracking-tighter">
-                    {format(parseISO(action.date), "H:m")}
+            <div
+              className="w-full shrink select-none overflow-hidden text-ellipsis whitespace-nowrap"
+              dangerouslySetInnerHTML={{
+                __html: removeTags(action.title),
+              }}
+            ></div>
+            {true ? (
+              <div className="text-[10px] tracking-tighter">
+                {format(parseISO(action.date), "H:m")}
+              </div>
+            ) : (
+              <div className="w-5 text-[8px] uppercase opacity-75">
+                {action.clients.short.length > 3 ? (
+                  <div className="text-center leading-[8px]">
+                    {action.clients.short.substring(0, 2)}
+                    <br />
+                    {action.clients.short.substring(2)}
                   </div>
                 ) : (
-                  <div className="w-5 text-[8px] uppercase opacity-75">
-                    {action.clients.short.length > 3 ? (
-                      <div className="text-center leading-[8px]">
-                        {action.clients.short.substring(0, 2)}
-                        <br />
-                        {action.clients.short.substring(2)}
-                      </div>
-                    ) : (
-                      action.clients.short
-                    )}
-                  </div>
+                  action.clients.short
                 )}
               </div>
-            </HoverCardTrigger>
+            )}
+          </div>
+          {/* </HoverCardTrigger>
             <HoverCardContent className="bg-content">
               <div className="space-y-1 px-4 text-xs">
                 <div className="text-sm font-medium">{action.title}</div>
@@ -131,7 +141,7 @@ export function ActionLineCalendar({ action }: { action: ActionFull }) {
                 </div>
               </div>
             </HoverCardContent>
-          </HoverCard>
+          </HoverCard> */}
         </ContextMenuTrigger>
         <ContextMenuContent className="bg-content mx-2">
           {action.states.slug !== "finished" && (

@@ -6,7 +6,6 @@ export function useCurrentDate() {
 	const [params] = useSearchParams();
 	const date = params.get("date");
 
-	console.log(date);
 
 
 	const currentDate = date ? new Date(date) : today;

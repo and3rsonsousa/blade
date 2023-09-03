@@ -1,5 +1,5 @@
-import { useMatches } from "@remix-run/react";
-import { format, isSameMonth, isToday, parseISO } from "date-fns";
+import { useFetcher, useMatches } from "@remix-run/react";
+import { format, formatISO, isSameMonth, isToday } from "date-fns";
 import { AnimatePresence } from "framer-motion";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
@@ -15,36 +15,69 @@ type CalendarDayType = {
   day: DayType;
   className?: string;
   isGrouped?: boolean;
+  dropAction?: Action | ActionFull;
+  setDropAction: (action?: Action | ActionFull) => void;
 };
 
 export default function CalendarDay({
   day,
   className,
   isGrouped,
+  dropAction,
+  setDropAction,
 }: CalendarDayType) {
   const currentDate = useCurrentDate();
   const matches = useMatches();
+  const fetcher = useFetcher();
 
   const { categories } = matches[1].data;
   const [open, setOpen] = useState(false);
-
-  console.log(
-    format(day.date, "Y-M-d"),
-    day.celebrations.length > 0
-      ? format(parseISO(day.celebrations[0].date), "Y-M-d")
-      : "",
-  );
+  const [drag, setDrag] = useState(false);
 
   return (
     <div
       className={cn([
-        `group relative justify-between  px-6 py-2 sm:flex sm:flex-col sm:p-1 ${
+        `group relative justify-between px-6 py-2 transition-colors sm:flex sm:flex-col sm:p-1 ${
           day.actions.length === 0 ? "max-sm:hidden" : ""
+        } rounded-sm border border-transparent ${
+          drag ? "border-muted bg-accent" : ""
         }`,
         className,
       ])}
+      data-date={format(day.date, "Y-M-d")}
+      onDragOver={(event) => {
+        event.preventDefault();
+        setDrag(true);
+      }}
+      onDragLeave={(event) => {
+        setDrag(false);
+      }}
+      onDrop={async (event) => {
+        setDrag(false);
+        const dateAttribute = (
+          event.currentTarget as HTMLDivElement
+        ).attributes.getNamedItem("data-date")?.value as string;
+
+        if (dropAction && dateAttribute) {
+          let targetDate = new Date(dateAttribute);
+          const currentActionDate = new Date(dropAction.date);
+          targetDate.setHours(
+            currentActionDate.getHours(),
+            currentActionDate.getMinutes(),
+          );
+
+          await fetcher.submit(
+            {
+              action: "update-action",
+              id: dropAction.id,
+              date: formatISO(targetDate),
+            },
+            { action: "/handle-action", method: "post" },
+          );
+        }
+      }}
     >
-      <div className="relative flex flex-col ">
+      <div className={`relative flex flex-col`}>
         <div className="flex justify-between">
           <div
             className={`mb-2 grid h-6 w-6 -translate-x-1 place-content-center text-xs ${
@@ -95,6 +128,7 @@ export default function CalendarDay({
                         <ActionLineCalendar
                           action={action as ActionFull}
                           key={action.id}
+                          setDropAction={setDropAction}
                         />
                       ))}
                     </div>
@@ -104,6 +138,7 @@ export default function CalendarDay({
                 <ActionLineCalendar
                   action={action as ActionFull}
                   key={action.id}
+                  setDropAction={setDropAction}
                 />
               ))}
         </AnimatePresence>
