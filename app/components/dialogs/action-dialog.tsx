@@ -1,6 +1,6 @@
 import { useFetcher, useMatches, useParams } from "@remix-run/react";
 
-import { formatISO, parseISO } from "date-fns";
+import { format, formatISO, parseISO } from "date-fns";
 import { Check, Loader2Icon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { CategoryIcons } from "~/lib/icons";
@@ -38,8 +38,16 @@ export default function ActionDialog({
   date,
   closeDialog,
 }: ActionDialogType) {
-  const baseDate = new Date();
-  baseDate.setHours(11, 12);
+  const baseDate = date || new Date();
+  const now = new Date();
+  if (
+    format(now, "Y-M-d") === format(baseDate, "Y-M-d") &&
+    now.getHours() >= 11
+  ) {
+    baseDate.setHours(now.getHours() + 1, 12);
+  } else {
+    baseDate.setHours(11, 12);
+  }
   const matches = useMatches();
   const fetcher = useFetcher();
   const { categories, clients, states } = matches[1].data;
@@ -58,7 +66,7 @@ export default function ActionDialog({
     client_id: action ? String(action.client_id) : client_id ? client_id : "",
     category_id: action ? String(action.category_id) : "1",
     state_id: action ? String(action.state_id) : "2",
-    date: action ? parseISO(action.date) : date || baseDate,
+    date: action ? parseISO(action.date) : baseDate,
   });
 
   const description = useRef<HTMLDivElement>(null);
