@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { CategoryIcons } from "~/lib/icons";
 import { removeTags } from "~/lib/utils";
+import { Button } from "../ui/button";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -22,12 +23,6 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "../ui/context-menu";
-import { Button } from "../ui/button";
-// import {
-//   HoverCard,
-//   HoverCardContent,
-//   HoverCardTrigger,
-// } from "../ui/hover-card";
 
 export type ActionFull = Action & {
   clients: Client;
@@ -75,12 +70,10 @@ export function ActionLineCalendar({
     >
       <ContextMenu>
         <ContextMenuTrigger>
-          {/* <HoverCard>
-            <HoverCardTrigger> */}
           <div
             className={`mb-0.5 border-l-4 px-2 border-${
               action.states.slug
-            }  relative flex w-full cursor-pointer gap-1 rounded bg-card py-1 text-xs text-slate-400 transition hover:bg-accent hover:text-foreground ${
+            }  group/action relative flex w-full cursor-pointer gap-1 rounded bg-card py-1 text-xs text-slate-400 transition hover:bg-accent hover:text-foreground ${
               busy && "opacity-50"
             }`}
             onClick={() => {
@@ -103,46 +96,28 @@ export function ActionLineCalendar({
                 __html: removeTags(action.title),
               }}
             ></div>
-            {true ? (
-              <div className="text-[10px] tracking-tighter">
-                {format(parseISO(action.date), "H:m")}
-              </div>
-            ) : (
-              <div className="w-5 text-[8px] uppercase opacity-75">
-                {action.clients.short.length > 3 ? (
-                  <div className="text-center leading-[8px]">
-                    {action.clients.short.substring(0, 2)}
-                    <br />
-                    {action.clients.short.substring(2)}
-                  </div>
-                ) : (
-                  action.clients.short
-                )}
-              </div>
-            )}
-          </div>
-          {/* </HoverCardTrigger>
-            <HoverCardContent className="bg-content">
-              <div className="space-y-1 px-4 text-xs">
-                <div className="text-sm font-medium">{action.title}</div>
 
-                <div className="flex justify-between gap-2 text-[10px] uppercase">
-                  <div className="overflow-hidden text-ellipsis whitespace-nowrap">
-                    {action.clients.title}
-                  </div>
-                  <div>{action.categories.title}</div>
-                  <div className="whitespace-nowrap">
-                    {format(
-                      parseISO(action.date),
-                      "d/M 'às' H'h'".concat(
-                        parseISO(action.date).getMinutes() !== 0 ? "m" : "",
-                      ),
-                    )}
-                  </div>
+            <div className="absolute right-2 top-1 w-7 text-right text-[10px] tracking-tighter opacity-0 group-hover/action:opacity-100">
+              {format(
+                parseISO(action.date),
+                "H'h'".concat(
+                  new Date(action.date).getMinutes() !== 0 ? "mm" : "",
+                ),
+              )}
+            </div>
+
+            <div className="w-5 text-[8px] uppercase opacity-75 group-hover/action:opacity-0">
+              {action.clients.short.length > 3 ? (
+                <div className="text-center leading-[8px]">
+                  {action.clients.short.substring(0, 2)}
+                  <br />
+                  {action.clients.short.substring(2)}
                 </div>
-              </div>
-            </HoverCardContent>
-          </HoverCard> */}
+              ) : (
+                action.clients.short
+              )}
+            </div>
+          </div>
         </ContextMenuTrigger>
         <ContextMenuContent className="bg-content mx-2">
           {action.states.slug !== "finished" && (

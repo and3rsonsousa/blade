@@ -45,7 +45,7 @@ export default function FancyDatetimePicker({
                   _date,
                   _date.getMinutes() === 0
                     ? "d 'de' MMMM 'de' Y".concat(time ? "'às' H'h'" : "")
-                    : "d 'de' MMMM 'de' Y".concat(time ? " 'às' H'h'm" : ""),
+                    : "d 'de' MMMM 'de' Y".concat(time ? " 'às' H'h'mm" : ""),
                   {
                     locale: ptBR,
                   },
@@ -58,7 +58,7 @@ export default function FancyDatetimePicker({
                   _date,
                   _date.getMinutes() === 0
                     ? "d/MMM".concat(time ? " 'às' H'h'" : "")
-                    : "d/MMM".concat(time ? " 'às' H'h'm" : ""),
+                    : "d/MMM".concat(time ? " 'às' H'h'mm" : ""),
                   {
                     locale: ptBR,
                   },
