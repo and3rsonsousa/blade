@@ -4,34 +4,18 @@ import { type LoaderArgs, type V2_MetaFunction } from "@vercel/remix";
 import StatusView from "~/components/status/status-view";
 import LayoutClient from "~/components/structure/layout-client";
 import supabaseServer from "~/lib/supabase.server";
+import { getLoaderActions } from "~/lib/utils";
 
 export async function loader({ request, params }: LoaderArgs) {
   const response = new Response();
   const supabase = supabaseServer({ request, response });
 
-  if (params.slug) {
-    const { data: client } = await supabase
-      .from("clients")
-      .select("*")
-      .eq("slug", params.slug)
-      .single();
-    if (client) {
-      const { data: actions } = await supabase
-        .from("actions")
-        .select("*, clients(*), categories(*), states(*)")
-        .eq("client_id", client!.id)
-        .order("date", { ascending: true });
+  const { client, actions, celebrations } = await getLoaderActions(
+    supabase,
+    params.slug,
+  );
 
-      return { client, actions };
-    }
-  } else {
-    const { data: actions } = await supabase
-      .from("actions")
-      .select("*, clients(*), categories(*), states(*)")
-      .order("date", { ascending: true });
-
-    return { client: null, actions };
-  }
+  return { client, actions, celebrations };
 }
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [

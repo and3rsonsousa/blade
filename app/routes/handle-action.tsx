@@ -47,6 +47,7 @@ export const action: ActionFunction = async ({ request }) => {
     const date = formData.get("date") as string;
     const category_id = Number(formData.get("category_id"));
     const updated_at = String(formatISO(new Date()));
+    const priority_id = String(formData.get("priority_id"));
 
     type ActionToUpdate = {
       title: string;
@@ -56,6 +57,7 @@ export const action: ActionFunction = async ({ request }) => {
       date: string;
       category_id: number;
       updated_at: string;
+      priority_id: string;
     };
 
     const action: ActionToUpdate = {
@@ -65,6 +67,7 @@ export const action: ActionFunction = async ({ request }) => {
       client_id,
       date,
       category_id,
+      priority_id,
       updated_at,
     };
 

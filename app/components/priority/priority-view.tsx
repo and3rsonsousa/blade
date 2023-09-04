@@ -1,7 +1,7 @@
 import { useMatches } from "@remix-run/react";
-import { getOrderedActions, getPrioritizedActions } from "~/lib/utils";
-import { ActionStatus, type ActionFull } from "../atoms/action";
 import { PriorityIcons } from "~/lib/icons";
+import { getOrderedActions, getPrioritizedActions } from "~/lib/utils";
+import { ActionLineCalendar, type ActionFull } from "../atoms/action";
 import { ScrollArea } from "../ui/scroll-area";
 
 export default function PriorityView({
@@ -45,7 +45,12 @@ export default function PriorityView({
               {actions.map(
                 (action) =>
                   action.states.slug !== "finished" && (
-                    <ActionStatus action={action} key={action.id} />
+                    <ActionLineCalendar
+                      showCategory={true}
+                      action={action}
+                      key={action.id}
+                      setDropAction={() => {}}
+                    />
                   ),
               )}
               <div className="h-[20vh]"></div>

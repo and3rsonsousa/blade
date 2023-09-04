@@ -9,7 +9,7 @@ import {
   PencilIcon,
   TrashIcon,
 } from "lucide-react";
-import { CategoryIcons } from "~/lib/icons";
+import { CategoryIcons, PriorityIcons } from "~/lib/icons";
 import { removeTags } from "~/lib/utils";
 import { Button } from "../ui/button";
 import {
@@ -28,21 +28,28 @@ export type ActionFull = Action & {
   clients: Client;
   categories: Category;
   states: State;
+  priority: Priority;
 };
 
 export function ActionLineCalendar({
   action,
   setDropAction,
+  showCategory,
 }: {
   action: ActionFull;
   setDropAction: (action: ActionFull | Action) => void;
+  showCategory?: boolean;
 }) {
   const navigate = useNavigate();
   const fetcher = useFetcher();
   const matches = useMatches();
 
   const busy = fetcher.state !== "idle";
-  const { categories, states }: { categories: Category[]; states: State[] } =
+  const {
+    categories,
+    states,
+    priorities,
+  }: { categories: Category[]; states: State[]; priorities: Priority[] } =
     matches[1].data;
 
   async function updateAction(values: {}) {
@@ -90,7 +97,15 @@ export function ActionLineCalendar({
                 onClick={() => {
                   navigate(`/dashboard/action/${action.id}`);
                 }}
+                title={action.title}
               > */}
+            {showCategory && (
+              <CategoryIcons
+                id={action.categories.slug}
+                className="h-4 w-4 text-slate-500"
+              />
+            )}
+
             <div
               className="w-full shrink select-none overflow-hidden text-ellipsis whitespace-nowrap"
               dangerouslySetInnerHTML={{
@@ -325,6 +340,51 @@ export function ActionLineCalendar({
               </ContextMenuSubContent>
             </ContextMenuPortal>
           </ContextMenuSub>
+          <ContextMenuSub>
+            <ContextMenuSubTrigger className="menu-item">
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <PriorityIcons
+                    id="base"
+                    className="absolute left-0 top-0 h-3 w-3 opacity-20"
+                  />
+                  <PriorityIcons
+                    id={action.priority.slug}
+                    className="h-3 w-3"
+                  />
+                </div>
+                {action.priority.title}
+              </div>
+            </ContextMenuSubTrigger>
+            <ContextMenuPortal>
+              <ContextMenuContent className="bg-content">
+                {priorities.map((priority) => (
+                  <ContextMenuItem
+                    key={priority.id}
+                    className="menu-item"
+                    onSelect={() => {
+                      fetcher.submit(
+                        {
+                          action: "update-action",
+                          id: action.id,
+                          priority_id: priority.id,
+                        },
+                        {
+                          action: "/handle-action",
+                          method: "POST",
+                        },
+                      );
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <PriorityIcons id={priority.slug} className="h-3 w-3" />
+                      {priority.title}
+                    </div>
+                  </ContextMenuItem>
+                ))}
+              </ContextMenuContent>
+            </ContextMenuPortal>
+          </ContextMenuSub>
         </ContextMenuContent>
       </ContextMenu>
 
@@ -368,6 +428,23 @@ export function ActionListItem({ action }: { action: ActionFull }) {
 }
 
 export function ActionStatus({ action }: { action: ActionFull }) {
+  return (
+    <div
+      className={`flex w-full cursor-pointer items-center justify-between overflow-hidden rounded border-l-4 bg-card px-2 text-slate-400 transition hover:bg-accent hover:text-foreground border-${action.states.slug}`}
+    >
+      <div className="flex items-center gap-2 py-1">
+        <CategoryIcons
+          id={action.categories.slug}
+          className="h-4 w-4 text-slate-500"
+        />
+        <div className="w-full overflow-hidden text-ellipsis whitespace-nowrap  text-xs">
+          {action.title}
+        </div>
+      </div>
+    </div>
+  );
+}
+export function ActionPriority({ action }: { action: ActionFull }) {
   return (
     <div
       className={`flex w-full cursor-pointer items-center justify-between overflow-hidden rounded border-l-4 bg-card px-2 text-slate-400 transition hover:bg-accent hover:text-foreground border-${action.states.slug}`}

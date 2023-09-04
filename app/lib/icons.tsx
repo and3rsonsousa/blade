@@ -52,5 +52,22 @@ export const PriorityIcons = ({
 }) => {
   const View = priorityIconsList[id as string] ?? SignalIcon;
 
-  return <View className={cn(className)} />;
+  return (
+    <div className="relative">
+      <SignalIcon
+        className={cn(["absolute left-0 top-0 z-0 opacity-20", className])}
+      />
+      <View
+        className={cn([
+          "isolate",
+          id === "low"
+            ? "text-green-400"
+            : id === "mid"
+            ? "text-amber-500"
+            : "text-rose-600",
+          className,
+        ])}
+      />
+    </div>
+  );
 };

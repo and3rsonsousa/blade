@@ -1,5 +1,5 @@
 import { useMatches } from "@remix-run/react";
-import { ActionStatus, type ActionFull } from "../atoms/action";
+import { ActionLineCalendar, type ActionFull } from "../atoms/action";
 import FancyInputText from "../atoms/fancy-input";
 import { ScrollArea } from "../ui/scroll-area";
 
@@ -27,9 +27,11 @@ export default function StatusView({ actions }: { actions: Action[] | null }) {
                   {actions
                     ?.filter((action) => action.state_id === state.id)
                     .map((action) => (
-                      <ActionStatus
+                      <ActionLineCalendar
+                        setDropAction={() => {}}
                         action={action as ActionFull}
                         key={action.id}
+                        showCategory={true}
                       />
                     ))}
                   <div
