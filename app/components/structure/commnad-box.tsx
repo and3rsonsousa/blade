@@ -1,4 +1,4 @@
-import { useMatches } from "@remix-run/react";
+import { useMatches, useNavigate } from "@remix-run/react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
@@ -32,9 +32,11 @@ export default function CommandBox({
     };
   };
 }) {
+  const matches = useMatches();
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const matches = useMatches();
   const { clients } = matches[1].data;
 
   useEffect(() => {
@@ -93,7 +95,15 @@ export default function CommandBox({
         {value.length > 0 ? (
           <CommandGroup heading="Clientes">
             {(clients as Client[]).map((client) => (
-              <CommandItem key={client.id}>{client.title}</CommandItem>
+              <CommandItem
+                key={client.id}
+                onSelect={() => {
+                  navigate(`/dashboard/client/${client.slug}`);
+                  setOpen(false);
+                }}
+              >
+                {client.title}
+              </CommandItem>
             ))}
           </CommandGroup>
         ) : null}
