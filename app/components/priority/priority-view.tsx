@@ -18,7 +18,7 @@ export default function PriorityView({
       )
     : null;
   return currentActions ? (
-    <div className="grid h-full grid-cols-3 overflow-hidden border border-yellow-500">
+    <div className="grid h-full grid-cols-3 overflow-hidden">
       {currentActions.map(({ priority, actions }) => (
         <div key={priority.id} className="flex flex-col overflow-hidden">
           <div className="flex items-center gap-2 p-2">
