@@ -35,7 +35,7 @@ export default function ClientID() {
   const { client, actions } = useLoaderData<typeof loader>();
   return (
     <LayoutClient client={client}>
-      {actions && <Calendar actions={actions} />}
+      {actions && <Calendar actions={actions} celebrations={[]} />}
     </LayoutClient>
   );
 }
