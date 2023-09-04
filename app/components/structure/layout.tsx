@@ -47,6 +47,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     const keyDown = (event: KeyboardEvent) => {
       if (event.metaKey && event.shiftKey) {
         if (event.key === "a") setOpenActionDialog(true);
+        if (event.key === "e") setOpenCelebrationDialog(true);
         if (event.key === "b") setOpen((value) => !value);
       }
     };
@@ -142,7 +143,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <div className="p-3">
               <div className="p-3">
                 <Button
-                  className="w-full justify-between px-2"
+                  className="w-full justify-between bg-card px-2"
                   size={"sm"}
                   variant={"secondary"}
                 >

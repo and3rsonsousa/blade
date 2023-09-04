@@ -117,7 +117,7 @@ export const action: ActionFunction = async ({ request }) => {
   } else if (actionToHandle === "create-celebration") {
     const title = formData.get("title") as string;
     const date = formData.get("date") as string;
-    const is_holiday = Boolean(formData.get("is_holiday"));
+    const is_holiday = formData.get("is_holiday") === "true";
 
     const celebration = {
       title,
