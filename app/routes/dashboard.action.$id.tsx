@@ -26,7 +26,7 @@ export const loader: LoaderFunction = async ({
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data: { action } }) => [
   {
-    title: `${action.title} /B`,
+    title: `${action.title} / ʙʟaᴅe`,
   },
 ];
 

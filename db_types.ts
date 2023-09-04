@@ -186,18 +186,21 @@ export interface Database {
         Row: {
           created_at: string
           id: string
+          order: number
           slug: string
           title: string
         }
         Insert: {
           created_at?: string
           id?: string
+          order: number
           slug: string
           title: string
         }
         Update: {
           created_at?: string
           id?: string
+          order?: number
           slug?: string
           title?: string
         }

@@ -5,9 +5,11 @@ import Calendar from "~/components/calendar/calendar-view";
 import LayoutClient from "~/components/structure/layout-client";
 import supabaseServer from "~/lib/supabase.server";
 
-export const meta: V2_MetaFunction = () => [
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
   {
-    title: "Blade Dashboard",
+    title: `${
+      data!.client ? data!.client.short.toUpperCase().concat(" / ") : ""
+    }Calendário / ʙʟaᴅe`,
   },
 ];
 

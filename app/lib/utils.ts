@@ -54,7 +54,19 @@ export function getGroupedActions(
 	return actionsByCategory;
 }
 
-export function getFilterdActions(actions: ActionFull[], filter: string) {
+export function getPrioritizedActions(
+	actions: ActionFull[],
+	priorities: Priority[]
+) {
+	const actionsByPriority = priorities.map((priority) => ({
+		priority: priority,
+		actions: actions.filter((action) => action.priority_id === priority.id),
+	}));
+
+	return actionsByPriority;
+}
+
+export function getFilteredActions(actions: ActionFull[], filter: string) {
 	const newActions = actions.filter(
 		(action) => action.categories.slug === filter
 	);

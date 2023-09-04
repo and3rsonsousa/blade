@@ -6,6 +6,7 @@ declare global {
 	type Client = DB["public"]["Tables"]["clients"]["Row"];
 	type Person = DB["public"]["Tables"]["people"]["Row"];
 	type Category = DB["public"]["Tables"]["categories"]["Row"];
+	type Priority = DB["public"]["Tables"]["priority"]["Row"];
 	type State = DB["public"]["Tables"]["states"]["Row"];
 	type GenericItem = { id: number; title: string; slug?: string };
 

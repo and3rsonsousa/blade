@@ -30,7 +30,7 @@ import {
 import { useState } from "react";
 import { CategoryIcons } from "~/lib/icons";
 import { useCurrentDate } from "~/lib/useCurrentDate";
-import { getFilterdActions, getOrderedActions } from "~/lib/utils";
+import { getFilteredActions, getOrderedActions } from "~/lib/utils";
 import { type ActionFull } from "../atoms/action";
 import { Button } from "../ui/button";
 import {
@@ -64,7 +64,7 @@ export default function Calendar({ actions, celebrations }: CalendarType) {
 
   const filteredActions =
     filter.category !== "all"
-      ? getFilterdActions(actions as ActionFull[], filter.category)
+      ? getFilteredActions(actions as ActionFull[], filter.category)
       : (actions as ActionFull[]);
 
   const orderedActions = getOrderedActions(filteredActions);
