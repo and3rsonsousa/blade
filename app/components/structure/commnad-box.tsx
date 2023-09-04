@@ -75,7 +75,7 @@ export default function CommandBox({
           >
             <CalendarPlusIcon className="mr-2" />
             Nova Data Comemorativa
-            <CommandShortcut>⌘⇧D</CommandShortcut>
+            <CommandShortcut>⌘⇧E</CommandShortcut>
           </CommandItem>
         </CommandGroup>
         <CommandGroup heading="Views">

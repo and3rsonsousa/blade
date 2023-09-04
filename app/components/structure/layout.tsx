@@ -75,7 +75,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             {open ? (
               <Blade className="h-4" />
             ) : (
-              <img src="/icon-3.png" alt="Blade Icon" className="w-8" />
+              <img src="/icon-3.png" alt="Blade Icon" className="mb-4 w-8" />
             )}
           </Link>
           <Button
