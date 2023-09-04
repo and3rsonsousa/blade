@@ -295,6 +295,7 @@ export default function Calendar({ actions, celebrations }: CalendarType) {
             />
           ))}
         </div>
+        <div className="mt-4 h-24 border-t"></div>
       </ScrollArea>
     </div>
   );
