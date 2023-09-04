@@ -47,7 +47,10 @@ export const action: ActionFunction = async ({ request }) => {
     const date = formData.get("date") as string;
     const category_id = Number(formData.get("category_id"));
     const updated_at = String(formatISO(new Date()));
-    const priority_id = String(formData.get("priority_id"));
+    const priority_id =
+      String(formData.get("priority_id")) === "null"
+        ? ""
+        : String(formData.get("priority_id"));
 
     type ActionToUpdate = {
       title: string;
