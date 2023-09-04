@@ -79,6 +79,7 @@ export function ActionLineCalendar({
             onClick={() => {
               navigate(`/dashboard/action/${action.id}`);
             }}
+            title={action.title}
           >
             {/* <div
                 className={`bg-${
