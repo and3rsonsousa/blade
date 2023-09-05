@@ -26,6 +26,8 @@ import {
   ChevronRightIcon,
   FilterIcon,
   ListTreeIcon,
+  StarIcon,
+  StarOffIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { CategoryIcons } from "~/lib/icons";
@@ -46,13 +48,14 @@ import CalendarDay from "./calendar-day";
 
 type CalendarType = { actions: Action[]; celebrations: Celebration[] };
 
-export default function Calendar({ actions, celebrations }: CalendarType) {
+export default function CalendarView({ actions, celebrations }: CalendarType) {
   const currentDate = useCurrentDate();
   const navigate = useNavigate();
   const matches = useMatches();
 
   const [filter, setFilter] = useState({ category: "all", state: "" });
   const [isGrouped, setGrouped] = useState(true);
+  const [isCelebrationsVisible, setCelebrationsVisible] = useState(true);
   const [dropAction, setDropAction] = useState<Action | ActionFull>();
 
   const { categories }: { categories: Category[] } = matches[1].data;
@@ -215,6 +218,18 @@ export default function Calendar({ actions, celebrations }: CalendarType) {
             <Toggle
               variant={"default"}
               size={"sm"}
+              pressed={isCelebrationsVisible}
+              onPressedChange={setCelebrationsVisible}
+            >
+              {isCelebrationsVisible ? (
+                <StarIcon size={16} />
+              ) : (
+                <StarOffIcon size={16} />
+              )}
+            </Toggle>
+            <Toggle
+              variant={"default"}
+              size={"sm"}
               pressed={isGrouped}
               onPressedChange={setGrouped}
             >
@@ -292,6 +307,7 @@ export default function Calendar({ actions, celebrations }: CalendarType) {
               isGrouped={isGrouped}
               dropAction={dropAction}
               setDropAction={(action) => setDropAction(action)}
+              isCelebrationsVisible={isCelebrationsVisible}
             />
           ))}
         </div>

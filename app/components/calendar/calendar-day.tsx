@@ -15,6 +15,7 @@ type CalendarDayType = {
   day: DayType;
   className?: string;
   isGrouped?: boolean;
+  isCelebrationsVisible?: boolean;
   dropAction?: Action | ActionFull;
   setDropAction: (action?: Action | ActionFull) => void;
 };
@@ -23,6 +24,7 @@ export default function CalendarDay({
   day,
   className,
   isGrouped,
+  isCelebrationsVisible,
   dropAction,
   setDropAction,
 }: CalendarDayType) {
@@ -145,7 +147,8 @@ export default function CalendarDay({
       </div>
 
       <div>
-        {day.celebrations.length > 0 &&
+        {isCelebrationsVisible &&
+          day.celebrations.length > 0 &&
           day.celebrations.map((celebration) => (
             <CelebrationLine celebration={celebration} key={celebration.id} />
           ))}
