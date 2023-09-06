@@ -15,7 +15,9 @@ import { Button } from "../ui/button";
 import {
   ContextMenu,
   ContextMenuContent,
+  ContextMenuGroup,
   ContextMenuItem,
+  ContextMenuLabel,
   ContextMenuPortal,
   ContextMenuSeparator,
   ContextMenuSub,
@@ -195,62 +197,90 @@ export function ActionLineCalendar({
               <ContextMenuSubContent className="bg-content">
                 {[
                   {
-                    title: "1 Hora",
                     id: 1,
-                    values: { hours: 1 },
+                    title: "Horas",
+                    periods: [
+                      {
+                        title: "1 Hora",
+                        id: 1,
+                        values: { hours: 1 },
+                      },
+                      {
+                        title: "3 Horas",
+                        id: 2,
+                        values: { hours: 3 },
+                      },
+                    ],
                   },
                   {
-                    title: "3 Horas",
                     id: 2,
-                    values: { hours: 3 },
+                    title: "Dias",
+                    periods: [
+                      {
+                        title: "1 Dia",
+                        id: 3,
+                        values: { days: 1 },
+                      },
+                      {
+                        title: "3 Dias",
+                        id: 4,
+                        values: { days: 3 },
+                      },
+                      {
+                        title: "5 Dias",
+                        id: 5,
+                        values: { days: 5 },
+                      },
+                    ],
                   },
                   {
-                    title: "1 Dia",
                     id: 3,
-                    values: { days: 1 },
+                    title: "Outros",
+                    periods: [
+                      {
+                        title: "1 Semana",
+                        id: 6,
+                        values: { weeks: 1 },
+                      },
+                      {
+                        title: "1 Mês",
+                        id: 7,
+                        values: { months: 1 },
+                      },
+                    ],
                   },
-                  {
-                    title: "3 Dias",
-                    id: 4,
-                    values: { days: 3 },
-                  },
-                  {
-                    title: "5 Dias",
-                    id: 5,
-                    values: { days: 5 },
-                  },
-                  {
-                    title: "1 Semana",
-                    id: 6,
-                    values: { weeks: 1 },
-                  },
-                  {
-                    title: "1 Mês",
-                    id: 7,
-                    values: { months: 1 },
-                  },
-                ].map((period) => (
-                  <ContextMenuItem
-                    key={period.id}
-                    className="menu-item"
-                    onSelect={async () => {
-                      await fetcher.submit(
-                        {
-                          action: "update-action",
-                          id: action.id,
-                          date: formatISO(
-                            add(parseISO(action.date), period.values),
-                          ),
-                        },
-                        {
-                          action: "/handle-action",
-                          method: "POST",
-                        },
-                      );
-                    }}
-                  >
-                    {period.title}
-                  </ContextMenuItem>
+                ].map((group, i) => (
+                  <ContextMenuGroup key={group.id}>
+                    <ContextMenuLabel className="text-[10px] uppercase opacity-50">
+                      {group.title}
+                    </ContextMenuLabel>
+                    {group.periods.map((period) => (
+                      <ContextMenuItem
+                        key={period.id}
+                        className="menu-item"
+                        onSelect={async () => {
+                          await fetcher.submit(
+                            {
+                              action: "update-action",
+                              id: action.id,
+                              date: formatISO(
+                                add(parseISO(action.date), period.values),
+                              ),
+                            },
+                            {
+                              action: "/handle-action",
+                              method: "POST",
+                            },
+                          );
+                        }}
+                      >
+                        {period.title}
+                      </ContextMenuItem>
+                    ))}
+                    {i + 1 < group.periods.length && (
+                      <hr className="border-foreground/10" />
+                    )}
+                  </ContextMenuGroup>
                 ))}
               </ContextMenuSubContent>
             </ContextMenuPortal>
