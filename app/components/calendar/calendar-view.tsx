@@ -242,7 +242,13 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
             {/* Filtro */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant={"ghost"} size={"sm"} className="text-xs">
+                <Button
+                  variant={"ghost"}
+                  size={"sm"}
+                  className={`text-xs ${
+                    filter.category !== "all" ? "bg-foreground/20" : ""
+                  }`}
+                >
                   {filter.category === "all" ? (
                     <FilterIcon size={16} />
                   ) : (
