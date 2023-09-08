@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import ActionDialog from "../dialogs/action-dialog";
+import CelebrationDialog from "../dialogs/celebration-dialog";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -29,7 +30,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Blade from "./blade";
 import CommandBox from "./commnad-box";
-import CelebrationDialog from "../dialogs/celebration-dialog";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user }: { user: Person } = useOutletContext();
@@ -119,9 +119,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
         <div className="hidden shrink-0 grow flex-col justify-between md:flex">
           <div
-            className={`flex flex-col gap-1 text-xs ${
-              open ? "px-2" : "px-1"
-            } font-medium text-muted-foreground`}
+            className={`flex flex-col gap-1 text-xs font-medium text-muted-foreground`}
           >
             {clients.map((client) => (
               <Link
@@ -130,12 +128,30 @@ export default function Layout({ children }: { children: ReactNode }) {
                 className={`${
                   open
                     ? "px-3"
-                    : "px-1 text-center text-[10px] font-semibold uppercase"
-                } overflow-hidden text-ellipsis whitespace-nowrap rounded-sm py-2 transition hover:bg-accent hover:text-accent-foreground ${
-                  slug === client.slug ? "bg-muted text-foreground" : ""
+                    : " px-1 text-center text-[10px] font-semibold uppercase"
+                } overflow-hidden text-ellipsis whitespace-nowrap border-l-2  py-2 transition hover:bg-accent hover:text-accent-foreground ${
+                  slug === client.slug
+                    ? "border-muted-foreground text-foreground"
+                    : "border-transparent"
                 }`}
               >
                 {open ? client.title : client.short}
+                {/* {slug === client.slug && (
+                  <div className="mt-2 flex flex-col gap-2 rounded-sm bg-card py-2">
+                    <Link to="/" className="flex items-center gap-2 px-2 py-1">
+                      <Calendar size={12} /> Calendário
+                    </Link>
+                    <Link to="/" className="flex items-center gap-2 px-2 py-1">
+                      <Calendar size={12} /> Calendário
+                    </Link>
+                    <Link to="/" className="flex items-center gap-2 px-2 py-1">
+                      <Calendar size={12} /> Calendário
+                    </Link>
+                    <Link to="/" className="flex items-center gap-2 px-2 py-1">
+                      <Calendar size={12} /> Calendário
+                    </Link>
+                  </div>
+                )} */}
               </Link>
             ))}
           </div>
