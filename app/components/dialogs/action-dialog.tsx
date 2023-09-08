@@ -3,7 +3,7 @@ import { useFetcher, useMatches, useParams } from "@remix-run/react";
 import { format, formatISO, parseISO } from "date-fns";
 import { Check, Loader2Icon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { CategoryIcons } from "~/lib/icons";
+import { CategoryIcons, PriorityIcons } from "~/lib/icons";
 import { removeTags } from "~/lib/utils";
 import UpdatedTimeClock from "../atoms/update-time-clock";
 
@@ -22,6 +22,7 @@ export type InternalAction = {
   client_id?: string;
   category_id?: string;
   state_id?: string;
+  priority_id?: string;
   date: Date;
 };
 
@@ -50,7 +51,7 @@ export default function ActionDialog({
   }
   const matches = useMatches();
   const fetcher = useFetcher();
-  const { categories, clients, states } = matches[1].data;
+  const { categories, clients, states, priorities } = matches[1].data;
   const { slug } = useParams();
 
   const client_id = slug
@@ -66,6 +67,9 @@ export default function ActionDialog({
     client_id: action ? String(action.client_id) : client_id ? client_id : "",
     category_id: action ? String(action.category_id) : "1",
     state_id: action ? String(action.state_id) : "2",
+    priority_id: action
+      ? String(action.priority_id)
+      : "af6ceef7-7c70-44c9-b187-ee9d376c15c1",
     date: action ? parseISO(action.date) : baseDate,
   });
 
@@ -111,6 +115,7 @@ export default function ActionDialog({
         client_id: internalAction.client_id as string,
         category_id: internalAction.category_id as string,
         state_id: internalAction.state_id as string,
+        priority_id: internalAction.priority_id as string,
         date: formatISO(internalAction.date),
       },
       {
@@ -137,6 +142,7 @@ export default function ActionDialog({
               }
         }
       />
+      {/* Título e Desrição */}
       <div
         className={
           mode === "page" ? "flex h-full flex-col overflow-hidden" : ""
@@ -200,8 +206,9 @@ export default function ActionDialog({
       {/* Botões */}
       <div className="shrink-0">
         <div className="mt-4 grid-cols-5 justify-between gap-4 overflow-hidden border-t border-foreground/10 px-2 py-4 sm:grid sm:px-6">
-          {/* Categoria e Cliente */}
+          {/* Categoria, Cliente, Status e Prioridade */}
           <div className="col-span-3 flex w-full justify-between gap-1 sm:justify-start">
+            {/* Clientes */}
             <FancySelectInput
               items={clients}
               placeholder="Cliente"
@@ -214,7 +221,7 @@ export default function ActionDialog({
               selectedValue={internalAction.client_id}
               ref={clientInput}
             />
-
+            {/* Categorias */}
             <FancySelectInput
               items={categories}
               placeholder="Categoria"
@@ -248,7 +255,7 @@ export default function ActionDialog({
                 })
               }
             />
-
+            {/* Status */}
             <FancySelectInput
               items={states}
               placeholder="Status"
@@ -280,6 +287,34 @@ export default function ActionDialog({
                 })
               }
             />
+            {/* Prioridades */}
+            {/* <pre>{JSON.stringify(internalAction, undefined, 2)}</pre> */}
+            {action && (
+              <FancySelectInput
+                items={priorities}
+                placeholder="Status"
+                selectedValue={internalAction.priority_id}
+                itemMenu={(item) => (
+                  <SelectItem value={String(item.id)}>
+                    <div className="flex items-center gap-2">
+                      <PriorityIcons id={item.slug} className="h-4 w-4" />
+                      <div>{item.title}</div>
+                    </div>
+                  </SelectItem>
+                )}
+                itemValue={(item) => {
+                  return (
+                    item && <PriorityIcons className="h-4 w-4" id={item.slug} />
+                  );
+                }}
+                onChange={(value) =>
+                  setAction({
+                    ...internalAction,
+                    priority_id: value,
+                  })
+                }
+              />
+            )}
           </div>
           {/* Data e Botão */}
           <div className="col-span-2 flex w-full justify-between gap-1 sm:justify-end">
