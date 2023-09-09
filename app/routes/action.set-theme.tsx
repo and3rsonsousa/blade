@@ -6,6 +6,8 @@ import { setTheme } from "~/lib/theme-session.server";
 import type { Theme } from "~/lib/utils";
 import { useHints, isTheme, useRequestInfo } from "~/lib/utils";
 
+export const config = { runtime: "edge" };
+
 export const action: ActionFunction = async ({ request }) => {
   const requestText = await request.text();
   const form = new URLSearchParams(requestText);

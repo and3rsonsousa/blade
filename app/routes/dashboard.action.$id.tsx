@@ -9,6 +9,8 @@ import ActionDialog from "~/components/dialogs/action-dialog";
 import LayoutClient from "~/components/structure/layout-client";
 import supabaseServer from "~/lib/supabase.server";
 
+export const config = { runtime: "edge" };
+
 export const loader: LoaderFunction = async ({
   request,
   params,

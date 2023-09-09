@@ -6,6 +6,8 @@ import LayoutClient from "~/components/structure/layout-client";
 import supabaseServer from "~/lib/supabase.server";
 import { getLoaderActions } from "~/lib/utils";
 
+export const config = { runtime: "edge" };
+
 export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
   {
     title: `${

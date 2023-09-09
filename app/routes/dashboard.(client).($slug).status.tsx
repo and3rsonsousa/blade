@@ -6,6 +6,8 @@ import LayoutClient from "~/components/structure/layout-client";
 import supabaseServer from "~/lib/supabase.server";
 import { getLoaderActions } from "~/lib/utils";
 
+export const config = { runtime: "edge" };
+
 export async function loader({ request, params }: LoaderArgs) {
   const response = new Response();
   const supabase = supabaseServer({ request, response });
