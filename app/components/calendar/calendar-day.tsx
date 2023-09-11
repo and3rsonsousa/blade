@@ -1,6 +1,5 @@
 import { useFetcher, useMatches } from "@remix-run/react";
 import { format, formatISO, isSameMonth, isToday } from "date-fns";
-import { AnimatePresence } from "framer-motion";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useCurrentDate } from "~/lib/useCurrentDate";
@@ -115,35 +114,35 @@ export default function CalendarDay({
             </Popover>
           </div>
         </div>
-        <AnimatePresence initial={false} mode="popLayout">
-          {isGrouped
-            ? getGroupedActions(day.actions as ActionFull[], categories).map(
-                ({ category, actions }) =>
-                  actions.length > 0 && (
-                    <div key={category.id} className="mb-2">
-                      <div
-                        className={`mb-1 text-[8px] font-bold uppercase tracking-wider`}
-                      >
-                        {category.title}
-                      </div>
-                      {actions.map((action) => (
-                        <ActionLineCalendar
-                          action={action as ActionFull}
-                          key={action.id}
-                          setDropAction={setDropAction}
-                        />
-                      ))}
+        {/* <AnimatePresence initial={false} mode="popLayout"> */}
+        {isGrouped
+          ? getGroupedActions(day.actions as ActionFull[], categories).map(
+              ({ category, actions }) =>
+                actions.length > 0 && (
+                  <div key={category.id} className="mb-2">
+                    <div
+                      className={`mb-1 text-[8px] font-bold uppercase tracking-wider`}
+                    >
+                      {category.title}
                     </div>
-                  ),
-              )
-            : day.actions.map((action) => (
-                <ActionLineCalendar
-                  action={action as ActionFull}
-                  key={action.id}
-                  setDropAction={setDropAction}
-                />
-              ))}
-        </AnimatePresence>
+                    {actions.map((action) => (
+                      <ActionLineCalendar
+                        action={action as ActionFull}
+                        key={action.id}
+                        setDropAction={setDropAction}
+                      />
+                    ))}
+                  </div>
+                ),
+            )
+          : day.actions.map((action) => (
+              <ActionLineCalendar
+                action={action as ActionFull}
+                key={action.id}
+                setDropAction={setDropAction}
+              />
+            ))}
+        {/* </AnimatePresence> */}
       </div>
 
       <div>

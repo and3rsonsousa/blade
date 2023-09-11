@@ -1,7 +1,6 @@
 import { type ContextMenuItemProps } from "@radix-ui/react-context-menu";
 import { Link, useFetcher, useMatches, useNavigate } from "@remix-run/react";
 import { add, format, formatISO, parseISO } from "date-fns";
-import { motion } from "framer-motion";
 import {
   ClockIcon,
   CopyIcon,
@@ -65,7 +64,14 @@ export function ActionLineCalendar({
   }
 
   return (
-    <motion.div
+    <div
+      className="relative"
+      draggable
+      onDrag={(event) => {
+        setDropAction(action);
+      }}
+    >
+      {/* <motion.div
       layout
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -76,7 +82,7 @@ export function ActionLineCalendar({
       onDrag={(event: MouseEvent) => {
         setDropAction(action);
       }}
-    >
+    > */}
       <ContextMenu>
         <ContextMenuTrigger>
           <div
@@ -423,7 +429,7 @@ export function ActionLineCalendar({
           <Loader2Icon size={12} className="animate-spin text-primary" />
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
 
