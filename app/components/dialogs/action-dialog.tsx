@@ -158,7 +158,22 @@ export default function ActionDialog({
             ) : (
               <UpdatedTimeClock time={parseISO(action.updated_at)} />
             ))}
-          <FancyInputText
+          <input
+            onChange={(event) => {
+              setAction({
+                ...internalAction,
+                title: removeTags(event.target.value!),
+              });
+            }}
+            placeholder="Nome da ação"
+            className={`${
+              action
+                ? `text-6xl font-bold tracking-tighter`
+                : `text-2xl font-semibold`
+            } bg-transparent outline-none`}
+            value={removeTags(internalAction.title || "")}
+          />
+          {/* <FancyInputText
             onBlur={(value) => {
               setAction({
                 ...internalAction,
@@ -172,7 +187,7 @@ export default function ActionDialog({
                 : `text-2xl font-semibold`
             }
             value={internalAction.title}
-          />
+          /> */}
         </div>
         {/* Descrição */}
         <div className="grow overflow-hidden px-8 text-sm max-sm:px-4 sm:pt-4">
