@@ -57,7 +57,7 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
   const [isGrouped, setGrouped] = useState(true);
   const [isCelebrationsVisible, setCelebrationsVisible] = useState(true);
   const [dropAction, setDropAction] = useState<Action | ActionFull>();
-  const [_actions, set_actions] = useState(actions);
+  // const [_actions, set_actions] = useState(actions);
 
   const { categories }: { categories: Category[] } = matches[1].data;
 
@@ -68,8 +68,8 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
 
   const filteredActions =
     filter.category !== "all"
-      ? getFilteredActions(_actions as ActionFull[], filter.category)
-      : (_actions as ActionFull[]);
+      ? getFilteredActions(actions as ActionFull[], filter.category)
+      : (actions as ActionFull[]);
 
   const orderedActions = getOrderedActions(filteredActions);
 
@@ -315,10 +315,11 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
               dropAction={dropAction}
               setDropAction={(action) => setDropAction(action)}
               set_actions={(action: Action & { loading?: boolean }) => {
-                const filtered = _actions.filter(
-                  (_action) => _action.id !== action.id,
-                );
-                set_actions([...filtered, action]);
+                // const filtered = _actions.filter(
+                //   (_action) => _action.id !== action.id,
+                // );
+                // console.log(filtered);
+                // set_actions([...filtered, action]);
               }}
               isCelebrationsVisible={isCelebrationsVisible}
             />

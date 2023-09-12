@@ -73,7 +73,6 @@ export default function CalendarDay({
           set_actions({
             ...dropAction,
             date: formatISO(targetDate),
-            loading: true,
           });
 
           await fetcher.submit(
