@@ -46,8 +46,10 @@ export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const keyDown = (event: KeyboardEvent) => {
       if (event.metaKey && event.shiftKey) {
+        event.preventDefault();
+        event.stopPropagation();
         if (event.key === "a") setOpenActionDialog(true);
-        if (event.key === "e") setOpenCelebrationDialog(true);
+        if (event.key === "d") setOpenCelebrationDialog(true);
         if (event.key === "b") setOpen((value) => !value);
       }
     };
