@@ -42,9 +42,7 @@ export default function CalendarDay({
       className={cn([
         `group relative justify-between px-6 py-2 transition-colors sm:flex sm:flex-col sm:p-1 ${
           day.actions.length === 0 ? "max-sm:hidden" : ""
-        } rounded-sm border border-transparent ${
-          drag ? "border-muted bg-accent" : ""
-        }`,
+        } rounded-sm ${drag ? "bg-popover" : ""}`,
         className,
       ])}
       data-date={format(day.date, "Y-M-d")}

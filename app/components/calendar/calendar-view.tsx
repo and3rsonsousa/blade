@@ -247,7 +247,7 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
                   variant={"ghost"}
                   size={"sm"}
                   className={`text-xs ${
-                    filter.category !== "all" ? "bg-foreground/20" : ""
+                    filter.category !== "all" ? "bg-accent" : ""
                   }`}
                 >
                   {filter.category === "all" ? (

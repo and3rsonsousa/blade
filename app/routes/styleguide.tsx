@@ -19,6 +19,43 @@ const StyleGuide = () => (
       <a href="#colors">Colors</a>
       <a href="#components">Components</a>
     </div>
+    <div>
+      <div className="bg-background py-8">
+        <div className="flex">
+          <div className="w-2/3">
+            <h1 className="mb-2">Lorem ipsum dolor sit amet consectetur.</h1>
+            <h5 className="text-muted">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vitae
+              voluptates quia dolorum.
+            </h5>
+            <div className="mt-4 flex gap-2">
+              <Button>Get it</Button>
+              <Button variant={"secondary"}>Later</Button>
+            </div>
+          </div>
+          <div className="relative w-1/3 rounded-lg bg-card p-8 text-sm">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti
+            nemo officia sint expedita corporis, sit magni voluptatem modi
+            maiores numquam neque esse tempore. Officia quos nulla laudantium
+            placeat corrupti? A.
+            <div className="mt-4 text-right">
+              <Button variant={"secondary"} size={"sm"}>
+                Perfect
+              </Button>
+            </div>
+            <div className="absolute -left-8 top-4 w-48 rounded-lg border border-foreground/10  bg-popover/25 p-4 text-xs shadow-2xl shadow-black backdrop-blur-xl">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Consequuntur id nihil porro? Quibusdam, reiciendis nesciunt!
+              <div className="mt-2">
+                <Button variant={"secondary"} size={"sm"}>
+                  Perfect
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <h3 id="headings">Headings</h3>
     <div>
       <h1>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</h1>
@@ -92,10 +129,10 @@ const StyleGuide = () => (
       <h4 className="my-16 mb-8">Input</h4>
       <div className="grid gap-8 text-center sm:grid-cols-2">
         <div>
-          <Input value="input normal" />
+          <Input defaultValue="input normal" />
         </div>
         <div>
-          <Input disabled value="input disabled" />
+          <Input disabled defaultValue="input disabled" />
         </div>
       </div>
     </div>

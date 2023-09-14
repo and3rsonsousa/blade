@@ -83,12 +83,12 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Button
             size={"icon"}
             variant={open ? "ghost" : "outline"}
-            className={`ml-4 mr-2 h-8 w-8 ${
-              !open && "absolute -right-6 top-4"
+            className={`ml-4 mr-2 h-6 w-6 ${
+              !open && "absolute -right-5 top-5"
             }`}
             onClick={() => setOpen(!open)}
           >
-            {open ? <ChevronsLeft size={24} /> : <ChevronsRight size={24} />}
+            {open ? <ChevronsLeft size={16} /> : <ChevronsRight size={16} />}
           </Button>
         </div>
         <div className="md:hidden">
@@ -131,7 +131,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                   open
                     ? "px-3"
                     : " px-1 text-center text-[10px] font-semibold uppercase"
-                } overflow-hidden text-ellipsis whitespace-nowrap border-l-2  py-2 transition hover:bg-accent hover:text-accent-foreground ${
+                } overflow-hidden text-ellipsis whitespace-nowrap border-l-2  py-2 transition hover:bg-card hover:text-accent-foreground ${
                   slug === client.slug
                     ? "border-muted-foreground text-foreground"
                     : "border-transparent"

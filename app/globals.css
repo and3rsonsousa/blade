@@ -27,25 +27,44 @@
   }
 
   .dark {
+    --background: 235 50% 10%;
+    --card: 228 35% 18%;
+    --popover: 225 30% 25%;
+    --primary: 270 100% 50%;
+    --secondary: 225 25% 35%;
+    --muted: 220 20% 40%;
+    --accent: 225 30% 25%;
+    --foreground: 200 50% 95%;
+    --card-foreground: 200 50% 95%;
+    --popover-foreground: 200 50% 95%;
+    --primary-foreground: 270 100% 95%;
+    --secondary-foreground: 200 50% 95%;
+    --muted-foreground: 220 30% 65%;
+    --accent-foreground: 200 50% 95%;
+    --border: 225 30% 25%;
+    --input: 225 30% 25%;
+    --ring: 270 100% 50%;
+    /* 
     --background: 229 84% 4.9%;
     --foreground: 210 40% 96.1%;
     --card: 222 47.4% 11.2%;
     --card-foreground: 213 26.8% 83.9%;
-    --popover: 229 84% 4.9%;
-    --popover-foreground: 213 26.8% 83.9%;
+    --popover: 229 84% 4.9%; 
+    `--popover-foreground: 213 26.8% 83.9%; 
     --primary: 270 100% 50%;
-    --primary-foreground: 251 91.3% 95.5%;
+    --primary-foreground: 251 91.3% 95.5%; 
     --secondary: 217 32.6% 17.5%;
     --secondary-foreground: 213 26.8% 83.9%;
     --muted: 215 25% 26.7%;
     --muted-foreground: 215 20.2% 65.1%;
     --accent: 217 32.6% 17.5%;
-    --accent-foreground: 251 91.3% 95.5%;
+    --accent-foreground: 251 91.3% 95.5%; */
     --destructive: 350 89% 60%;
-    --destructive-foreground: 356 100% 94.7%;
-    --border: 217 32.6% 17.5%;
+    --destructive-foreground: 350 90% 95%;
+
+    /* --border: 217 32.6% 17.5%;
     --input: 222 47.4% 11.2%;
-    --ring: 270 100% 50%;
+    --ring: 270 100% 50%; */
   }
 }
 
@@ -174,11 +193,11 @@
 }
 
 .bg-content {
-  @apply rounded-lg border border-foreground/10 bg-foreground/5 px-0 py-2 backdrop-blur-xl;
+  @apply rounded-lg border border-foreground/10 bg-popover/20 px-0 py-2 backdrop-blur-xl;
 }
 
 .menu-item {
-  @apply flex items-center rounded-none text-xs text-foreground focus:bg-foreground/20;
+  @apply flex items-center rounded-none text-xs text-foreground focus:bg-secondary/50;
 }
 
 .scroll-area__component > div {
