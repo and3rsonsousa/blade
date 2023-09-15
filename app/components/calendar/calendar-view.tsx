@@ -20,6 +20,7 @@ import {
   toDate,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useSpring } from "framer-motion";
 import {
   AlignJustifyIcon,
   ChevronLeftIcon,
@@ -29,7 +30,7 @@ import {
   StarIcon,
   StarOffIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CategoryIcons } from "~/lib/icons";
 import { useCurrentDate } from "~/lib/useCurrentDate";
 import { getFilteredActions, getOrderedActions } from "~/lib/utils";
@@ -92,6 +93,27 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
       }),
     });
   });
+
+  const spring = useSpring(0, {
+    stiffness: 200,
+    damping: 30,
+  });
+
+  spring.on("change", (value) => {
+    const viewport = document.querySelector(
+      "[data-radix-scroll-area-viewport]",
+    );
+    viewport?.scrollTo({ top: value });
+  });
+
+  useEffect(() => {
+    if (window) {
+      const el = document.querySelector<HTMLElement>(
+        `[data-date="${format(new Date(), "Y-M-d")}"]`,
+      );
+      spring.set(el?.offsetTop);
+    }
+  }, [spring]);
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
