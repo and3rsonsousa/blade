@@ -2,7 +2,6 @@ import { useLoaderData } from "@remix-run/react";
 import { type LoaderArgs, type V2_MetaFunction } from "@vercel/remix";
 import PriorityView from "~/components/priority/priority-view";
 
-import LayoutClient from "~/components/structure/layout-client";
 import supabaseServer from "~/lib/supabase.server";
 import { getLoaderActions } from "~/lib/utils";
 
@@ -29,10 +28,6 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
 ];
 
 export default function ClientID() {
-  const { client, actions } = useLoaderData<typeof loader>();
-  return (
-    <LayoutClient client={client}>
-      <PriorityView actions={actions} />
-    </LayoutClient>
-  );
+  const { actions } = useLoaderData<typeof loader>();
+  return <PriorityView actions={actions} />;
 }

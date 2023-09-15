@@ -2,7 +2,6 @@ import { useLoaderData } from "@remix-run/react";
 import { type LoaderArgs, type V2_MetaFunction } from "@vercel/remix";
 
 import Calendar from "~/components/calendar/calendar-view";
-import LayoutClient from "~/components/structure/layout-client";
 import supabaseServer from "~/lib/supabase.server";
 import { getLoaderActions } from "~/lib/utils";
 
@@ -32,14 +31,12 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export default function DashboardIndex() {
-  const { actions, client, celebrations } = useLoaderData<typeof loader>();
+  const { actions, celebrations } = useLoaderData<typeof loader>();
 
   return (
-    <LayoutClient client={client}>
-      <Calendar
-        actions={actions as Action[]}
-        celebrations={celebrations as Celebration[]}
-      />
-    </LayoutClient>
+    <Calendar
+      actions={actions as Action[]}
+      celebrations={celebrations as Celebration[]}
+    />
   );
 }

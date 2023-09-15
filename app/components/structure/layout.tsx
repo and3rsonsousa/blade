@@ -6,13 +6,17 @@ import {
   useParams,
 } from "@remix-run/react";
 import {
+  CalendarDaysIcon,
   CalendarPlusIcon,
+  CheckCircleIcon,
   ChevronsLeft,
   ChevronsRight,
   CommandIcon,
+  ListTodoIcon,
   MenuIcon,
   PlusIcon,
   SearchIcon,
+  SignalHighIcon,
   UserIcon,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
@@ -30,6 +34,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Blade from "./blade";
 import CommandBox from "./commnad-box";
+import { cn } from "~/lib/utils";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user }: { user: Person } = useOutletContext();
@@ -39,8 +44,9 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(true);
   const [openActionDialog, setOpenActionDialog] = useState(false);
   const [openCelebrationDialog, setOpenCelebrationDialog] = useState(false);
-
   const slug = params["slug"];
+  const url = `/dashboard${slug ? "/client/".concat(slug) : ""}/`;
+
   const { clients }: { clients: Client[] } = matches[1].data;
 
   useEffect(() => {
@@ -119,44 +125,73 @@ export default function Layout({ children }: { children: ReactNode }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+
         <div className="hidden shrink-0 grow flex-col justify-between md:flex">
-          <div
-            className={`flex flex-col gap-1 text-xs font-medium text-muted-foreground`}
-          >
-            {clients.map((client) => (
+          <div>
+            <h5 className="px-4 text-[10px] text-muted">Páginas</h5>
+            <div className="mb-8 flex flex-col text-sm font-medium hover:text-muted">
               <Link
-                key={client.id}
-                to={`/dashboard/client/${client.slug}`}
-                className={`${
-                  open
-                    ? "px-3"
-                    : " px-1 text-center text-[10px] font-semibold uppercase"
-                } overflow-hidden text-ellipsis whitespace-nowrap border-l-2  py-2 transition hover:bg-card hover:text-accent-foreground ${
-                  slug === client.slug
-                    ? "border-muted-foreground text-foreground"
-                    : "border-transparent"
+                to={`${url}`}
+                className={`flex gap-2 py-2 transition hover:text-foreground ${
+                  open ? "px-4" : "px-6"
                 }`}
               >
-                {open ? client.title : client.short}
-                {/* {slug === client.slug && (
-                  <div className="mt-2 flex flex-col gap-2 rounded-sm bg-card py-2">
-                    <Link to="/" className="flex items-center gap-2 px-2 py-1">
-                      <Calendar size={12} /> Calendário
-                    </Link>
-                    <Link to="/" className="flex items-center gap-2 px-2 py-1">
-                      <Calendar size={12} /> Calendário
-                    </Link>
-                    <Link to="/" className="flex items-center gap-2 px-2 py-1">
-                      <Calendar size={12} /> Calendário
-                    </Link>
-                    <Link to="/" className="flex items-center gap-2 px-2 py-1">
-                      <Calendar size={12} /> Calendário
-                    </Link>
-                  </div>
-                )} */}
+                <CalendarDaysIcon size={16} />
+                <span className={!open ? "hidden" : ""}> Calendário </span>
               </Link>
-            ))}
+
+              <Link
+                to={`${url}list`}
+                className={`flex gap-2 py-2 transition hover:text-foreground ${
+                  open ? "px-4" : "px-6"
+                }`}
+              >
+                <ListTodoIcon size={16} />
+                <span className={!open ? "hidden" : ""}> Lista </span>
+              </Link>
+
+              <Link
+                to={`${url}status`}
+                className={`flex gap-2 py-2 transition hover:text-foreground ${
+                  open ? "px-4" : "px-6"
+                }`}
+              >
+                <CheckCircleIcon size={16} />
+                <span className={!open ? "hidden" : ""}> Status </span>
+              </Link>
+
+              <Link
+                to={`${url}priority`}
+                className={`flex gap-2 py-2 transition hover:text-foreground ${
+                  open ? "px-4" : "px-6"
+                }`}
+              >
+                <SignalHighIcon size={16} />
+                <span className={!open ? "hidden" : ""}> Prioridade </span>
+              </Link>
+            </div>
+
+            <h5 className="px-4 text-[10px] text-muted">Clientes</h5>
+
+            <div
+              className={`flex flex-col gap-1 text-xs font-medium text-muted-foreground`}
+            >
+              {clients.map((client) => (
+                <Link
+                  key={client.id}
+                  to={`/dashboard/client/${client.slug}`}
+                  className={`${cn(
+                    !open && "px-4 text-center text-[10px] uppercase",
+                  )} overflow-hidden text-ellipsis whitespace-nowrap px-4 py-2 font-normal transition hover:text-accent-foreground ${cn(
+                    slug === client.slug && "text-foreground",
+                  )}`}
+                >
+                  {open ? client.title : client.short}
+                </Link>
+              ))}
+            </div>
           </div>
+
           {open ? (
             <div className="p-3">
               <div className="p-3">
@@ -196,7 +231,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       </div>
 
       {children}
-
+      {/* Add button */}
       <div className="fixed bottom-6 right-4">
         <Popover
           open={openCelebrationDialog}
@@ -239,6 +274,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           </PopoverContent>
         </Popover>
       </div>
+      {/* Cmd + K */}
       <CommandBox
         options={{
           action: { open: openActionDialog, setOpen: setOpenActionDialog },
