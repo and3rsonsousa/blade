@@ -170,7 +170,7 @@ export default function ActionDialog({
               action
                 ? `text-6xl font-bold tracking-tighter`
                 : `text-2xl font-semibold`
-            } bg-transparent outline-none`}
+            } w-full bg-transparent outline-none`}
             value={removeTags(internalAction.title || "")}
           />
           {/* <FancyInputText

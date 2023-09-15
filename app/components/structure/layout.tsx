@@ -35,6 +35,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Blade from "./blade";
 import CommandBox from "./commnad-box";
 import { cn } from "~/lib/utils";
+import { ScrollArea } from "../ui/scroll-area";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user }: { user: Person } = useOutletContext();
@@ -69,7 +70,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <div
         className={`${
           open ? "md:w-48" : "md:w-16"
-        } flex shrink-0 justify-between max-md:items-center  max-md:border-b md:flex-col md:border-r`}
+        } flex shrink-0 justify-between overflow-hidden border-border/50 max-md:items-center max-md:border-b md:flex-col md:border-r`}
       >
         <div
           className={`${
@@ -126,74 +127,76 @@ export default function Layout({ children }: { children: ReactNode }) {
           </DropdownMenu>
         </div>
 
-        <div className="hidden shrink-0 grow flex-col justify-between md:flex">
-          <div>
-            <h5 className="px-4 text-[10px] text-muted">Páginas</h5>
-            <div className="mb-8 flex flex-col text-sm font-medium hover:text-muted">
-              <Link
-                to={`${url}`}
-                className={`flex gap-2 py-2 transition hover:text-foreground ${
-                  open ? "px-4" : "px-6"
-                }`}
-              >
-                <CalendarDaysIcon size={16} />
-                <span className={!open ? "hidden" : ""}> Calendário </span>
-              </Link>
-
-              <Link
-                to={`${url}list`}
-                className={`flex gap-2 py-2 transition hover:text-foreground ${
-                  open ? "px-4" : "px-6"
-                }`}
-              >
-                <ListTodoIcon size={16} />
-                <span className={!open ? "hidden" : ""}> Lista </span>
-              </Link>
-
-              <Link
-                to={`${url}status`}
-                className={`flex gap-2 py-2 transition hover:text-foreground ${
-                  open ? "px-4" : "px-6"
-                }`}
-              >
-                <CheckCircleIcon size={16} />
-                <span className={!open ? "hidden" : ""}> Status </span>
-              </Link>
-
-              <Link
-                to={`${url}priority`}
-                className={`flex gap-2 py-2 transition hover:text-foreground ${
-                  open ? "px-4" : "px-6"
-                }`}
-              >
-                <SignalHighIcon size={16} />
-                <span className={!open ? "hidden" : ""}> Prioridade </span>
-              </Link>
-            </div>
-
-            <h5 className="px-4 text-[10px] text-muted">Clientes</h5>
-
-            <div
-              className={`flex flex-col gap-1 text-xs font-medium text-muted-foreground`}
-            >
-              {clients.map((client) => (
+        <div className="hidden h-full flex-col justify-between overflow-hidden  md:flex">
+          <ScrollArea className="shrink grow">
+            <div>
+              <h5 className="px-4 text-[10px] text-muted">Páginas</h5>
+              <div className="mb-8 flex flex-col text-sm font-medium hover:text-muted">
                 <Link
-                  key={client.id}
-                  to={`/dashboard/client/${client.slug}`}
-                  className={`${cn(
-                    !open && "px-4 text-center text-[10px] uppercase",
-                  )} overflow-hidden text-ellipsis whitespace-nowrap px-4 py-2 font-normal transition hover:text-accent-foreground ${cn(
-                    slug === client.slug && "text-foreground",
-                  )}`}
+                  to={`${url}`}
+                  className={`flex gap-2 py-2 transition hover:text-foreground ${
+                    open ? "px-4" : "px-6"
+                  }`}
                 >
-                  {open ? client.title : client.short}
+                  <CalendarDaysIcon size={16} />
+                  <span className={!open ? "hidden" : ""}> Calendário </span>
                 </Link>
-              ))}
+
+                <Link
+                  to={`${url}list`}
+                  className={`flex gap-2 py-2 transition hover:text-foreground ${
+                    open ? "px-4" : "px-6"
+                  }`}
+                >
+                  <ListTodoIcon size={16} />
+                  <span className={!open ? "hidden" : ""}> Lista </span>
+                </Link>
+
+                <Link
+                  to={`${url}status`}
+                  className={`flex gap-2 py-2 transition hover:text-foreground ${
+                    open ? "px-4" : "px-6"
+                  }`}
+                >
+                  <CheckCircleIcon size={16} />
+                  <span className={!open ? "hidden" : ""}> Status </span>
+                </Link>
+
+                <Link
+                  to={`${url}priority`}
+                  className={`flex gap-2 py-2 transition hover:text-foreground ${
+                    open ? "px-4" : "px-6"
+                  }`}
+                >
+                  <SignalHighIcon size={16} />
+                  <span className={!open ? "hidden" : ""}> Prioridade </span>
+                </Link>
+              </div>
+
+              <h5 className="px-4 text-[10px] text-muted">Clientes</h5>
+
+              <div
+                className={`flex flex-col gap-1 text-xs font-medium text-muted-foreground`}
+              >
+                {clients.map((client) => (
+                  <Link
+                    key={client.id}
+                    to={`/dashboard/client/${client.slug}`}
+                    className={`${cn(
+                      !open && "px-4 text-center text-[10px] uppercase",
+                    )} overflow-hidden text-ellipsis whitespace-nowrap px-4 py-2 font-normal transition hover:text-accent-foreground ${cn(
+                      slug === client.slug && "text-foreground",
+                    )}`}
+                  >
+                    {open ? client.title : client.short}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          </ScrollArea>
 
           {open ? (
-            <div className="p-3">
+            <div className="shrink-0 p-3">
               <div className="p-3">
                 <Button
                   className="w-full justify-between bg-card px-2"
@@ -218,7 +221,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-2 pb-4">
+            <div className="flex shrink-0  flex-col items-center gap-2 pb-4">
               <Button variant={"secondary"} className="h-auto p-2">
                 <SearchIcon size={16} />
               </Button>
