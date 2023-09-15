@@ -158,11 +158,11 @@ export default function ActionDialog({
             ) : (
               <UpdatedTimeClock time={parseISO(action.updated_at)} />
             ))}
-          <input
-            onChange={(event) => {
+          <FancyInputText
+            onChange={(value) => {
               setAction({
                 ...internalAction,
-                title: removeTags(event.target.value!),
+                title: removeTags(value as string),
               });
             }}
             placeholder="Nome da ação"
@@ -173,25 +173,11 @@ export default function ActionDialog({
             } w-full bg-transparent outline-none`}
             value={removeTags(internalAction.title || "")}
           />
-          {/* <FancyInputText
-            onBlur={(value) => {
-              setAction({
-                ...internalAction,
-                title: removeTags(value!),
-              });
-            }}
-            placeholder="Nome da ação"
-            className={
-              action
-                ? `text-6xl font-bold tracking-tighter`
-                : `text-2xl font-semibold`
-            }
-            value={internalAction.title}
-          /> */}
         </div>
         {/* Descrição */}
-        <div className="grow overflow-hidden px-8 text-sm max-sm:px-4 sm:pt-4">
-          {action ? (
+
+        {action ? (
+          <div className="grow overflow-hidden px-8 text-sm max-sm:px-4 sm:pt-4">
             <ScrollArea className="h-full">
               <Editor
                 content={action.description as string}
@@ -203,20 +189,22 @@ export default function ActionDialog({
                 }
               />
             </ScrollArea>
-          ) : (
+          </div>
+        ) : (
+          <div className="px-8 text-sm max-sm:px-4 sm:pt-4">
             <FancyInputText
               placeholder="Descreva sua ação aqui..."
-              onBlur={(value) => {
+              onChange={(value) => {
                 setAction({
                   ...internalAction,
-                  description: removeTags(value!),
+                  description: removeTags(value || ""),
                 });
               }}
               ref={description}
               max={200}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
       {/* Botões */}
       <div className="shrink-0">
@@ -254,7 +242,7 @@ export default function ActionDialog({
               }}
               itemMenu={(item) => {
                 return (
-                  <SelectItem value={String(item.id)}>
+                  <SelectItem value={String(item.id)} key={item.id}>
                     <div className="flex gap-2">
                       <CategoryIcons id={item.slug} className="h-4 w-4" />
 

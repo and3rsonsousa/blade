@@ -99,19 +99,24 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
     damping: 30,
   });
 
-  spring.on("change", (value) => {
-    const viewport = document.querySelector(
-      "[data-radix-scroll-area-viewport]",
-    );
-    viewport?.scrollTo({ top: value });
-  });
+  // spring.on("change", (value) => {
+  //   console.log(value);
+  //   const viewport = document.querySelector(
+  //     "[data-radix-scroll-area-viewport]",
+  //   );
+  //   viewport?.scrollTo({ top: value });
+  // });
 
   useEffect(() => {
     if (window) {
       const el = document.querySelector<HTMLElement>(
         `[data-date="${format(new Date(), "Y-M-d")}"]`,
       );
-      spring.set(el?.offsetTop);
+      // spring.set(el?.offsetTop);
+      el?.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+      });
     }
   }, [spring]);
 
