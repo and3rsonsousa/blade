@@ -2,6 +2,8 @@ import { type ActionFunction } from "@vercel/remix";
 import { formatISO } from "date-fns";
 import supabaseServer from "~/lib/supabase.server";
 
+export const config = { runtime: "edge" };
+
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const actionToHandle = formData.get("action") as string;
@@ -139,7 +141,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     return { data, error };
   } else if (actionToHandle === "delete-celebration") {
-    const id = formData.get("id");
+    const id = formData.get("id") as string;
     const { data, error } = await supabase
       .from("celebration")
       .delete()
