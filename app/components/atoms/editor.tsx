@@ -54,7 +54,7 @@ export default function Editor({
     extensions,
     editorProps: {
       attributes: {
-        class: "outline-none min-h-[25vh]",
+        class: "outline-none min-h-[50vh]",
       },
     },
   });
