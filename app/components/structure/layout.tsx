@@ -130,7 +130,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="hidden h-full flex-col justify-between overflow-hidden  md:flex">
           <ScrollArea className="shrink grow">
             <div>
-              <h5 className="px-4 text-[10px] text-muted">Páginas</h5>
+              {open && <h5 className="px-4 text-[10px] text-muted">Páginas</h5>}
               <div className="mb-8 flex flex-col text-sm font-medium hover:text-muted">
                 <Link
                   to={`${url}`}
@@ -172,8 +172,9 @@ export default function Layout({ children }: { children: ReactNode }) {
                   <span className={!open ? "hidden" : ""}> Prioridade </span>
                 </Link>
               </div>
-
-              <h5 className="px-4 text-[10px] text-muted">Clientes</h5>
+              {open && (
+                <h5 className="px-4 text-[10px] text-muted">Clientes</h5>
+              )}
 
               <div
                 className={`flex flex-col gap-1 text-xs font-medium text-muted-foreground`}
@@ -183,8 +184,8 @@ export default function Layout({ children }: { children: ReactNode }) {
                     key={client.id}
                     to={`/dashboard/client/${client.slug}`}
                     className={`${cn(
-                      !open && "px-4 text-center text-[10px] uppercase",
-                    )} overflow-hidden text-ellipsis whitespace-nowrap px-4 py-2 font-normal transition hover:text-accent-foreground ${cn(
+                      !open ? "px-1 text-center text-[10px] uppercase" : "px-4",
+                    )} overflow-hidden text-ellipsis whitespace-nowrap py-2 font-normal transition hover:text-accent-foreground ${cn(
                       slug === client.slug && "text-foreground",
                     )}`}
                   >
