@@ -87,16 +87,6 @@ export default function Layout({ children }: { children: ReactNode }) {
               <img src="/icon-3.png" alt="Blade Icon" className="mb-4 w-8" />
             )}
           </Link>
-          <Button
-            size={"icon"}
-            variant={open ? "ghost" : "outline"}
-            className={`ml-4 mr-2 h-6 w-6 ${
-              !open && "absolute -right-5 top-5"
-            }`}
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <ChevronsLeft size={16} /> : <ChevronsRight size={16} />}
-          </Button>
         </div>
         <div className="md:hidden">
           <DropdownMenu>
@@ -127,9 +117,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           </DropdownMenu>
         </div>
 
-        <div className="hidden h-full flex-col justify-between overflow-hidden  md:flex">
+        <div className="hidden h-full flex-col justify-between overflow-hidden   md:flex">
           <ScrollArea className="shrink grow">
-            <div>
+            <div className="pb-2">
               {open && <h5 className="px-4 text-[10px] text-muted">Páginas</h5>}
               <div className="mb-8 flex flex-col text-sm font-medium hover:text-muted">
                 <Link
@@ -197,15 +187,15 @@ export default function Layout({ children }: { children: ReactNode }) {
           </ScrollArea>
 
           {open ? (
-            <div className="shrink-0 p-3">
-              <div className="p-3">
+            <div className="shrink-0 border-t border-border/50 p-3">
+              <div className="p-1">
                 <Button
                   className="w-full justify-between bg-card px-2"
                   size={"sm"}
-                  variant={"secondary"}
+                  variant={"ghost"}
                 >
                   <div className="flex items-center gap-2 text-sm">
-                    <SearchIcon size={16} />
+                    <SearchIcon size={16} className="opacity-50" />
                     Busca
                   </div>
                   <div className="flex items-center gap-1 text-xs opacity-25">
@@ -222,8 +212,8 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
             </div>
           ) : (
-            <div className="flex shrink-0  flex-col items-center gap-2 pb-4">
-              <Button variant={"secondary"} className="h-auto p-2">
+            <div className="flex shrink-0 flex-col items-center gap-2 border-t border-border/50 pb-4 pt-4">
+              <Button variant={"ghost"} className="h-auto p-2">
                 <SearchIcon size={16} />
               </Button>
               <Button variant={"ghost"} className="h-auto p-2">
@@ -235,6 +225,16 @@ export default function Layout({ children }: { children: ReactNode }) {
       </div>
 
       {children}
+      <Button
+        size={"icon"}
+        variant={open ? "ghost" : "outline"}
+        className={`absolute top-5 ml-4 mr-2 h-6 w-6 ${
+          open ? "left-36 " : " left-9"
+        }`}
+        onClick={() => setOpen(!open)}
+      >
+        {open ? <ChevronsLeft size={16} /> : <ChevronsRight size={16} />}
+      </Button>
       {/* Add button */}
       <div className="fixed bottom-6 right-4">
         <Popover
