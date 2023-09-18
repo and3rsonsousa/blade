@@ -11,7 +11,6 @@ import {
   CheckCircleIcon,
   ChevronsLeft,
   ChevronsRight,
-  CommandIcon,
   ListTodoIcon,
   MenuIcon,
   PlusIcon,
@@ -20,6 +19,7 @@ import {
   UserIcon,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
+import { cn } from "~/lib/utils";
 import ActionDialog from "../dialogs/action-dialog";
 import CelebrationDialog from "../dialogs/celebration-dialog";
 import { Button } from "../ui/button";
@@ -32,10 +32,9 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { ScrollArea } from "../ui/scroll-area";
 import Blade from "./blade";
 import CommandBox from "./commnad-box";
-import { cn } from "~/lib/utils";
-import { ScrollArea } from "../ui/scroll-area";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user }: { user: Person } = useOutletContext();
@@ -53,11 +52,21 @@ export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const keyDown = (event: KeyboardEvent) => {
       if (event.metaKey && event.shiftKey) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (event.key === "a") setOpenActionDialog(true);
-        if (event.key === "d") setOpenCelebrationDialog(true);
-        if (event.key === "b") setOpen((value) => !value);
+        if (event.key === "a") {
+          event.preventDefault();
+          event.stopPropagation();
+          setOpenActionDialog(true);
+        }
+        if (event.key === "d") {
+          event.preventDefault();
+          event.stopPropagation();
+          setOpenCelebrationDialog(true);
+        }
+        if (event.key === "b") {
+          event.preventDefault();
+          event.stopPropagation();
+          setOpen((value) => !value);
+        }
       }
     };
     window.addEventListener("keydown", keyDown);
@@ -188,22 +197,6 @@ export default function Layout({ children }: { children: ReactNode }) {
 
           {open ? (
             <div className="shrink-0 border-t border-border/50 p-3">
-              <div className="p-1">
-                <Button
-                  className="w-full justify-between bg-card px-2"
-                  size={"sm"}
-                  variant={"ghost"}
-                >
-                  <div className="flex items-center gap-2 text-sm">
-                    <SearchIcon size={16} className="opacity-50" />
-                    Busca
-                  </div>
-                  <div className="flex items-center gap-1 text-xs opacity-25">
-                    <CommandIcon size={12} />
-                    <div>+ K</div>
-                  </div>
-                </Button>
-              </div>
               <div className="flex items-center gap-2 px-3 py-2">
                 <UserIcon size={16} />
                 <div className="overflow-hidden text-ellipsis whitespace-nowrap text-xs">

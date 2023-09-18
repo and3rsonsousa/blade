@@ -73,9 +73,9 @@ export default function Editor({
             pressed={editor.isActive("heading", {
               level: 3,
             })}
-            onPressedChange={() =>
-              editor.chain().focus().toggleHeading({ level: 3 }).run()
-            }
+            onPressedChange={() => {
+              editor.chain().focus().toggleHeading({ level: 3 }).run();
+            }}
           >
             <Heading1Icon size={size} />
           </ToggleButton>

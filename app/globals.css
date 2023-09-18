@@ -102,7 +102,7 @@
 }
 
 .prose {
-  @apply text-lg text-foreground selection:bg-muted selection:text-primary-foreground;
+  @apply text-lg text-foreground selection:bg-primary selection:text-foreground;
 }
 
 .prose .tiptap * {
