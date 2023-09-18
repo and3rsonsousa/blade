@@ -2,7 +2,7 @@ import { useFetcher, useMatches, useParams } from "@remix-run/react";
 
 import { format, formatISO, parseISO } from "date-fns";
 import { Check, Loader2Icon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { CategoryIcons, PriorityIcons } from "~/lib/icons";
 import { removeTags } from "~/lib/utils";
 import UpdatedTimeClock from "../atoms/update-time-clock";
@@ -13,8 +13,8 @@ import Editor from "../atoms/editor";
 import FancyDatetimePicker from "../atoms/fancy-datetime";
 import FancyInputText from "../atoms/fancy-input";
 import { Button } from "../ui/button";
-import { SelectItem } from "../ui/select";
 import { ScrollArea } from "../ui/scroll-area";
+import { SelectItem } from "../ui/select";
 
 export type InternalAction = {
   title?: string;
@@ -72,9 +72,6 @@ export default function ActionDialog({
       : "af6ceef7-7c70-44c9-b187-ee9d376c15c1",
     date: action ? parseISO(action.date) : baseDate,
   });
-
-  const description = useRef<HTMLDivElement>(null);
-  const clientInput = useRef<HTMLButtonElement>(null);
 
   const busy = fetcher.state !== "idle";
 
@@ -168,7 +165,7 @@ export default function ActionDialog({
             placeholder="Nome da ação"
             className={`${
               action
-                ? `text-6xl font-bold tracking-tighter`
+                ? `min-h-[70px] text-6xl font-bold tracking-tighter`
                 : `text-2xl font-semibold`
             } w-full bg-transparent outline-none`}
             value={removeTags(internalAction.title || "")}
@@ -200,7 +197,6 @@ export default function ActionDialog({
                   description: removeTags(value || ""),
                 });
               }}
-              ref={description}
               max={200}
             />
           </div>
@@ -222,7 +218,6 @@ export default function ActionDialog({
                 });
               }}
               selectedValue={internalAction.client_id}
-              ref={clientInput}
             />
             {/* Categorias */}
             <FancySelectInput
@@ -264,7 +259,7 @@ export default function ActionDialog({
               placeholder="Status"
               selectedValue={internalAction.state_id}
               itemMenu={(item) => (
-                <SelectItem value={String(item.id)}>
+                <SelectItem value={String(item.id)} key={item.id}>
                   <div className="flex items-center gap-2">
                     <div
                       className={`border-${item.slug} h-2 w-2 rounded-full border-2`}
@@ -298,7 +293,7 @@ export default function ActionDialog({
                 placeholder="Status"
                 selectedValue={internalAction.priority_id}
                 itemMenu={(item) => (
-                  <SelectItem value={String(item.id)}>
+                  <SelectItem value={String(item.id)} key={item.id}>
                     <div className="flex items-center gap-2">
                       <PriorityIcons id={item.slug} className="h-4 w-4" />
                       <div>{item.title}</div>

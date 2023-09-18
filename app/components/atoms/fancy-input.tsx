@@ -1,16 +1,20 @@
-import { type LegacyRef, forwardRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "~/lib/utils";
 
-const FancyInputText = forwardRef<
-  HTMLDivElement | HTMLTextAreaElement,
-  {
-    placeholder?: string;
-    className?: string;
-    max?: number;
-    value?: string;
-    onChange?: (value?: string) => void;
-  }
->(({ placeholder, value, className, max = 70, onChange }, ref) => {
+const FancyInputText = ({
+  placeholder,
+  value,
+  className,
+  max = 70,
+  onChange,
+}: {
+  placeholder?: string;
+  className?: string;
+  max?: number;
+  value?: string;
+  onChange?: (value?: string) => void;
+}) => {
+  const ref = useRef<HTMLTextAreaElement>(null);
   const onPaste = async (event: ClipboardEvent) => {
     const data = await navigator.clipboard.readText();
     navigator.clipboard.writeText(data);
@@ -23,6 +27,13 @@ const FancyInputText = forwardRef<
 
   const [text, setText] = useState(value as string);
 
+  function fixHeight() {
+    if (ref.current?.scrollHeight) {
+      ref.current.style.height = `auto`;
+      ref.current.style.height = `${ref.current.scrollHeight}px`;
+    }
+  }
+
   return (
     <div className="relative">
       <textarea
@@ -31,15 +42,14 @@ const FancyInputText = forwardRef<
           "w-full resize-none overflow-hidden bg-transparent outline-none",
           className,
         ])}
-        ref={ref as LegacyRef<HTMLTextAreaElement>}
         placeholder={placeholder}
         defaultValue={text}
+        ref={ref}
         onChange={(event) => {
-          event.target.style.height = `${event.target.scrollHeight}px`;
           setText(event.target.value);
-          if (onChange) onChange(text);
+          if (onChange) onChange(event.target.value);
+          fixHeight();
         }}
-        style={{ height: "auto" }}
         onKeyDown={(event) => {
           if (
             event.currentTarget.value.length >= max &&
@@ -65,7 +75,7 @@ const FancyInputText = forwardRef<
       )}
     </div>
   );
-});
+};
 
 FancyInputText.displayName = "FancyInputText";
 
