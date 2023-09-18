@@ -37,6 +37,7 @@ const FancyInputText = ({
   return (
     <div className="relative">
       <textarea
+        rows={1}
         className={cn([
           "w-full resize-none overflow-hidden bg-transparent outline-none selection:bg-primary selection:text-foreground placeholder:text-muted",
           className,

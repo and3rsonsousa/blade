@@ -325,7 +325,7 @@ export default function ActionDialog({
 
             <Button
               variant={
-                isValidAction(internalAction) || busy ? "default" : "secondary"
+                isValidAction(internalAction) || busy ? "default" : "ghost"
               }
               size={"sm"}
               onClick={() => {
