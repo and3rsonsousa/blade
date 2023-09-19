@@ -22,6 +22,7 @@ const FancyInputText = ({
 
   useEffect(() => {
     window.addEventListener("paste", onPaste);
+    fixHeight();
     return () => window.removeEventListener("paste", onPaste);
   }, []);
 
