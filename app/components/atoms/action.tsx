@@ -77,7 +77,7 @@ export function ActionLineCalendar({
           <div
             className={`mb-0.5 border-l-4 px-2 border-${
               action.states.slug
-            }  group/action relative flex w-full cursor-pointer gap-1 rounded bg-card py-1 text-xs text-slate-400 transition hover:bg-accent hover:text-foreground ${
+            }  group/action font relative flex w-full cursor-pointer gap-1 rounded bg-card py-1 text-xs text-slate-400 transition hover:bg-accent hover:text-foreground ${
               busy && "opacity-50"
             }`}
             onClick={() => {

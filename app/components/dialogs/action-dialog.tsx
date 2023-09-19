@@ -166,7 +166,7 @@ export default function ActionDialog({
             className={`${
               action
                 ? `min-h-[70px] text-6xl font-bold tracking-tighter`
-                : `text-2xl font-semibold`
+                : `text-2xl font-bold`
             } w-full bg-transparent outline-none`}
             value={removeTags(internalAction.title || "")}
           />

@@ -63,14 +63,14 @@ export default function CelebrationDialog({
         {/* Título */}
         <div className={`p-8  pb-0 max-sm:p-4 `}>
           <FancyInputText
-            onBlur={(value) => {
+            onChange={(value) => {
               setCelebration({
                 ...celebration,
                 title: removeTags(value!),
               });
             }}
             placeholder="Título da data comemorativa"
-            className={`text-2xl font-semibold`}
+            className={`text-2xl font-bold`}
           />
         </div>
       </div>

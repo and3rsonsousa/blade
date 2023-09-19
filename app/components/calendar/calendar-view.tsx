@@ -124,7 +124,7 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
     <div className="flex h-full w-full flex-col overflow-hidden">
       <div className="flex shrink items-center justify-between gap-2 border-b p-2">
         <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-1 text-xl font-semibold">
+          <div className="flex items-center gap-1 text-xl font-bold">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant={"ghost"} size={"sm"}>
