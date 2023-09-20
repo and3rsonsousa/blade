@@ -126,7 +126,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           </DropdownMenu>
         </div>
 
-        <div className="hidden h-full flex-col justify-between overflow-hidden   md:flex">
+        <div className="hidden h-full flex-col justify-between overflow-hidden  md:flex">
           <ScrollArea className="shrink grow">
             <div className="pb-2">
               {open && <h5 className="px-4 text-[10px] text-muted">Páginas</h5>}
@@ -176,7 +176,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               )}
 
               <div
-                className={`flex flex-col gap-1 text-xs font-medium text-muted-foreground`}
+                className={`flex flex-col gap-1 text-xs font-medium hover:text-muted`}
               >
                 {clients.map((client) => (
                   <Link
@@ -184,7 +184,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     to={`/dashboard/client/${client.slug}`}
                     className={`${cn(
                       !open ? "px-1 text-center text-[10px] uppercase" : "px-4",
-                    )} overflow-hidden text-ellipsis whitespace-nowrap py-2 font-normal transition hover:text-accent-foreground ${cn(
+                    )} overflow-hidden text-ellipsis whitespace-nowrap py-2 font-normal transition hover:text-foreground ${cn(
                       slug === client.slug && "text-foreground",
                     )}`}
                   >
