@@ -1,34 +1,65 @@
 import { Link } from "@remix-run/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { LogInIcon } from "lucide-react";
 import Blade from "~/components/structure/blade";
 import { Button } from "~/components/ui/button";
 
 export default function Index() {
-	return (
-		<div className="grid min-h-screen place-content-center">
-			<div className="text-center max-w-xs">
-				<Blade className="w-32 mx-auto" />
+  return (
+    <div className="grid min-h-screen place-content-center">
+      <div className="max-w-xs text-center">
+        {/* <div className="inline-block bg-gradient-to-r from-teal-400 via-primary  via-[65%] to-rose-500 bg-clip-text text-5xl font-black text-transparent">
+          BLADE
+        </div> */}
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, scale: 1.2 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 2, ease: [0.215, 0.61, 0.355, 1.0] }}
+          >
+            <Blade className="mx-auto w-48" />
+          </motion.div>
 
-				<div className="my-8">
-					Sistema de gestão de ações criado e mantido pela{" "}
-					<a
-						href="https://agenciacanivete.com.br"
-						target="_blank"
-						rel="noreferrer"
-						className="link"
-					>
-						aɢêɴᴄɪa ᴄaɴɪᴠeᴛe.
-					</a>
-				</div>
-				<div>
-					<Button variant={"default"} asChild>
-						<Link to="/dashboard">
-							Acessar{" "}
-							<LogInIcon size={24} className="ml-2 -mr-1" />
-						</Link>
-					</Button>
-				</div>
-			</div>
-		</div>
-	);
+          <motion.div
+            className="my-8"
+            initial={{ opacity: 0, scale: 1.2 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{
+              duration: 2,
+              ease: [0.215, 0.61, 0.355, 1.0],
+              delay: 0.5,
+            }}
+          >
+            Sistema de gestão de ações criado e mantido pela{" "}
+            <a
+              href="https://agenciacanivete.com.br"
+              target="_blank"
+              rel="noreferrer"
+              className="link"
+            >
+              aɢêɴᴄɪa ᴄaɴɪᴠeᴛe.
+            </a>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 1.2 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{
+              duration: 2,
+              ease: [0.215, 0.61, 0.355, 1.0],
+              delay: 1,
+            }}
+          >
+            <Button variant={"default"} asChild>
+              <Link to="/dashboard">
+                Acessar <LogInIcon size={24} className="-mr-1 ml-2" />
+              </Link>
+            </Button>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
 }
