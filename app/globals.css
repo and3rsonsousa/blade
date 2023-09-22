@@ -193,11 +193,11 @@
 }
 
 .bg-content {
-  @apply rounded-lg border border-foreground/10 bg-popover/20 px-0 py-2 backdrop-blur-xl;
+  @apply rounded-lg border border-foreground/10 bg-popover/10 px-0 py-2 backdrop-blur-xl;
 }
 
 .menu-item {
-  @apply flex items-center rounded-none text-xs text-foreground focus:bg-secondary/50;
+  @apply flex items-center rounded-none text-xs text-foreground focus:bg-accent;
 }
 
 .scroll-area__component > div {
