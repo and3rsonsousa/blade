@@ -193,7 +193,7 @@
 }
 
 .bg-content {
-  @apply rounded-lg border border-foreground/10 bg-popover/10 px-0 py-2 backdrop-blur-xl;
+  @apply rounded-lg border border-foreground/10 bg-popover/20 px-0 py-2 backdrop-blur-xl;
 }
 
 .menu-item {
