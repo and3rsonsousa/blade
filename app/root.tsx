@@ -1,4 +1,8 @@
-import { json, type LinksFunction, type LoaderArgs } from "@vercel/remix";
+import {
+  json,
+  type LinksFunction,
+  type LoaderFunctionArgs,
+} from "@vercel/remix";
 import {
   Links,
   LiveReload,
@@ -15,8 +19,8 @@ import createServerSupabase from "~/lib/supabase.server";
 
 import { type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "db_types";
-import styles from "./globals.css";
-import { cssBundleHref } from "@remix-run/css-bundle";
+import styles from "./tailwind.css";
+
 import { ClientHintCheck, getHints, useNonce } from "./lib/client-hints";
 import { getTheme } from "./lib/theme-session.server";
 import { useTheme } from "./routes/action.set-theme";
@@ -28,12 +32,11 @@ export type OutletContextType = {
 };
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: styles },
   { rel: "icon", href: "/icon-3.png" },
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+  { rel: "stylesheet", href: styles },
 ];
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const env = {
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
@@ -50,7 +53,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const { data: user } = await supabase
     .from("people")
     .select("*")
-    .eq("user_id", session?.user.id)
+    .eq("user_id", session?.user.id as string)
     .single();
 
   return json(

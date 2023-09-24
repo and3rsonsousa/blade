@@ -1,6 +1,6 @@
 import { useMatches, useNavigate } from "@remix-run/react";
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import ptBR from "date-fns/locale/pt-BR/index.js";
 import {
   CalendarDaysIcon,
   CalendarIcon,

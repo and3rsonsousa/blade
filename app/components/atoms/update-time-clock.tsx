@@ -1,6 +1,6 @@
 import { formatDistanceToNow, formatISO } from "date-fns";
 import { zonedTimeToUtc } from "date-fns-tz";
-import { ptBR } from "date-fns/locale";
+import ptBR from "date-fns/locale/pt-BR/index.js";
 import { ClockIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 

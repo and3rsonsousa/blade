@@ -218,6 +218,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       </div>
 
       {children}
+
       <Button
         size={"icon"}
         variant={open ? "ghost" : "outline"}
