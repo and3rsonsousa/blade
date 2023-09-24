@@ -1,9 +1,4 @@
 import {
-  json,
-  type LinksFunction,
-  type LoaderFunctionArgs,
-} from "@vercel/remix";
-import {
   Links,
   LiveReload,
   Meta,
@@ -14,6 +9,11 @@ import {
   useRevalidator,
 } from "@remix-run/react";
 import { createBrowserClient } from "@supabase/auth-helpers-remix";
+import {
+  json,
+  type LinksFunction,
+  type LoaderFunctionArgs,
+} from "@vercel/remix";
 import { useEffect, useState } from "react";
 import createServerSupabase from "~/lib/supabase.server";
 
@@ -21,10 +21,7 @@ import { type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "db_types";
 import styles from "./tailwind.css";
 
-import { ClientHintCheck, getHints, useNonce } from "./lib/client-hints";
 import { getTheme } from "./lib/theme-session.server";
-import { useTheme } from "./routes/action.set-theme";
-import clsx from "clsx";
 
 type TypedSupabaseClient = SupabaseClient<Database>;
 export type OutletContextType = {
@@ -61,20 +58,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       env,
       session,
       user,
-      requestInfo: {
-        hints: getHints(request),
-        userPrefs: {
-          theme: getTheme(request),
-        },
-      },
     },
     { headers: response.headers },
   );
 };
 
 export default function App() {
-  const nonce = useNonce();
-  const theme = useTheme();
   const { env, session, user } = useLoaderData<typeof loader>();
   const revalidator = useRevalidator();
   const [supabase] = useState(() =>
@@ -101,9 +90,8 @@ export default function App() {
   }, [supabase, serverAccessToken, revalidator]);
 
   return (
-    <html lang="pt-br" className={clsx(theme)}>
+    <html lang="pt-br">
       <head>
-        <ClientHintCheck nonce={nonce} />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
