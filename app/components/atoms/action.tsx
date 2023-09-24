@@ -8,6 +8,7 @@ import {
   PencilIcon,
   TrashIcon,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { CategoryIcons, PriorityIcons } from "~/lib/icons";
 import { removeTags } from "~/lib/utils";
 import { Button } from "../ui/button";
@@ -45,6 +46,7 @@ export function ActionLineCalendar({
   const navigate = useNavigate();
   const fetcher = useFetcher();
   const matches = useMatches();
+  const [isHover, setHover] = useState(false);
 
   const busy = fetcher.state !== "idle";
   const {
@@ -52,7 +54,11 @@ export function ActionLineCalendar({
     states,
     priorities,
   }: { categories: Category[]; states: State[]; priorities: Priority[] } =
-    matches[1].data;
+    matches[1].data as {
+      categories: Category[];
+      states: State[];
+      priorities: Priority[];
+    };
 
   async function updateAction(values: {}) {
     await fetcher.submit(
@@ -64,8 +70,97 @@ export function ActionLineCalendar({
     );
   }
 
+  async function deleteAction() {
+    if (confirm("Deseja deletar essa ação?")) {
+      await fetcher.submit(
+        { action: "delete-action", id: action.id },
+        {
+          method: "post",
+          action: "/handle-action",
+        },
+      );
+    }
+  }
+
+  useEffect(() => {
+    if (isHover) {
+      const keyDown = async function (event: KeyboardEvent) {
+        if (["i", "f", "z", "t", "a", "c"].find((k) => k === event.key)) {
+          let state_id = 0;
+          if (event.key === "i") {
+            state_id = 1;
+          }
+          if (event.key === "f") {
+            state_id = 2;
+          }
+          if (event.key === "z") {
+            state_id = 3;
+          }
+          if (event.key === "a") {
+            state_id = 4;
+          }
+          if (event.key === "t") {
+            state_id = 5;
+          }
+          if (event.key === "c") {
+            state_id = 6;
+          }
+
+          await fetcher.submit(
+            {
+              action: "update-action",
+              id: action.id,
+              state_id,
+            },
+            {
+              method: "POST",
+              action: "/handle-action",
+            },
+          );
+        }
+
+        if (event.key === "d") {
+          fetcher.submit(
+            { id: action.id, action: "duplicate-action" },
+            { action: "/handle-action", method: "POST" },
+          );
+        }
+
+        if (event.key === "x") {
+          deleteAction();
+        }
+      };
+      window.addEventListener("keydown", keyDown);
+
+      return () => window.removeEventListener("keydown", keyDown);
+    }
+  }, [isHover, action, fetcher]);
+
+  // const keyDown = function (event: KeyboardEvent) {
+  //   if (event.key === "c") {
+  //     fetcher.submit(
+  //       {
+  //         action: "update-action",
+  //         id: action.id,
+  //         state_id: 6,
+  //       },
+  //       {
+  //         method: "POST",
+  //         action: "/handle-action",
+  //       },
+  //     );
+  //   }
+  // };
+  // event.target.addEventListener("keydown", keyDown);
+
   return (
     <div
+      onMouseEnter={() => {
+        setHover(true);
+      }}
+      onMouseLeave={() => {
+        setHover(false);
+      }}
       className="relative"
       draggable
       onDrag={(event) => {
@@ -85,17 +180,6 @@ export function ActionLineCalendar({
             }}
             title={action.title}
           >
-            {/* <div
-                className={`bg-${
-                  action.states.slug
-                }-action relative flex w-full cursor-pointer gap-1 border-l-2 px-1 py-1.5  text-[11px] leading-none transition ${
-                  busy && "opacity-50"
-                }`}
-                onClick={() => {
-                  navigate(`/dashboard/action/${action.id}`);
-                }}
-                title={action.title}
-              > */}
             {showCategory && (
               <CategoryIcons
                 id={action.categories.slug}
@@ -283,15 +367,7 @@ export function ActionLineCalendar({
 
           <MenuItem
             onSelect={async () => {
-              if (confirm("Deseja deletar essa ação?")) {
-                await fetcher.submit(
-                  { action: "delete-action", id: action.id },
-                  {
-                    method: "post",
-                    action: "/handle-action",
-                  },
-                );
-              }
+              deleteAction();
             }}
           >
             <div className="flex items-center gap-2">
