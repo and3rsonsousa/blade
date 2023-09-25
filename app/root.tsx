@@ -21,8 +21,6 @@ import { type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "db_types";
 import styles from "./tailwind.css";
 
-import { getTheme } from "./lib/theme-session.server";
-
 type TypedSupabaseClient = SupabaseClient<Database>;
 export type OutletContextType = {
   supabase: TypedSupabaseClient;
