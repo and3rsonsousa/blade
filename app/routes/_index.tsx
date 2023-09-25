@@ -1,24 +1,39 @@
-import { Link } from "@remix-run/react";
+import { Link, MetaFunction } from "@remix-run/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LogInIcon } from "lucide-react";
+import { useEffect, useRef } from "react";
 import Blade from "~/components/structure/blade";
 import { Button } from "~/components/ui/button";
 
+export const meta: MetaFunction = () => [
+  {
+    title: "ʙʟaᴅe",
+  },
+];
+
 export default function Index() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const mouseMove = (event: MouseEvent) => {
+      ref.current?.animate(
+        { left: event.clientX + "px", top: event.clientY + "px" },
+        { fill: "forwards", duration: 10000 },
+      );
+    };
+    window.addEventListener("mousemove", mouseMove);
+  }, []);
   return (
-    <div className="relative grid min-h-screen place-content-center">
+    <div className="relative grid min-h-screen place-content-center overflow-hidden">
       <motion.div
+        ref={ref}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 3 }}
-        className="absolute left-1/2 top-1/3 z-0 h-[40vh] w-[80vh] -translate-x-1/2 rounded-full bg-primary opacity-50 blur-[200px]"
+        className=" absolute left-1/2 top-1/2 z-0 aspect-square w-[30vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-primary opacity-50"
       ></motion.div>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, x: "-50%" }}
-        animate={{ opacity: 1, scale: 0.8, x: "-50%" }}
-        transition={{ duration: 2 }}
-        className="absolute left-1/2 top-2/3 z-0 h-[20vh] w-[40vh] -translate-x-1/2 rounded-full bg-primary blur-[80px]"
-      ></motion.div>
+      <div className="absolute inset-0 backdrop-blur-[100px]"></div>
+
       <div className="relative max-w-xs text-center">
         {/* <div className="inline-block bg-gradient-to-r from-teal-400 via-primary  via-[65%] to-rose-500 bg-clip-text text-5xl font-black text-transparent">
           BLADE

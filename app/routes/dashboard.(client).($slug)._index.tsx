@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
-import { type LoaderArgs, type V2_MetaFunction } from "@vercel/remix";
+import { type LoaderFunctionArgs, type MetaFunction } from "@vercel/remix";
 
 import Calendar from "~/components/calendar/calendar-view";
 import supabaseServer from "~/lib/supabase.server";
@@ -7,7 +7,7 @@ import { getLoaderActions } from "~/lib/utils";
 
 export const config = { runtime: "edge" };
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
   {
     title: `${
       data!.client ? data!.client.short.toUpperCase().concat(" / ") : ""
@@ -15,7 +15,7 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => [
   },
 ];
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const response = new Response();
   const supabase = supabaseServer({
     request,

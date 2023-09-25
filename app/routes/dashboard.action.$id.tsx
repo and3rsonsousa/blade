@@ -1,7 +1,7 @@
 import {
-  type V2_MetaFunction,
+  type MetaFunction,
   type LoaderFunction,
-  type LoaderArgs,
+  type LoaderFunctionArgs,
   json,
 } from "@vercel/remix";
 import { useLoaderData } from "@remix-run/react";
@@ -13,7 +13,7 @@ export const config = { runtime: "edge" };
 export const loader: LoaderFunction = async ({
   request,
   params,
-}: LoaderArgs) => {
+}: LoaderFunctionArgs) => {
   const response = new Response();
   const supabase = supabaseServer({ request, response });
   const { data: action } = await supabase
@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({
   return json({ action });
 };
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data: { action } }) => [
+export const meta: MetaFunction<typeof loader> = ({ data: { action } }) => [
   {
     title: `${action.title} / ʙʟaᴅe`,
   },
