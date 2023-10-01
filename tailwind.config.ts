@@ -52,7 +52,7 @@ export default {
 				doing: colors.rose,
 				review: colors.violet,
 				done: colors.sky,
-				finished: colors.emerald,
+				finished: colors.green,
 			},
 			borderRadius: {
 				lg: "var(--radius)",

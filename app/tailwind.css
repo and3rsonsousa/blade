@@ -112,7 +112,7 @@
 }
 
 .border-idea {
-  @apply border-idea-600;
+  @apply border-idea-500;
 }
 .border-do {
   @apply border-do-600;
@@ -121,13 +121,13 @@
   @apply border-doing-600;
 }
 .border-review {
-  @apply border-review-600;
+  @apply border-review-500;
 }
 .border-done {
-  @apply border-done-600;
+  @apply border-done-500;
 }
 .border-finished {
-  @apply border-finished-600;
+  @apply border-finished-500;
 }
 
 .bg-idea-action {

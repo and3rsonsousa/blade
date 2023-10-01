@@ -32,9 +32,10 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CategoryIcons } from "~/lib/icons";
-import { useCurrentDate } from "~/lib/useCurrentDate";
+
 import { getFilteredActions, getOrderedActions } from "~/lib/utils";
 import { type ActionFull } from "../atoms/action";
+import Statistics from "../atoms/statistics";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -46,11 +47,12 @@ import {
 import { ScrollArea } from "../ui/scroll-area";
 import { Toggle } from "../ui/toggle";
 import CalendarDay from "./calendar-day";
+import { getCurrentDate } from "~/lib/getCurrentDate";
 
 type CalendarType = { actions: Action[]; celebrations: Celebration[] };
 
 export default function CalendarView({ actions, celebrations }: CalendarType) {
-  const currentDate = useCurrentDate();
+  const currentDate = getCurrentDate();
   const navigate = useNavigate();
   const matches = useMatches();
 
@@ -59,7 +61,11 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
   const [isCelebrationsVisible, setCelebrationsVisible] = useState(true);
   const [dropAction, setDropAction] = useState<Action | ActionFull>();
 
-  const { categories } = matches[1].data as { categories: Category[] };
+  const { categories, states } = matches[1].data as {
+    categories: Category[];
+    states: State[];
+  };
+
   const start = startOfWeek(startOfMonth(currentDate));
   const end = endOfWeek(endOfMonth(currentDate));
 
@@ -230,6 +236,23 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Statistics
+              data={states.map((state) => ({
+                title: state.title,
+                slug: state.slug,
+                id: state.id,
+                count: actions.filter(
+                  (action) => (action as ActionFull).states.slug === state.slug,
+                ).length,
+              }))}
+              // showInfo={(data) => {
+              //   return (
+              //     <div className="mb-1 text-xs text-muted-foreground">
+              //       {data[1].count} ações para serem finalizadas
+              //     </div>
+              //   );
+              // }}
+            />
             <Toggle
               variant={"default"}
               size={"sm"}
@@ -307,7 +330,8 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-7 border-b text-xs font-bold uppercase tracking-wider">
+      {/* Dias do Calendário */}
+      <div className="grid grid-cols-7 border-b text-center text-xs font-bold uppercase tracking-wider">
         {eachDayOfInterval({
           start: startOfWeek(currentDate),
           end: endOfWeek(currentDate),

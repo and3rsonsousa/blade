@@ -14,8 +14,17 @@ export function removeTags(str: string) {
 }
 
 export function getOrderedActions(actions: ActionFull[]) {
-	const newActions = actions.sort((a, b) => a.states.order - b.states.order);
-	return newActions;
+
+	if (actions) {
+		const newActions = actions.sort((a, b) => a.states.order - b.states.order);
+		return newActions;
+	} else {
+		throw new Error(
+			"'actions' is not valid"
+		)
+
+	}
+
 }
 
 export function getGroupedActions(
@@ -49,19 +58,24 @@ export function getFilteredActions(actions: ActionFull[], filter: string) {
 	return newActions;
 }
 
-export async function getLoaderActions(supabase: SupabaseClient, slug?: string) {
+export async function getLoaderActions(supabase: SupabaseClient, period: { start: string, end: string }, slug?: string,) {
+
 	if (slug) {
+
 		const { data: client } = await supabase
 			.from("clients")
 			.select("*")
 			.eq("slug", slug)
 			.single();
 
+
 		const [{ data: actions }, { data: celebrations }] = await Promise.all([
 			supabase
 				.from("actions")
 				.select("*, clients(*), categories(*), states(*), priority(*)")
-				.eq("client_id", client!.id)
+				.eq("client_id", client.id)
+				.gte("date", period.start)
+				.lte("date", period.end)
 				.order("date", { ascending: true }),
 			supabase
 				.from("celebration")
@@ -69,12 +83,15 @@ export async function getLoaderActions(supabase: SupabaseClient, slug?: string) 
 				.order("date", { ascending: true }),
 		]);
 
+
 		return { client, actions, celebrations };
 	} else {
 		const [{ data: actions }, { data: celebrations }] = await Promise.all([
 			supabase
 				.from("actions")
 				.select("*,clients(*), categories(*), states(*), priority(*)")
+				.gte("date", period.start)
+				.lte("date", period.end)
 				.order("date", { ascending: true })
 				.order("created_at", { ascending: true }),
 			supabase

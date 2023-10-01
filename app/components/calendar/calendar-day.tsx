@@ -2,7 +2,7 @@ import { useFetcher, useMatches } from "@remix-run/react";
 import { format, formatISO, isSameMonth, isToday, parseISO } from "date-fns";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { useCurrentDate } from "~/lib/useCurrentDate";
+import { getCurrentDate } from "~/lib/getCurrentDate";
 import { cn, getGroupedActions } from "~/lib/utils";
 import { ActionLineCalendar, type ActionFull } from "../atoms/action";
 import CelebrationLine from "../atoms/celebration";
@@ -29,7 +29,7 @@ export default function CalendarDay({
   set_actions,
   setDropAction,
 }: CalendarDayType) {
-  const currentDate = useCurrentDate();
+  const currentDate = getCurrentDate();
   const matches = useMatches();
   const fetcher = useFetcher();
 
