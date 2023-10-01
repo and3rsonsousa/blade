@@ -42,7 +42,7 @@ export default function ActionDialog({
   const baseDate = date || new Date();
   const now = new Date();
   if (
-    format(now, "Y-M-d") === format(baseDate, "Y-M-d") &&
+    format(now, "Y-MM-dd") === format(baseDate, "Y-MM-dd") &&
     now.getHours() >= 11
   ) {
     baseDate.setHours(now.getHours() + 1, 12);

@@ -1,4 +1,4 @@
-import { useMatches, useNavigate } from "@remix-run/react";
+import { Link, useMatches, useNavigate } from "@remix-run/react";
 import {
   add,
   eachDayOfInterval,
@@ -61,8 +61,13 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
 
   const { categories } = matches[1].data as { categories: Category[] };
 
+  console.log({ currentDate });
+
   const start = startOfWeek(startOfMonth(currentDate));
   const end = endOfWeek(endOfMonth(currentDate));
+
+  console.log({ start, end });
+
   const days = eachDayOfInterval({ start, end });
   const calendar: DaysType = [];
 
@@ -78,14 +83,14 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
       date: day,
       actions: orderedActions?.filter((action) => {
         const date = toDate(parseISO(action.date));
-        if (format(date, "Y-M-d") === format(day, "Y-M-d")) {
+        if (format(date, "Y-MM-dd") === format(day, "Y-MM-dd")) {
           return true;
         }
         return false;
       }) as Action[],
       celebrations: celebrations.filter((celebration) => {
         const date = toDate(parseISO(celebration.date));
-        if (format(date, "Y-M-d") === format(day, "Y-M-d")) {
+        if (format(date, "Y-MM-dd") === format(day, "Y-MM-dd")) {
           return true;
         }
         return false;
@@ -109,7 +114,7 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
   useEffect(() => {
     if (window) {
       const el = document.querySelector<HTMLElement>(
-        `[data-date="${format(new Date(), "Y-M-d")}"]`,
+        `[data-date="${format(new Date(), "Y-MM-dd")}"]`,
       );
       // spring.set(el?.offsetTop);
       el?.scrollIntoView({
@@ -154,7 +159,7 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
                         navigate(
                           `?date=${format(
                             setMonth(currentDate, Number(month.getMonth())),
-                            "Y-M-d",
+                            "Y-MM-dd",
                           )}`,
                         );
                       }}
@@ -198,7 +203,7 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
                         navigate(
                           `?date=${format(
                             setYear(currentDate, Number(year.getFullYear())),
-                            "Y-M-d",
+                            "Y-MM-dd",
                           )}`,
                         );
                       }}
@@ -215,29 +220,25 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
             </DropdownMenu>
 
             <div>
-              <Button
-                variant={"ghost"}
-                size={"sm"}
-                className="px-2"
-                onClick={() => {
-                  navigate(
-                    `?date=${format(sub(currentDate, { months: 1 }), "Y-M-d")}`,
-                  );
-                }}
-              >
-                <ChevronLeftIcon size={16} />
+              <Button variant={"ghost"} size={"sm"} className="px-2" asChild>
+                <Link
+                  to={`?date=${format(
+                    sub(currentDate, { months: 1 }),
+                    "Y-MM-dd",
+                  )}`}
+                >
+                  <ChevronLeftIcon size={16} />
+                </Link>
               </Button>
-              <Button
-                variant={"ghost"}
-                size={"sm"}
-                className="px-2"
-                onClick={() => {
-                  navigate(
-                    `?date=${format(add(currentDate, { months: 1 }), "Y-M-d")}`,
-                  );
-                }}
-              >
-                <ChevronRightIcon size={16} />
+              <Button variant={"ghost"} size={"sm"} className="px-2" asChild>
+                <Link
+                  to={`?date=${format(
+                    add(currentDate, { months: 1 }),
+                    "Y-MM-dd",
+                  )}`}
+                >
+                  <ChevronRightIcon size={16} />
+                </Link>
               </Button>
             </div>
           </div>
