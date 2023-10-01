@@ -60,13 +60,8 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
   const [dropAction, setDropAction] = useState<Action | ActionFull>();
 
   const { categories } = matches[1].data as { categories: Category[] };
-
-  console.log({ currentDate });
-
   const start = startOfWeek(startOfMonth(currentDate));
   const end = endOfWeek(endOfMonth(currentDate));
-
-  console.log({ start, end });
 
   const days = eachDayOfInterval({ start, end });
   const calendar: DaysType = [];
@@ -102,14 +97,6 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
     stiffness: 200,
     damping: 30,
   });
-
-  // spring.on("change", (value) => {
-  //   console.log(value);
-  //   const viewport = document.querySelector(
-  //     "[data-radix-scroll-area-viewport]",
-  //   );
-  //   viewport?.scrollTo({ top: value });
-  // });
 
   useEffect(() => {
     if (window) {
@@ -341,13 +328,7 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
               isGrouped={isGrouped}
               dropAction={dropAction}
               setDropAction={(action) => setDropAction(action)}
-              set_actions={(action: Action & { loading?: boolean }) => {
-                // const filtered = _actions.filter(
-                //   (_action) => _action.id !== action.id,
-                // );
-                // console.log(filtered);
-                // set_actions([...filtered, action]);
-              }}
+              set_actions={(action: Action & { loading?: boolean }) => {}}
               isCelebrationsVisible={isCelebrationsVisible}
             />
           ))}
