@@ -37,7 +37,7 @@ export default function CommandBox({
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const { clients } = matches[1].data;
+  const { clients } = matches[1].data as { clients: Client[] };
 
   useEffect(() => {
     function keyDown(event: KeyboardEvent) {

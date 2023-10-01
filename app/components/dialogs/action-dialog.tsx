@@ -51,7 +51,12 @@ export default function ActionDialog({
   }
   const matches = useMatches();
   const fetcher = useFetcher();
-  const { categories, clients, states, priorities } = matches[1].data;
+  const { categories, clients, states, priorities } = matches[1].data as {
+    categories: Category[];
+    clients: Client[];
+    states: State[];
+    priorities: Priority[];
+  };
   const { slug } = useParams();
 
   const client_id = slug
@@ -289,7 +294,11 @@ export default function ActionDialog({
             {/* <pre>{JSON.stringify(internalAction, undefined, 2)}</pre> */}
             {action && (
               <FancySelectInput
-                items={priorities}
+                items={priorities.map<GenericItem>((p, i) => ({
+                  id: i,
+                  title: p.title,
+                  slug: p.slug,
+                }))}
                 placeholder="Status"
                 selectedValue={internalAction.priority_id}
                 itemMenu={(item) => (

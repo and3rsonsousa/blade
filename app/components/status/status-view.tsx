@@ -5,7 +5,7 @@ import { ScrollArea } from "../ui/scroll-area";
 
 export default function StatusView({ actions }: { actions: Action[] | null }) {
   const matches = useMatches();
-  const { states }: { states: State[] } = matches[1].data;
+  const { states } = matches[1].data as { states: State[] };
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden border border-yellow-400">

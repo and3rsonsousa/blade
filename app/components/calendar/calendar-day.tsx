@@ -1,5 +1,5 @@
 import { useFetcher, useMatches } from "@remix-run/react";
-import { format, formatISO, isSameMonth, isToday } from "date-fns";
+import { format, formatISO, isSameMonth, isToday, parseISO } from "date-fns";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useCurrentDate } from "~/lib/useCurrentDate";
@@ -33,7 +33,7 @@ export default function CalendarDay({
   const matches = useMatches();
   const fetcher = useFetcher();
 
-  const { categories } = matches[1].data;
+  const { categories } = matches[1].data as { categories: Category[] };
   const [open, setOpen] = useState(false);
   const [drag, setDrag] = useState(false);
 
@@ -61,8 +61,12 @@ export default function CalendarDay({
         ).attributes.getNamedItem("data-date")?.value as string;
 
         if (dropAction && dateAttribute) {
-          let targetDate = new Date(dateAttribute);
-          const currentActionDate = new Date(dropAction.date);
+          console.log({ dateAttribute });
+
+          let targetDate = parseISO(dateAttribute);
+          console.log({ targetDate });
+
+          const currentActionDate = parseISO(dropAction.date);
           targetDate.setHours(
             currentActionDate.getHours(),
             currentActionDate.getMinutes(),

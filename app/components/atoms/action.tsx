@@ -198,7 +198,7 @@ export function ActionLineCalendar({
               {format(
                 parseISO(action.date),
                 "H'h'".concat(
-                  new Date(action.date).getMinutes() !== 0 ? "mm" : "",
+                  parseISO(action.date).getMinutes() !== 0 ? "mm" : "",
                 ),
               )}
             </div>

@@ -58,9 +58,8 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
   const [isGrouped, setGrouped] = useState(true);
   const [isCelebrationsVisible, setCelebrationsVisible] = useState(true);
   const [dropAction, setDropAction] = useState<Action | ActionFull>();
-  // const [_actions, set_actions] = useState(actions);
 
-  const { categories }: { categories: Category[] } = matches[1].data;
+  const { categories } = matches[1].data as { categories: Category[] };
 
   const start = startOfWeek(startOfMonth(currentDate));
   const end = endOfWeek(endOfMonth(currentDate));

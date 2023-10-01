@@ -10,7 +10,7 @@ export default function PriorityView({
   actions: Action[] | null;
 }) {
   const matches = useMatches();
-  const { priorities } = matches[1].data;
+  const { priorities } = matches[1].data as { priorities: Priority[] };
   const currentActions = actions
     ? getPrioritizedActions(
         getOrderedActions(actions as ActionFull[]),

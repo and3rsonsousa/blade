@@ -47,7 +47,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const slug = params["slug"];
   const url = `/dashboard${slug ? "/client/".concat(slug) : ""}/`;
 
-  const { clients }: { clients: Client[] } = matches[1].data;
+  const { clients } = matches[1].data as { clients: Client[] };
 
   useEffect(() => {
     const keyDown = (event: KeyboardEvent) => {
