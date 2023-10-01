@@ -81,6 +81,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           open ? "md:w-48" : "md:w-16"
         } flex shrink-0 justify-between overflow-hidden border-border/50 max-md:items-center max-md:border-b md:flex-col md:border-r`}
       >
+        {/* Logo  */}
         <div
           className={`${
             open ? "flex" : ""
@@ -97,6 +98,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             )}
           </Link>
         </div>
+        {/* Mobile */}
         <div className="md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -183,9 +185,13 @@ export default function Layout({ children }: { children: ReactNode }) {
                     key={client.id}
                     to={`/dashboard/client/${client.slug}`}
                     className={`${cn(
-                      !open ? "px-1 text-center text-[10px] uppercase" : "px-4",
-                    )} overflow-hidden text-ellipsis whitespace-nowrap py-2 font-normal transition hover:text-foreground ${cn(
-                      slug === client.slug && "text-foreground",
+                      !open
+                        ? " px-1 text-center text-[10px] uppercase"
+                        : "px-3.5",
+                    )} overflow-hidden text-ellipsis whitespace-nowrap border-l-2 border-transparent py-1 font-medium  transition hover:text-foreground ${cn(
+                      slug === client.slug
+                        ? "border-foreground text-foreground"
+                        : "text-muted-foreground",
                     )}`}
                   >
                     {open ? client.title : client.short}
