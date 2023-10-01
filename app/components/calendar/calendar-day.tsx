@@ -45,7 +45,7 @@ export default function CalendarDay({
         } rounded-sm ${drag ? "bg-popover" : ""}`,
         className,
       ])}
-      data-date={format(day.date, "Y-M-d")}
+      data-date={format(day.date, "Y-MM-dd")}
       onDragOver={(event) => {
         event.preventDefault();
         setDrag(true);
@@ -61,10 +61,7 @@ export default function CalendarDay({
         ).attributes.getNamedItem("data-date")?.value as string;
 
         if (dropAction && dateAttribute) {
-          console.log({ dateAttribute });
-
           let targetDate = parseISO(dateAttribute);
-          console.log({ targetDate });
 
           const currentActionDate = parseISO(dropAction.date);
           targetDate.setHours(
