@@ -27,7 +27,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     supabase.from("categories").select("*").order("id", { ascending: true }),
     supabase.from("clients").select("*").order("title", { ascending: true }),
     supabase.from("states").select("*").order("order"),
-    supabase.from("priority").select("*").order("order"),
+    supabase.from("priority").select("*").order("order", { ascending: false }),
   ]);
 
   return json({ categories, clients, states, priorities });
