@@ -136,23 +136,6 @@ export function ActionLineCalendar({
     }
   }, [isHover, action, fetcher]);
 
-  // const keyDown = function (event: KeyboardEvent) {
-  //   if (event.key === "c") {
-  //     fetcher.submit(
-  //       {
-  //         action: "update-action",
-  //         id: action.id,
-  //         state_id: 6,
-  //       },
-  //       {
-  //         method: "POST",
-  //         action: "/handle-action",
-  //       },
-  //     );
-  //   }
-  // };
-  // event.target.addEventListener("keydown", keyDown);
-
   return (
     <div
       onMouseEnter={() => {

@@ -42,7 +42,11 @@ export default function CalendarDay({
       className={cn([
         `group relative justify-between px-6 py-2 transition-colors sm:flex sm:flex-col sm:p-1 ${
           day.actions.length === 0 ? "max-sm:hidden" : ""
-        } rounded-sm ${drag ? "bg-popover" : ""}`,
+        } rounded-sm ${drag ? "bg-popover" : ""} ${
+          day.celebrations.find((celebration) => celebration.is_holiday)
+            ? "bg-card/50"
+            : ""
+        }`,
         className,
       ])}
       data-date={format(day.date, "Y-MM-dd")}
