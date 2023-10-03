@@ -215,15 +215,17 @@ export default function Layout({ children }: { children: ReactNode }) {
 
           <div className="flex shrink-0 flex-col items-center gap-2 border-t border-border/50 pb-4 pt-4">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex gap-2">
-                <UserIcon size={16} />
-                <div
-                  className={`overflow-hidden text-ellipsis whitespace-nowrap text-xs ${
-                    !open ? "hidden" : ""
-                  }`}
-                >
-                  {user.name}
-                </div>
+              <DropdownMenuTrigger className="flex gap-2" asChild>
+                <Button variant={"ghost"}>
+                  <UserIcon size={16} />
+                  <div
+                    className={`overflow-hidden text-ellipsis whitespace-nowrap text-xs ${
+                      !open ? "hidden" : ""
+                    }`}
+                  >
+                    {user.name}
+                  </div>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-content">
                 <DropdownMenuSub>
@@ -232,16 +234,15 @@ export default function Layout({ children }: { children: ReactNode }) {
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent className="bg-content">
-                      <DropdownMenuItem
-                        className="menu-item"
-                        onClick={() => {
-                          navigate("/dashboard/admin/clients");
-                        }}
-                      >
-                        Todos os clientes
+                      <DropdownMenuItem className="menu-item" asChild>
+                        <Link to={"/dashboard/admin/clients"}>
+                          Todos os clientes
+                        </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="menu-item">
-                        Adicionar novo cliente
+                      <DropdownMenuItem className="menu-item" asChild>
+                        <Link to={"/dashboard/admin/clients/new"}>
+                          Adicionar novo cliente
+                        </Link>
                       </DropdownMenuItem>
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>

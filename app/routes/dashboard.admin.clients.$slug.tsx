@@ -1,5 +1,5 @@
 import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
-import { LoaderFunctionArgs, json } from "@vercel/remix";
+import { LoaderFunctionArgs, MetaFunction, json } from "@vercel/remix";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -22,6 +22,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   return json({ client });
 };
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+  {
+    title: `Editar / ${data && data.client?.title} / ʙʟaᴅe`,
+  },
+];
 
 export default function ClientsPages() {
   const { client } = useLoaderData<typeof loader>();

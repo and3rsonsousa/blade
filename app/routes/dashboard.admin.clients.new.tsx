@@ -1,14 +1,15 @@
-import { Form, Link, useFetcher, useLoaderData } from "@remix-run/react";
-import { LoaderFunctionArgs, json } from "@vercel/remix";
-import { PlusCircleIcon } from "lucide-react";
+import { MetaFunction, useFetcher } from "@remix-run/react";
 import { useState } from "react";
-import { ShortName } from "~/components/atoms/action";
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import supabaseServer from "~/lib/supabase.server";
+
+export const meta: MetaFunction = ({ data }) => [
+  {
+    title: `Novo Cliente / ʙʟaᴅe`,
+  },
+];
 
 export default function ClientsPages() {
   const [slug, setSlug] = useState("");
@@ -23,8 +24,12 @@ export default function ClientsPages() {
           <h4>Novo Cliente</h4>
         </div>
         <div className="p-4">
-          <fetcher.Form method="post" action="/handle-action">
-            <div className="mb-4">
+          <fetcher.Form
+            method="post"
+            action="/handle-action"
+            className="grid grid-cols-2 gap-4"
+          >
+            <div className="col-span-full mb-4">
               <Label htmlFor="title" className="mb-2 block">
                 Nome
               </Label>
@@ -72,15 +77,27 @@ export default function ClientsPages() {
               <Label htmlFor="fgColor" className="mb-2 block">
                 fgColor
               </Label>
-              <Input id="fgColor" name="fgColor" type="color" />
+              <input
+                id="fgColor"
+                name="fgColor"
+                type="color"
+                className="color-input h-12 w-full appearance-none bg-transparent"
+                defaultValue={"#ffffff"}
+              />
             </div>
             <div className="mb-4">
               <Label htmlFor="bgColor" className="mb-2 block">
                 bgColor
               </Label>
-              <Input id="bgColor" name="bgColor" type="color" />
+              <input
+                id="bgColor"
+                name="bgColor"
+                type="color"
+                className="color-input h-12 w-full appearance-none bg-transparent"
+                defaultValue={"#56697c"}
+              />
             </div>
-            <div className="text-right">
+            <div className="col-span-full text-right">
               <Button type="submit" name="action" value="create-client">
                 Adicionar
               </Button>
