@@ -150,5 +150,53 @@ export const action: ActionFunction = async ({ request }) => {
       .single();
 
     return { data, error };
+  } else if (actionToHandle === "create-client") {
+    const title = formData.get("title") as string;
+    const slug = formData.get("slug") as string;
+    const short = formData.get("short") as string;
+    const fgColor = formData.get("fgColor") as string;
+    const bgColor = formData.get("bgColor") as string;
+
+    const client = {
+      title,
+      slug,
+      short,
+      fgColor,
+      bgColor,
+    };
+
+    const { data, error } = await supabase
+      .from("clients")
+      .insert(client)
+      .select()
+      .single();
+
+    console.log({ data, error });
+
+    return { data, error };
+  } else if (actionToHandle === "update-client") {
+    const id = formData.get("id") as string;
+    const title = formData.get("title") as string;
+    const slug = formData.get("slug") as string;
+    const short = formData.get("short") as string;
+    const fgColor = formData.get("fgColor") as string;
+    const bgColor = formData.get("bgColor") as string;
+
+    const client = {
+      title,
+      slug,
+      short,
+      fgColor,
+      bgColor,
+    };
+
+    const { data, error } = await supabase
+      .from("clients")
+      .update(client)
+      .eq("id", id)
+      .select()
+      .single();
+
+    return { data, error };
   }
 };

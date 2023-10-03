@@ -187,15 +187,7 @@ export function ActionLineCalendar({
             </div>
 
             <div className="w-5 text-[8px] uppercase opacity-75 group-hover/action:opacity-0">
-              {action.clients.short.length > 3 ? (
-                <div className="text-center leading-[8px]">
-                  {action.clients.short.substring(0, 2)}
-                  <br />
-                  {action.clients.short.substring(2)}
-                </div>
-              ) : (
-                action.clients.short
-              )}
+              <ShortName short={action.clients.short} />
             </div>
           </div>
         </ContextMenuTrigger>
@@ -543,5 +535,17 @@ export function ActionPriority({ action }: { action: ActionFull }) {
         </div>
       </div>
     </div>
+  );
+}
+
+export function ShortName({ short }: { short: string }) {
+  return short.length > 3 ? (
+    <div className="text-center leading-none">
+      {short.substring(0, short.length > 4 ? 3 : 2)}
+      <br />
+      {short.substring(short.length > 4 ? 3 : 2)}
+    </div>
+  ) : (
+    short
   );
 }

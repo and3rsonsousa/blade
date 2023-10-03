@@ -51,11 +51,13 @@ export default function ActionDialog({
   }
   const matches = useMatches();
   const fetcher = useFetcher();
-  const { categories, clients, states, priorities } = matches[1].data as {
+  const { categories, clients, states, priorities, people } = matches[1]
+    .data as {
     categories: Category[];
     clients: Client[];
     states: State[];
     priorities: Priority[];
+    people: Person[];
   };
   const { slug } = useParams();
 
@@ -290,8 +292,10 @@ export default function ActionDialog({
                 })
               }
             />
+            {/* Responsibles */}
+
             {/* Prioridades */}
-            {/* <pre>{JSON.stringify(internalAction, undefined, 2)}</pre> */}
+
             {action && (
               <FancySelectInput
                 items={priorities.map<GenericItem>((p, i) => ({

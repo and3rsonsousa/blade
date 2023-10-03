@@ -18,7 +18,7 @@ export default function Index() {
     const mouseMove = (event: MouseEvent) => {
       ref.current?.animate(
         { left: event.clientX + "px", top: event.clientY + "px" },
-        { fill: "forwards", duration: 10000 },
+        { fill: "forwards", duration: 50000 },
       );
     };
     window.addEventListener("mousemove", mouseMove);

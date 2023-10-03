@@ -23,14 +23,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     { data: clients },
     { data: states },
     { data: priorities },
+    { data: people },
   ] = await Promise.all([
     supabase.from("categories").select("*").order("id", { ascending: true }),
     supabase.from("clients").select("*").order("title", { ascending: true }),
     supabase.from("states").select("*").order("order"),
     supabase.from("priority").select("*").order("order", { ascending: false }),
+    supabase.from("people").select("*").order("name", { ascending: true }),
   ]);
 
-  return json({ categories, clients, states, priorities });
+  return json({ categories, clients, states, priorities, people });
 }
 
 export default function Dashboard() {

@@ -28,7 +28,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -47,7 +51,10 @@ export default function Layout({ children }: { children: ReactNode }) {
   const slug = params["slug"];
   const url = `/dashboard${slug ? "/client/".concat(slug) : ""}/`;
 
-  const { clients } = matches[1].data as { clients: Client[] };
+  const { clients, people } = matches[1].data as {
+    clients: Client[];
+    people: Person[];
+  };
 
   useEffect(() => {
     const keyDown = (event: KeyboardEvent) => {
@@ -131,6 +138,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="hidden h-full flex-col justify-between overflow-hidden  md:flex">
           <ScrollArea className="shrink grow">
             <div className="pb-2">
+              {/* Páginas */}
               {open && <h5 className="px-4 text-[10px] text-muted">Páginas</h5>}
               <div className="mb-8 flex flex-col text-sm font-medium hover:text-muted">
                 <Link
@@ -173,6 +181,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                   <span className={!open ? "hidden" : ""}> Prioridade </span>
                 </Link>
               </div>
+              {/* Clientes */}
               {open && (
                 <h5 className="px-4 text-[10px] text-muted">Clientes</h5>
               )}
@@ -188,10 +197,10 @@ export default function Layout({ children }: { children: ReactNode }) {
                       !open
                         ? " px-1 text-center text-[10px] uppercase"
                         : "px-3.5",
-                    )} overflow-hidden text-ellipsis whitespace-nowrap border-l-2 border-transparent py-1 font-medium  transition hover:text-foreground ${cn(
+                    )} overflow-hidden text-ellipsis whitespace-nowrap border-l-2  py-1 font-medium  transition hover:text-foreground ${cn(
                       slug === client.slug
                         ? "border-foreground text-foreground"
-                        : "text-muted-foreground",
+                        : "border-transparent text-muted-foreground",
                     )}`}
                   >
                     {open ? client.title : client.short}
@@ -200,26 +209,61 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
             </div>
           </ScrollArea>
+          {/* <Button variant={"ghost"} className="h-auto p-2">
+            <SearchIcon size={16} />
+          </Button> */}
 
-          {open ? (
-            <div className="shrink-0 border-t border-border/50 p-3">
-              <div className="flex items-center gap-2 px-3 py-2">
+          <div className="flex shrink-0 flex-col items-center gap-2 border-t border-border/50 pb-4 pt-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex gap-2">
                 <UserIcon size={16} />
-                <div className="overflow-hidden text-ellipsis whitespace-nowrap text-xs">
+                <div
+                  className={`overflow-hidden text-ellipsis whitespace-nowrap text-xs ${
+                    !open ? "hidden" : ""
+                  }`}
+                >
                   {user.name}
                 </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex shrink-0 flex-col items-center gap-2 border-t border-border/50 pb-4 pt-4">
-              <Button variant={"ghost"} className="h-auto p-2">
-                <SearchIcon size={16} />
-              </Button>
-              <Button variant={"ghost"} className="h-auto p-2">
-                <UserIcon size={16} />
-              </Button>
-            </div>
-          )}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-content">
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="menu-item">
+                    Clientes
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="bg-content">
+                      <DropdownMenuItem
+                        className="menu-item"
+                        onClick={() => {
+                          navigate("/dashboard/admin/clients");
+                        }}
+                      >
+                        Todos os clientes
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="menu-item">
+                        Adicionar novo cliente
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="menu-item">
+                    Usuários
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="bg-content">
+                      <DropdownMenuItem className="menu-item">
+                        Todos os usuários
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="menu-item">
+                        Cadastrar novo Usuário
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
 

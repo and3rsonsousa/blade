@@ -46,7 +46,7 @@
     @apply mb-2 text-3xl font-bold;
   }
   h4 {
-    @apply mb-2 text-2xl font-light tracking-wide;
+    @apply mb-2 text-xl font-bold tracking-tight;
   }
   h5 {
     @apply mb-1 text-sm font-bold uppercase tracking-wider;

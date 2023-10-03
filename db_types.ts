@@ -18,6 +18,7 @@ export interface Database {
           description: string | null
           id: string
           priority_id: string
+          responsibles: string[] | null
           state_id: number
           title: string
           updated_at: string
@@ -31,6 +32,7 @@ export interface Database {
           description?: string | null
           id?: string
           priority_id: string
+          responsibles?: string[] | null
           state_id: number
           title: string
           updated_at?: string
@@ -44,6 +46,7 @@ export interface Database {
           description?: string | null
           id?: string
           priority_id?: string
+          responsibles?: string[] | null
           state_id?: number
           title?: string
           updated_at?: string
@@ -129,21 +132,27 @@ export interface Database {
       }
       clients: {
         Row: {
+          bgColor: string | null
           created_at: string
+          fgColor: string | null
           id: number
           short: string
           slug: string
           title: string
         }
         Insert: {
+          bgColor?: string | null
           created_at?: string
+          fgColor?: string | null
           id?: number
           short: string
           slug: string
           title: string
         }
         Update: {
+          bgColor?: string | null
           created_at?: string
+          fgColor?: string | null
           id?: number
           short?: string
           slug?: string
@@ -229,6 +238,34 @@ export interface Database {
           title?: string
         }
         Relationships: []
+      }
+      topic: {
+        Row: {
+          client_id: number
+          created_at: string
+          id: string
+          title: string
+        }
+        Insert: {
+          client_id: number
+          created_at?: string
+          id?: string
+          title: string
+        }
+        Update: {
+          client_id?: number
+          created_at?: string
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "topic_client_id_fkey"
+            columns: ["client_id"]
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
