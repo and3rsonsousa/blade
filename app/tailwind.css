@@ -160,3 +160,8 @@
 .scroll-area__component > div {
   @apply h-full;
 }
+
+.color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 12px;
+}

@@ -1,5 +1,5 @@
 import { Link, useLoaderData } from "@remix-run/react";
-import { LoaderFunctionArgs, json } from "@vercel/remix";
+import { LoaderFunctionArgs, MetaFunction, json } from "@vercel/remix";
 import { PlusCircleIcon } from "lucide-react";
 import { ShortName } from "~/components/atoms/action";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
@@ -21,6 +21,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   return json({ clients });
 };
+
+export const meta: MetaFunction = () => [
+  {
+    title: "Clientes / ʙʟaᴅe",
+  },
+];
 
 export default function ClientsPages() {
   const { clients } = useLoaderData<typeof loader>();

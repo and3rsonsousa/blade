@@ -46,9 +46,13 @@ export default function ClientsPages() {
           <h4>Editar Cliente: {client?.title}</h4>
         </div>
         <div className="p-4">
-          <fetcher.Form method="post" action="/handle-action">
+          <fetcher.Form
+            method="post"
+            action="/handle-action"
+            className="grid grid-cols-2 gap-4"
+          >
             <input type="hidden" name="id" value={client?.id} />
-            <div className="mb-4">
+            <div className="col-span-full mb-4">
               <Label htmlFor="title" className="mb-2 block">
                 Nome
               </Label>
@@ -97,25 +101,27 @@ export default function ClientsPages() {
               <Label htmlFor="fgColor" className="mb-2 block">
                 fgColor
               </Label>
-              <Input
+              <input
                 id="fgColor"
                 name="fgColor"
                 type="color"
                 defaultValue={client?.fgColor || "#000"}
+                className="color-input h-12 w-full appearance-none bg-transparent"
               />
             </div>
             <div className="mb-4">
               <Label htmlFor="bgColor" className="mb-2 block">
                 bgColor
               </Label>
-              <Input
+              <input
                 id="bgColor"
                 name="bgColor"
                 type="color"
                 defaultValue={client?.bgColor || "#000"}
+                className="color-input h-12 w-full appearance-none bg-transparent"
               />
             </div>
-            <div className="text-right">
+            <div className="col-span-full text-right">
               <Button type="submit" name="action" value="update-client">
                 Adicionar
               </Button>

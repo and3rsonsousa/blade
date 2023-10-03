@@ -26,7 +26,7 @@ export default function Statistics({
           <div
             key={item.id}
             className={`bg-${item.slug}`}
-            style={{ width: `${Math.round((item.count / total) * 100)}%` }}
+            style={{ width: `${Math.ceil((item.count / total) * 100)}%` }}
           >
             {/* {Math.round((item.count / total) * 100)} */}
           </div>
