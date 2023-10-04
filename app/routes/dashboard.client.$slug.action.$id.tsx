@@ -1,19 +1,12 @@
-import {
-  type MetaFunction,
-  type LoaderFunction,
-  type LoaderFunctionArgs,
-  json,
-} from "@vercel/remix";
 import { useLoaderData } from "@remix-run/react";
+import { type LoaderFunctionArgs, type MetaFunction } from "@vercel/remix";
+
 import ActionDialog from "~/components/dialogs/action-dialog";
 import supabaseServer from "~/lib/supabase.server";
 
 export const config = { runtime: "edge" };
 
-export const loader: LoaderFunction = async ({
-  request,
-  params,
-}: LoaderFunctionArgs) => {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const response = new Response();
   const supabase = supabaseServer({ request, response });
   const { data: action } = await supabase
@@ -22,16 +15,16 @@ export const loader: LoaderFunction = async ({
     .eq("id", params.id!)
     .single();
 
-  return json({ action });
-};
+  if (action) return { action };
+}
 
-export const meta: MetaFunction<typeof loader> = ({ data: { action } }) => [
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
   {
-    title: `${action.title} / ʙʟaᴅe`,
+    title: data ? `${data.action?.title} / ʙʟaᴅe` : "ʙʟaᴅe",
   },
 ];
 
-export default function ActionPage() {
+export default function Page() {
   const { action } = useLoaderData<typeof loader>();
 
   return (

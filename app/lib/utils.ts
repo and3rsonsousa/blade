@@ -2,6 +2,7 @@ import { type SupabaseClient } from "@supabase/supabase-js";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { type ActionFull } from "~/components/atoms/action";
+import { TypedSupabaseClient } from "~/root";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -58,7 +59,7 @@ export function getFilteredActions(actions: ActionFull[], filter: string) {
 	return newActions;
 }
 
-export async function getLoaderActions(supabase: SupabaseClient, period: { start: string, end: string }, slug?: string,) {
+export async function getLoaderActions(supabase: TypedSupabaseClient, period: { start: string, end: string }, slug?: string,) {
 
 	if (slug) {
 
@@ -67,6 +68,10 @@ export async function getLoaderActions(supabase: SupabaseClient, period: { start
 			.select("*")
 			.eq("slug", slug)
 			.single();
+
+		if (!client) {
+			return {};
+		}
 
 
 		const [{ data: actions }, { data: celebrations }] = await Promise.all([

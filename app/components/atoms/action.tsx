@@ -159,7 +159,9 @@ export function ActionLineCalendar({
               busy && "opacity-50"
             }`}
             onClick={() => {
-              navigate(`/dashboard/action/${action.id}`);
+              navigate(
+                `/dashboard/client/${action.clients.slug}/action/${action.id}`,
+              );
             }}
             title={action.title}
           >
@@ -219,7 +221,9 @@ export function ActionLineCalendar({
           )}
           <MenuItem
             onSelect={() => {
-              navigate(`/dashboard/action/${action.id}`);
+              navigate(
+                `/dashboard/client/${action.clients.slug}/action/${action.id}`,
+              );
             }}
           >
             <div className="flex items-center gap-2">
@@ -491,7 +495,9 @@ export function ActionListItem({ action }: { action: ActionFull }) {
       </div>
       <div className="flex py-1 opacity-0 transition group-hover:opacity-100">
         <Button variant={"ghost"} className="h-8 w-8 p-0" asChild>
-          <Link to={`/dashboard/action/${action.id}`}>
+          <Link
+            to={`/dashboard/client/${action.clients.slug}/action/${action.id}`}
+          >
             <PencilIcon size={12} />
           </Link>
         </Button>
@@ -540,7 +546,7 @@ export function ActionPriority({ action }: { action: ActionFull }) {
 
 export function ShortName({ short }: { short: string }) {
   return short.length > 3 ? (
-    <div className="text-center leading-none">
+    <div className="scale-90 text-center leading-none">
       {short.substring(0, short.length > 4 ? 3 : 2)}
       <br />
       {short.substring(short.length > 4 ? 3 : 2)}
