@@ -39,13 +39,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ScrollArea } from "../ui/scroll-area";
 import Blade from "./blade";
 import CommandBox from "./commnad-box";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { ShortName } from "../atoms/action";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { user }: { user: Person } = useOutletContext();
   const matches = useMatches();
   const params = useParams();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [openActionDialog, setOpenActionDialog] = useState(false);
   const [openCelebrationDialog, setOpenCelebrationDialog] = useState(false);
   const slug = params["slug"];
@@ -182,31 +184,50 @@ export default function Layout({ children }: { children: ReactNode }) {
                 </Link>
               </div>
               {/* Clientes */}
-              {open && (
-                <h5 className="px-4 text-[10px] text-muted">Clientes</h5>
-              )}
+              {open ? (
+                <>
+                  <h5 className="px-4 text-[10px] text-muted">Clientes</h5>
 
-              <div
-                className={`flex flex-col gap-1 text-xs font-medium hover:text-muted`}
-              >
-                {clients.map((client) => (
-                  <Link
-                    key={client.id}
-                    to={`/dashboard/client/${client.slug}`}
-                    className={`${cn(
-                      !open
-                        ? " px-1 text-center text-[10px] uppercase"
-                        : "px-3.5",
-                    )} overflow-hidden text-ellipsis whitespace-nowrap border-l-2  py-1 font-medium  transition hover:text-foreground ${cn(
-                      slug === client.slug
-                        ? "border-foreground text-foreground"
-                        : "border-transparent text-muted-foreground",
-                    )}`}
+                  <div
+                    className={`flex flex-col gap-1 text-xs font-medium hover:text-muted`}
                   >
-                    {open ? client.title : client.short}
+                    {clients.map((client) => (
+                      <Link
+                        key={client.id}
+                        to={`/dashboard/client/${client.slug}`}
+                        className={`overflow-hidden text-ellipsis whitespace-nowrap border-l-2 px-3.5  py-1 font-medium  transition hover:text-foreground ${cn(
+                          slug === client.slug
+                            ? "border-foreground text-foreground"
+                            : "border-transparent text-muted-foreground",
+                        )}`}
+                      >
+                        {client.title}
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                clients.map((client) => (
+                  <Link key={client.id} to={`/dashboard/client/${client.slug}`}>
+                    <Avatar
+                      className={`mx-auto scale-75 border-2 border-transparent text-[12px] font-bold transition hover:scale-90 ${
+                        params.slug === client.slug &&
+                        "scale-100 border-foreground"
+                      }`}
+                    >
+                      <AvatarFallback
+                        className="uppercase"
+                        style={{
+                          backgroundColor: client.bgColor || undefined,
+                          color: client.fgColor || undefined,
+                        }}
+                      >
+                        <ShortName short={client.short} />
+                      </AvatarFallback>
+                    </Avatar>
                   </Link>
-                ))}
-              </div>
+                ))
+              )}
             </div>
           </ScrollArea>
           {/* <Button variant={"ghost"} className="h-auto p-2">
