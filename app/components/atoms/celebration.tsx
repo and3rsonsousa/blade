@@ -9,6 +9,7 @@ export default function CelebrationLine({
   const fetcher = useFetcher();
   return (
     <div
+      title={celebration.title}
       className="mt-1 flex shrink-0 grow items-center gap-1 text-[10px] leading-none text-muted-foreground opacity-50 transition hover:opacity-100"
       onClick={() => {
         if (confirm("Deseja mesmo excluir essa Data Comemorativa?")) {
