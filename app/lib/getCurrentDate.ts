@@ -1,8 +1,9 @@
 import { useSearchParams } from "@remix-run/react";
-import { parseISO, toDate } from "date-fns";
+import { toDate } from "date-fns-tz";
 
 export function getCurrentDate(request?: Request) {
 	const today = toDate(Date.now());
+
 	let date = null
 
 	if (request) {
@@ -13,6 +14,8 @@ export function getCurrentDate(request?: Request) {
 		date = params.get("date");
 	}
 
-	const currentDate = date ? parseISO(date) : today;
-	return currentDate;
+	const currentDate = date ? toDate(date) : today;
+
+	return currentDate
+
 }

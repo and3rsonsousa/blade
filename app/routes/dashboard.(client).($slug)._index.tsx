@@ -1,12 +1,7 @@
 import { useLoaderData } from "@remix-run/react";
 import { type LoaderFunctionArgs, type MetaFunction } from "@vercel/remix";
-import {
-  startOfWeek,
-  startOfMonth,
-  endOfWeek,
-  endOfMonth,
-  format,
-} from "date-fns";
+import { startOfWeek, startOfMonth, endOfWeek, endOfMonth } from "date-fns";
+import { format } from "date-fns-tz";
 
 import Calendar from "~/components/calendar/calendar-view";
 import supabaseServer from "~/lib/supabase.server";
@@ -34,9 +29,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const start = startOfWeek(startOfMonth(currentDate));
   const end = endOfWeek(endOfMonth(currentDate));
 
+  console.log({
+    start: format(start, "Y-MM-dd '0:0:0'"),
+    end: format(end, "Y-MM-dd '23:59:59'"),
+  });
+
   const { client, actions, celebrations } = await getLoaderActions(
     supabase,
-    { start: format(start, "Y-MM-dd"), end: format(end, "Y-MM-dd") },
+    {
+      start: format(start, "Y-MM-dd '0:0:0'"),
+      end: format(end, "Y-MM-dd '23:59:59'"),
+    },
     params.slug,
   );
 
