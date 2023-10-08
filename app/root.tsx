@@ -70,8 +70,6 @@ export default function App() {
 
   const serverAccessToken = session?.access_token;
 
-  console.log({ access_token: session?.access_token });
-
   useEffect(() => {
     const {
       data: { subscription },

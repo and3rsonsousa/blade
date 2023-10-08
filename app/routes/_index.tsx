@@ -1,9 +1,16 @@
-import { Link, MetaFunction } from "@remix-run/react";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import {
+  Link,
+  MetaFunction,
+  useLoaderData,
+  useNavigate,
+} from "@remix-run/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LogInIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import Blade from "~/components/structure/blade";
 import { Button } from "~/components/ui/button";
+import supabaseServer from "~/lib/supabase.server";
 
 export const meta: MetaFunction = () => [
   {
@@ -11,8 +18,20 @@ export const meta: MetaFunction = () => [
   },
 ];
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const response = new Response();
+
+  const supabase = supabaseServer({ request, response });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return { session };
+};
+
 export default function Index() {
+  const { session } = useLoaderData<typeof loader>();
   const ref = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const mouseMove = (event: MouseEvent) => {
@@ -23,6 +42,12 @@ export default function Index() {
     };
     window.addEventListener("mousemove", mouseMove);
   }, []);
+
+  useEffect(() => {
+    if (session) {
+      navigate("/dashboard");
+    }
+  }, [session]);
   return (
     <div className="relative grid min-h-screen place-content-center overflow-hidden">
       <motion.div
