@@ -29,11 +29,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const start = startOfWeek(startOfMonth(currentDate));
   const end = endOfWeek(endOfMonth(currentDate));
 
-  console.log({
-    start: format(start, "Y-MM-dd '0:0:0'"),
-    end: format(end, "Y-MM-dd '23:59:59'"),
-  });
-
   const { client, actions, celebrations } = await getLoaderActions(
     supabase,
     {

@@ -171,8 +171,6 @@ export const action: ActionFunction = async ({ request }) => {
       .select()
       .single();
 
-    console.log({ data, error });
-
     return { data, error };
   } else if (actionToHandle === "update-client") {
     const id = formData.get("id") as string;
