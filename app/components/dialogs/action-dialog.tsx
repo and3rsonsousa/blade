@@ -130,7 +130,13 @@ export default function ActionDialog({
   }
 
   return (
-    <div
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (isValidAction(internalAction)) {
+          action ? updateAction() : createAction();
+        }
+      }}
       className={`${
         mode === "page" ? "flex h-full flex-col overflow-hidden" : ""
       }`}
@@ -337,13 +343,14 @@ export default function ActionDialog({
             />
 
             <Button
+              type="sub"
               variant={
                 isValidAction(internalAction) || busy ? "default" : "ghost"
               }
               size={"sm"}
-              onClick={() => {
-                action ? updateAction() : createAction();
-              }}
+              // onClick={() => {
+              //   action ? updateAction() : createAction();
+              // }}
               disabled={!isValidAction(internalAction) || busy}
             >
               {busy ? (
@@ -358,7 +365,7 @@ export default function ActionDialog({
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 

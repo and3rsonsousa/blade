@@ -44,7 +44,7 @@ export default function CalendarDay({
           day.actions.length === 0 ? "max-sm:hidden" : ""
         } rounded-sm ${drag ? "bg-popover" : ""} ${
           day.celebrations.find((celebration) => celebration.is_holiday)
-            ? "bg-card/50"
+            ? "bg-popover/20 ring-1 ring-secondary"
             : ""
         }`,
         className,
