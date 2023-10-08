@@ -12,16 +12,18 @@ import {
   ChevronsLeft,
   ChevronsRight,
   ListTodoIcon,
+  LogOutIcon,
   MenuIcon,
   PlusIcon,
-  SearchIcon,
   SignalHighIcon,
   UserIcon,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "~/lib/utils";
+import { ShortName } from "../atoms/action";
 import ActionDialog from "../dialogs/action-dialog";
 import CelebrationDialog from "../dialogs/celebration-dialog";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -39,11 +41,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ScrollArea } from "../ui/scroll-area";
 import Blade from "./blade";
 import CommandBox from "./commnad-box";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { ShortName } from "../atoms/action";
+import { TypedSupabaseClient } from "~/root";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { user }: { user: Person } = useOutletContext();
+  const { user, supabase }: { user: Person; supabase: TypedSupabaseClient } =
+    useOutletContext();
   const matches = useMatches();
   const params = useParams();
   const navigate = useNavigate();
@@ -53,9 +55,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   const slug = params["slug"];
   const url = `/dashboard${slug ? "/client/".concat(slug) : ""}/`;
 
-  const { clients, people } = matches[1].data as {
+  const { clients } = matches[1].data as {
     clients: Client[];
-    people: Person[];
   };
 
   useEffect(() => {
@@ -230,14 +231,11 @@ export default function Layout({ children }: { children: ReactNode }) {
               )}
             </div>
           </ScrollArea>
-          {/* <Button variant={"ghost"} className="h-auto p-2">
-            <SearchIcon size={16} />
-          </Button> */}
 
-          <div className="flex shrink-0 flex-col items-center gap-2 border-t border-border/50 pb-4 pt-4">
+          <div className="flex shrink-0 flex-col items-center gap-2 border-t border-border/50 py-4">
             <DropdownMenu>
               <DropdownMenuTrigger className="flex gap-2" asChild>
-                <Button variant={"ghost"}>
+                <Button variant={"ghost"} size={open ? "default" : "icon"}>
                   <UserIcon size={16} />
                   <div
                     className={`overflow-hidden text-ellipsis whitespace-nowrap text-xs ${
@@ -248,7 +246,8 @@ export default function Layout({ children }: { children: ReactNode }) {
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-content">
+              <DropdownMenuContent className="bg-content ml-2">
+                {/* Clientes */}
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="menu-item">
                     Clientes
@@ -268,6 +267,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
+                {/* Usuários */}
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger className="menu-item">
                     Usuários
@@ -283,6 +283,16 @@ export default function Layout({ children }: { children: ReactNode }) {
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
+                <DropdownMenuSeparator className="bg-foreground/10" />
+                <DropdownMenuItem
+                  className="menu-item px-2"
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                  }}
+                >
+                  <span>Sair</span>
+                  <LogOutIcon className="h-3 w-3" />
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

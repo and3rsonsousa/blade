@@ -35,11 +35,9 @@ export default function Index() {
       <div className="absolute inset-0 backdrop-blur-[100px]"></div>
 
       <div className="relative max-w-xs text-center">
-        {/* <div className="inline-block bg-gradient-to-r from-teal-400 via-primary  via-[65%] to-rose-500 bg-clip-text text-5xl font-black text-transparent">
-          BLADE
-        </div> */}
         <AnimatePresence>
           <motion.div
+            key="b1"
             initial={{ opacity: 0, scale: 1.2 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
@@ -49,6 +47,7 @@ export default function Index() {
           </motion.div>
 
           <motion.div
+            key="b2"
             className="z-10 my-8"
             initial={{ opacity: 0, scale: 1.2 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -70,6 +69,7 @@ export default function Index() {
             </a>
           </motion.div>
           <motion.div
+            key="b3"
             initial={{ opacity: 0, scale: 1.2 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
