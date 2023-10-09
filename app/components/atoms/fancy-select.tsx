@@ -50,7 +50,7 @@ const FancySelectInput = forwardRef<
                 value={String(item.id)}
                 className="menu-item"
               >
-                {item.title} {item.id}
+                {item.title}
               </SelectItem>
             ),
           )}
