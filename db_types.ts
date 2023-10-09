@@ -160,11 +160,43 @@ export interface Database {
         }
         Relationships: []
       }
+      config: {
+        Row: {
+          created_at: string
+          id: number
+          title: string
+          user_id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          title: string
+          user_id: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          title?: string
+          user_id?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "config_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       people: {
         Row: {
           created_at: string
           email: string
           id: number
+          image: string | null
           name: string
           user_id: string
         }
@@ -172,6 +204,7 @@ export interface Database {
           created_at?: string
           email: string
           id?: number
+          image?: string | null
           name: string
           user_id: string
         }
@@ -179,6 +212,7 @@ export interface Database {
           created_at?: string
           email?: string
           id?: number
+          image?: string | null
           name?: string
           user_id?: string
         }

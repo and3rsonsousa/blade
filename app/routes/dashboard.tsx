@@ -32,7 +32,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     supabase.from("people").select("*").order("name", { ascending: true }),
   ]);
 
-  return json({ categories, clients, states, priorities, people });
+  return json({
+    categories,
+    clients,
+    states,
+    priorities,
+    people,
+    user: session.user.id,
+  });
 }
 
 export default function Dashboard() {

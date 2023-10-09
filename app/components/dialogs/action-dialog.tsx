@@ -1,10 +1,10 @@
 import { useFetcher, useMatches, useParams } from "@remix-run/react";
 
 import { format, formatISO, parseISO } from "date-fns";
-import { Check, Loader2Icon } from "lucide-react";
+import { Check, Loader2Icon, UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CategoryIcons, PriorityIcons } from "~/lib/icons";
-import { removeTags } from "~/lib/utils";
+import { cn, removeTags } from "~/lib/utils";
 import UpdatedTimeClock from "../atoms/update-time-clock";
 
 import FancySelectInput from "~/components/atoms/fancy-select";
@@ -15,6 +15,13 @@ import FancyInputText from "../atoms/fancy-input";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 import { SelectItem } from "../ui/select";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 export type InternalAction = {
   title?: string;
@@ -23,6 +30,7 @@ export type InternalAction = {
   category_id?: string;
   state_id?: string;
   priority_id?: string;
+  responsibles?: string[] | null;
   date: Date;
 };
 
@@ -51,13 +59,14 @@ export default function ActionDialog({
   }
   const matches = useMatches();
   const fetcher = useFetcher();
-  const { categories, clients, states, priorities, people } = matches[1]
+  const { categories, clients, states, priorities, people, user } = matches[1]
     .data as {
     categories: Category[];
     clients: Client[];
     states: State[];
     priorities: Priority[];
     people: Person[];
+    user: string;
   };
   const { slug } = useParams();
 
@@ -78,6 +87,7 @@ export default function ActionDialog({
       ? String(action.priority_id)
       : "af6ceef7-7c70-44c9-b187-ee9d376c15c1",
     date: action ? parseISO(action.date) : baseDate,
+    responsibles: action ? action.responsibles : null,
   });
 
   const busy = fetcher.state !== "idle";
@@ -101,6 +111,7 @@ export default function ActionDialog({
         category_id: internalAction.category_id as string,
         state_id: internalAction.state_id as string,
         date: formatISO(internalAction.date),
+        responsibles: [user],
       },
       {
         method: "post",
@@ -120,6 +131,7 @@ export default function ActionDialog({
         category_id: internalAction.category_id as string,
         state_id: internalAction.state_id as string,
         priority_id: internalAction.priority_id as string,
+        responsibles: internalAction.responsibles as string[],
         date: formatISO(internalAction.date),
       },
       {
@@ -215,6 +227,9 @@ export default function ActionDialog({
           </div>
         )}
       </div>
+
+      {/* <pre>{JSON.stringify(internalAction, undefined, 2)}</pre> */}
+
       {/* Botões */}
       <div className="shrink-0">
         <div className="mt-4 grid-cols-5 justify-between gap-4 overflow-hidden border-t border-foreground/10 px-2 py-4 sm:grid sm:px-6">
@@ -298,18 +313,16 @@ export default function ActionDialog({
                 })
               }
             />
-            {/* Responsibles */}
 
             {/* Prioridades */}
 
             {action && (
               <FancySelectInput
                 items={priorities.map<GenericItem>((p, i) => ({
-                  id: i,
+                  id: p.id,
                   title: p.title,
                   slug: p.slug,
                 }))}
-                placeholder="Status"
                 selectedValue={internalAction.priority_id}
                 itemMenu={(item) => (
                   <SelectItem value={String(item.id)} key={item.id}>
@@ -332,6 +345,68 @@ export default function ActionDialog({
                 }
               />
             )}
+
+            {/* Responsibles */}
+
+            {action && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="flex cursor-pointer pl-2">
+                    {internalAction.responsibles?.length ? (
+                      internalAction.responsibles.map((responsible) => {
+                        const person = people.find(
+                          (p) => responsible === p.user_id,
+                        );
+
+                        return (
+                          <AvatarPerson
+                            key={person?.id}
+                            person={person}
+                            className="-ml-2 h-8 w-8 border-4 border-background"
+                          />
+                        );
+                      })
+                    ) : (
+                      <div className="grid h-8 w-8 place-content-center rounded-full bg-card">
+                        <UserIcon className="h-4 w-4" />
+                      </div>
+                    )}
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-content">
+                  {people.map((person) => (
+                    <DropdownMenuCheckboxItem
+                      key={person.user_id}
+                      checked={
+                        (internalAction.responsibles &&
+                          internalAction.responsibles?.filter(
+                            (r) => r === person.user_id,
+                          ).length > 0) ||
+                        false
+                      }
+                      className="menu-item gap-2"
+                      onCheckedChange={(checked) => {
+                        let responsibles = internalAction.responsibles;
+                        if (checked) {
+                          if (responsibles)
+                            responsibles = [...responsibles, person.user_id];
+                          else responsibles = [person.user_id];
+                        } else {
+                          if (responsibles)
+                            responsibles = responsibles.filter(
+                              (r) => person.user_id !== r,
+                            );
+                        }
+                        setAction({ ...internalAction, responsibles });
+                      }}
+                    >
+                      <AvatarPerson person={person} className="h-6 w-6" />
+                      <span>{person.name}</span>
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
           {/* Data e Botão */}
           <div className="col-span-2 flex w-full justify-between gap-1 sm:justify-end">
@@ -343,7 +418,7 @@ export default function ActionDialog({
             />
 
             <Button
-              type="sub"
+              type="submit"
               variant={
                 isValidAction(internalAction) || busy ? "default" : "ghost"
               }
@@ -378,4 +453,28 @@ function isValidAction(action: InternalAction) {
   if (!action.state_id) valid = false;
 
   return valid;
+}
+
+export function AvatarPerson({
+  person,
+  className,
+}: {
+  person?: Person;
+  className?: string;
+}) {
+  const name = person?.name.split(" ");
+  return (
+    <Avatar className={cn(className)}>
+      {person ? (
+        <>
+          <AvatarImage src={`/${person.image}`} />
+          <AvatarFallback className="font-bold">
+            {name ? `${name[0][0]}${name[1][0]}` : "!!"}
+          </AvatarFallback>
+        </>
+      ) : (
+        <AvatarFallback>??</AvatarFallback>
+      )}
+    </Avatar>
+  );
 }

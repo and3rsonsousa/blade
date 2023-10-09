@@ -25,6 +25,8 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "../ui/context-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { AvatarPerson } from "../dialogs/action-dialog";
 
 export type ActionFull = Action & {
   clients: Client;
@@ -53,12 +55,21 @@ export function ActionLineCalendar({
     categories,
     states,
     priorities,
-  }: { categories: Category[]; states: State[]; priorities: Priority[] } =
-    matches[1].data as {
-      categories: Category[];
-      states: State[];
-      priorities: Priority[];
-    };
+    people,
+    user,
+  }: {
+    categories: Category[];
+    states: State[];
+    priorities: Priority[];
+    people: Person[];
+    user: string;
+  } = matches[1].data as {
+    categories: Category[];
+    states: State[];
+    priorities: Priority[];
+    people: Person[];
+    user: string;
+  };
 
   async function updateAction(values: {}) {
     await fetcher.submit(
@@ -144,7 +155,7 @@ export function ActionLineCalendar({
       onMouseLeave={() => {
         setHover(false);
       }}
-      className="relative"
+      className="group/action relative"
       draggable
       onDrag={(event) => {
         setDropAction(action);
@@ -155,7 +166,7 @@ export function ActionLineCalendar({
           <div
             className={`mb-0.5 border-l-4 px-2 border-${
               action.states.slug
-            }  group/action font relative flex w-full cursor-pointer gap-1 rounded bg-card py-1 text-xs text-slate-400 transition hover:bg-accent hover:text-foreground ${
+            }   font relative flex w-full cursor-pointer gap-1 rounded bg-card py-1 text-xs text-slate-400 transition hover:bg-accent hover:text-foreground ${
               busy && "opacity-50"
             }`}
             onClick={() => {
@@ -467,6 +478,24 @@ export function ActionLineCalendar({
           </ContextMenuSub>
         </ContextMenuContent>
       </ContextMenu>
+
+      {
+        <div className="absolute -top-1 right-0 z-10 flex origin-top-right scale-[.25] pl-2 transition-transform group-hover/action:scale-50">
+          {action.responsibles?.map((responsible) => {
+            const person = people.find((p) => p.user_id === responsible);
+
+            return (
+              user !== responsible && (
+                <AvatarPerson
+                  person={person}
+                  key={responsible}
+                  className="-ml-2 border-4 border-background"
+                />
+              )
+            );
+          })}
+        </div>
+      }
 
       {busy && (
         <div className="absolute inset-0 grid place-content-center">
