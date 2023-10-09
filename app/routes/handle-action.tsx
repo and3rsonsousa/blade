@@ -48,15 +48,14 @@ export const action: ActionFunction = async ({ request }) => {
     const client_id = Number(formData.get("client_id"));
     const date = formData.get("date") as string;
     const category_id = Number(formData.get("category_id"));
-    const responsibles = String(formData.get("responsibles")).split(",");
+    const responsibles = formData.get("responsibles")
+      ? String(formData.get("responsibles")).split(",")
+      : null;
     const updated_at = String(formatISO(new Date()));
     const priority_id =
       String(formData.get("priority_id")) === "null"
         ? ""
         : String(formData.get("priority_id"));
-    console.log({
-      responsibles,
-    });
 
     type ActionToUpdate = {
       title: string;
@@ -67,7 +66,7 @@ export const action: ActionFunction = async ({ request }) => {
       category_id: number;
       updated_at: string;
       priority_id: string;
-      responsibles: string[];
+      responsibles: string[] | null;
     };
 
     const action: ActionToUpdate = {
@@ -81,6 +80,8 @@ export const action: ActionFunction = async ({ request }) => {
       updated_at,
       responsibles,
     };
+
+    console.log({ action });
 
     Object.keys(action).forEach((key) => {
       if (!action[key as keyof ActionToUpdate]) {
