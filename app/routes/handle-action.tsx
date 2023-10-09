@@ -81,8 +81,6 @@ export const action: ActionFunction = async ({ request }) => {
       responsibles,
     };
 
-    console.log({ action });
-
     Object.keys(action).forEach((key) => {
       if (!action[key as keyof ActionToUpdate]) {
         delete action[key as keyof ActionToUpdate];

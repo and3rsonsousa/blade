@@ -141,6 +141,7 @@ export default function CalendarDay({
                         action={action as ActionFull}
                         key={action.id}
                         setDropAction={setDropAction}
+                        showCategory={true}
                       />
                     ))}
                   </div>
