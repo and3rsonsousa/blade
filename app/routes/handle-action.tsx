@@ -21,6 +21,9 @@ export const action: ActionFunction = async ({ request }) => {
     const client_id = Number(formData.get("client_id"));
     const date = formData.get("date") as string;
     const category_id = Number(formData.get("category_id"));
+    const responsibles = [formData.get("responsibles") as string];
+
+    console.log({ responsibles });
 
     const action = {
       title,
@@ -31,6 +34,7 @@ export const action: ActionFunction = async ({ request }) => {
       category_id,
       user_id: session?.user.id,
       priority_id: "af6ceef7-7c70-44c9-b187-ee9d376c15c1",
+      responsibles,
     };
 
     const { data, error } = await supabase
@@ -48,9 +52,10 @@ export const action: ActionFunction = async ({ request }) => {
     const client_id = Number(formData.get("client_id"));
     const date = formData.get("date") as string;
     const category_id = Number(formData.get("category_id"));
-    const responsibles = formData.get("responsibles")
-      ? String(formData.get("responsibles")).split(",")
-      : null;
+    const responsibles =
+      formData.get("responsibles") !== "null"
+        ? String(formData.get("responsibles")).split(",")
+        : null;
     const updated_at = String(formatISO(new Date()));
     const priority_id =
       String(formData.get("priority_id")) === "null"

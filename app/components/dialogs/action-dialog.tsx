@@ -22,6 +22,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 export type InternalAction = {
   title?: string;
@@ -416,6 +417,33 @@ export default function ActionDialog({
                 setAction({ ...internalAction, date: value });
               }}
             />
+
+            {/* <Popover>
+              <PopoverTrigger>Hora</PopoverTrigger>
+              <PopoverContent>
+                <div className="p-4">
+                  <div className="relative mx-auto h-40 w-40">
+                    <div className=" h-full rounded-full border-8"></div>
+                    <svg
+                      viewBox="0 0 320 320"
+                      className="absolute top-0 text-primary"
+                      style={{ transform: `rotate(${-7.5}deg)` }}
+                    >
+                      <path
+                        strokeWidth="16"
+                        stroke="currentColor"
+                        strokeDasharray="30, 1000"
+                        strokeLinecap="round"
+                        fill="none"
+                        d="M160 10
+      a 150 150 0 0 1 0 300
+      a 150 150 0 0 1 0 -300"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover> */}
 
             <Button
               type="submit"
