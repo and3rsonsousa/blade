@@ -23,8 +23,6 @@ export const action: ActionFunction = async ({ request }) => {
     const category_id = Number(formData.get("category_id"));
     const responsibles = [formData.get("responsibles") as string];
 
-    console.log({ responsibles });
-
     const action = {
       title,
       description,
@@ -53,7 +51,7 @@ export const action: ActionFunction = async ({ request }) => {
     const date = formData.get("date") as string;
     const category_id = Number(formData.get("category_id"));
     const responsibles =
-      formData.get("responsibles") !== "null"
+      formData.get("responsibles") !== null
         ? String(formData.get("responsibles")).split(",")
         : null;
     const updated_at = String(formatISO(new Date()));

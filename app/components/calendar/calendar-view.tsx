@@ -352,7 +352,6 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
               isGrouped={isGrouped}
               dropAction={dropAction}
               setDropAction={(action) => setDropAction(action)}
-              set_actions={(action: Action & { loading?: boolean }) => {}}
               isCelebrationsVisible={isCelebrationsVisible}
             />
           ))}

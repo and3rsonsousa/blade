@@ -17,7 +17,6 @@ type CalendarDayType = {
   isCelebrationsVisible?: boolean;
   dropAction?: Action | ActionFull;
   setDropAction: (action?: Action | ActionFull) => void;
-  set_actions: (action: Action | ActionFull) => void;
 };
 
 export default function CalendarDay({
@@ -26,7 +25,6 @@ export default function CalendarDay({
   isGrouped,
   isCelebrationsVisible,
   dropAction,
-  set_actions,
   setDropAction,
 }: CalendarDayType) {
   const currentDate = getCurrentDate();
@@ -73,10 +71,7 @@ export default function CalendarDay({
             currentActionDate.getMinutes(),
           );
 
-          set_actions({
-            ...dropAction,
-            date: formatISO(targetDate),
-          });
+          console.log({ dropAction, targetDate });
 
           await fetcher.submit(
             {
