@@ -71,8 +71,6 @@ export default function CalendarDay({
             currentActionDate.getMinutes(),
           );
 
-          console.log({ dropAction, targetDate });
-
           await fetcher.submit(
             {
               action: "update-action",
@@ -136,7 +134,6 @@ export default function CalendarDay({
                         action={action as ActionFull}
                         key={action.id}
                         setDropAction={setDropAction}
-                        showCategory={true}
                       />
                     ))}
                   </div>
@@ -147,6 +144,7 @@ export default function CalendarDay({
                 action={action as ActionFull}
                 key={action.id}
                 setDropAction={setDropAction}
+                showCategory={true}
               />
             ))}
         {/* </AnimatePresence> */}

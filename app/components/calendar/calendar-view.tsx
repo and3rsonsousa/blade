@@ -33,12 +33,17 @@ import {
 import { useEffect, useState } from "react";
 import { CategoryIcons } from "~/lib/icons";
 
-import { getFilteredActions, getOrderedActions } from "~/lib/utils";
+import {
+  getActionsByResponsible,
+  getFilteredActions,
+  getOrderedActions,
+} from "~/lib/utils";
 import { type ActionFull } from "../atoms/action";
 import Statistics from "../atoms/statistics";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -48,6 +53,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Toggle } from "../ui/toggle";
 import CalendarDay from "./calendar-day";
 import { getCurrentDate } from "~/lib/getCurrentDate";
+import { AvatarPerson } from "../dialogs/action-dialog";
 
 type CalendarType = { actions: Action[]; celebrations: Celebration[] };
 
@@ -56,15 +62,17 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
   const navigate = useNavigate();
   const matches = useMatches();
 
+  const { categories, states, people } = matches[1].data as {
+    categories: Category[];
+    states: State[];
+    people: Person[];
+  };
+
   const [filter, setFilter] = useState({ category: "all", state: "" });
   const [isGrouped, setGrouped] = useState(true);
   const [isCelebrationsVisible, setCelebrationsVisible] = useState(true);
+  const [responsibles, setResponsibles] = useState<Person[]>(people);
   const [dropAction, setDropAction] = useState<Action | ActionFull>();
-
-  const { categories, states } = matches[1].data as {
-    categories: Category[];
-    states: State[];
-  };
 
   const start = startOfWeek(startOfMonth(currentDate));
   const end = endOfWeek(endOfMonth(currentDate));
@@ -77,7 +85,9 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
       ? getFilteredActions(actions as ActionFull[], filter.category)
       : (actions as ActionFull[]);
 
-  const orderedActions = getOrderedActions(filteredActions);
+  const orderedActions = getOrderedActions(
+    getActionsByResponsible(filteredActions, responsibles),
+  );
 
   days.forEach((day) => {
     calendar.push({
@@ -109,7 +119,6 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
       const el = document.querySelector<HTMLElement>(
         `[data-date="${format(new Date(), "Y-MM-dd")}"]`,
       );
-      // spring.set(el?.offsetTop);
       el?.scrollIntoView({
         block: "start",
         behavior: "smooth",
@@ -235,7 +244,7 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
               </Button>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 lg:gap-4">
             <Statistics
               data={states.map((state) => ({
                 title: state.title,
@@ -245,38 +254,81 @@ export default function CalendarView({ actions, celebrations }: CalendarType) {
                   (action) => (action as ActionFull).states.slug === state.slug,
                 ).length,
               }))}
-              // showInfo={(data) => {
-              //   return (
-              //     <div className="mb-1 text-xs text-muted-foreground">
-              //       {data[1].count} ações para serem finalizadas
-              //     </div>
-              //   );
-              // }}
             />
-            <Toggle
-              variant={"default"}
-              size={"sm"}
-              pressed={isCelebrationsVisible}
-              onPressedChange={setCelebrationsVisible}
-            >
-              {isCelebrationsVisible ? (
-                <StarIcon size={16} />
-              ) : (
-                <StarOffIcon size={16} />
-              )}
-            </Toggle>
-            <Toggle
-              variant={"default"}
-              size={"sm"}
-              pressed={isGrouped}
-              onPressedChange={setGrouped}
-            >
-              {isGrouped ? (
-                <ListTreeIcon size={16} />
-              ) : (
-                <AlignJustifyIcon size={16} />
-              )}
-            </Toggle>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="flex cursor-pointer pl-2">
+                  {responsibles.map((person) => (
+                    <AvatarPerson
+                      key={person?.id}
+                      person={person}
+                      className="-ml-2 h-8 w-8 border-4 border-background"
+                    />
+                  ))}
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-content">
+                {people.map((person) => (
+                  <DropdownMenuCheckboxItem
+                    key={person.id}
+                    className="menu-item gap-2"
+                    checked={
+                      responsibles.find(
+                        (responsible) => responsible.id === person.id,
+                      ) !== undefined
+                    }
+                    onCheckedChange={(checked) => {
+                      let _responsibles = responsibles;
+                      if (checked) {
+                        _responsibles = [...responsibles, person];
+                        setResponsibles(_responsibles);
+                      } else {
+                        if (responsibles.length > 1) {
+                          _responsibles = responsibles.filter(
+                            (r) => person.id !== r.id,
+                          );
+                          setResponsibles(_responsibles);
+                        } else {
+                          alert(
+                            "É necessário ter pelo menos uma pessoa respons;ável para ver as ações",
+                          );
+                        }
+                      }
+                    }}
+                  >
+                    <AvatarPerson person={person} className="h-6 w-6" />
+                    {person.name}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <div className="flex gap-1">
+              <Toggle
+                variant={"default"}
+                size={"xs"}
+                pressed={isCelebrationsVisible}
+                onPressedChange={setCelebrationsVisible}
+              >
+                {isCelebrationsVisible ? (
+                  <StarIcon size={16} />
+                ) : (
+                  <StarOffIcon size={16} />
+                )}
+              </Toggle>
+              <Toggle
+                variant={"default"}
+                size={"xs"}
+                pressed={isGrouped}
+                onPressedChange={setGrouped}
+              >
+                {isGrouped ? (
+                  <ListTreeIcon size={16} />
+                ) : (
+                  <AlignJustifyIcon size={16} />
+                )}
+              </Toggle>
+            </div>
             {/* Filtro */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

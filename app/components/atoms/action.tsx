@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { CategoryIcons, PriorityIcons } from "~/lib/icons";
 import { removeTags } from "~/lib/utils";
+import { AvatarPerson } from "../dialogs/action-dialog";
 import { Button } from "../ui/button";
 import {
   ContextMenu,
@@ -25,8 +26,6 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "../ui/context-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { AvatarPerson } from "../dialogs/action-dialog";
 
 export type ActionFull = Action & {
   clients: Client;

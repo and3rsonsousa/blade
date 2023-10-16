@@ -1,3 +1,4 @@
+import { action } from './../routes/handle-action';
 import { type SupabaseClient } from "@supabase/supabase-js";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -28,10 +29,26 @@ export function getOrderedActions(actions: ActionFull[]) {
 
 }
 
+export function getActionsByResponsible(actions: ActionFull[], responsibles: Person[]) {
+
+	if (actions) {
+		const newActions = actions.filter(action => action.responsibles?.find(responsible => responsibles.find(r => r.user_id === responsible)))
+		return newActions;
+	} else {
+		throw new Error(
+			"'actions' is not valid"
+		)
+	}
+
+}
+
 export function getGroupedActions(
 	actions: ActionFull[],
 	categories: Category[]
 ) {
+
+	categories = categories.sort((a, b) => a.priority - b.priority)
+
 	const actionsByCategory = categories.map((category) => ({
 		category: category,
 		actions: actions.filter((action) => action.category_id === category.id),
