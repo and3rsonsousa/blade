@@ -1,8 +1,11 @@
 import {
   CircleDashedIcon,
+  Code2Icon,
   DollarSignIcon,
   ImageIcon,
   ListChecksIcon,
+  MegaphoneIcon,
+  PenToolIcon,
   PlayIcon,
   PrinterIcon,
   SignalIcon,
@@ -11,8 +14,6 @@ import {
   UsersIcon,
   XIcon,
   type LucideIcon,
-  CodeIcon,
-  Code2Icon,
 } from "lucide-react";
 import { cn } from "./utils";
 
@@ -25,6 +26,8 @@ const categoryIconsList: { [key: string]: LucideIcon } = {
   print: PrinterIcon,
   meeting: UsersIcon,
   dev: Code2Icon,
+  design: PenToolIcon,
+  ads: MegaphoneIcon,
 };
 
 const priorityIconsList: { [key: string]: LucideIcon } = {
