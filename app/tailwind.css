@@ -63,7 +63,7 @@
 }
 
 .prose .tiptap * {
-  @apply mb-2;
+  @apply mb-4;
 }
 
 .prose h1,
@@ -81,8 +81,8 @@
 .prose ol {
   @apply ml-6 list-decimal;
 }
-.prose ol * {
-  @apply my-0;
+.prose .tiptap ol * {
+  @apply mb-0;
 }
 
 .prose .tiptap > *:first-child {

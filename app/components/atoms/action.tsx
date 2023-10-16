@@ -96,24 +96,25 @@ export function ActionLineCalendar({
   useEffect(() => {
     if (isHover) {
       const keyDown = async function (event: KeyboardEvent) {
-        if (["i", "f", "z", "t", "a", "c"].find((k) => k === event.key)) {
+        const key = event.key.toLowerCase();
+        if (["i", "f", "z", "t", "a", "c"].find((k) => k === key)) {
           let state_id = 0;
-          if (event.key === "i") {
+          if (key === "i") {
             state_id = 1;
           }
-          if (event.key === "f") {
+          if (key === "f") {
             state_id = 2;
           }
-          if (event.key === "z") {
+          if (key === "z") {
             state_id = 3;
           }
-          if (event.key === "a") {
+          if (key === "a") {
             state_id = 4;
           }
-          if (event.key === "t") {
+          if (key === "t") {
             state_id = 5;
           }
-          if (event.key === "c") {
+          if (key === "c") {
             state_id = 6;
           }
 
@@ -130,14 +131,19 @@ export function ActionLineCalendar({
           );
         }
 
-        if (event.key === "d") {
+        if (key === "e") {
+          navigate(
+            `/dashboard/client/${action.clients.slug}/action/${action.id}`,
+          );
+        }
+        if (key === "d") {
           fetcher.submit(
             { id: action.id, action: "duplicate-action" },
             { action: "/handle-action", method: "POST" },
           );
         }
 
-        if (event.key === "x") {
+        if (key === "x") {
           deleteAction();
         }
       };

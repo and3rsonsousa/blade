@@ -11,6 +11,8 @@ import {
   UsersIcon,
   XIcon,
   type LucideIcon,
+  CodeIcon,
+  Code2Icon,
 } from "lucide-react";
 import { cn } from "./utils";
 
@@ -22,6 +24,7 @@ const categoryIconsList: { [key: string]: LucideIcon } = {
   finance: DollarSignIcon,
   print: PrinterIcon,
   meeting: UsersIcon,
+  dev: Code2Icon,
 };
 
 const priorityIconsList: { [key: string]: LucideIcon } = {
