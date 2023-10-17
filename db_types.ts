@@ -309,7 +309,37 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      search_for_actions: {
+        Args: {
+          query: string
+        }
+        Returns: {
+          category_id: number
+          client_id: number
+          created_at: string
+          date: string
+          description: string | null
+          id: string
+          priority_id: string
+          responsibles: string[] | null
+          state_id: number
+          title: string
+          updated_at: string
+          user_id: string
+        }[]
+      }
+      unaccent: {
+        Args: {
+          "": string
+        }
+        Returns: string
+      }
+      unaccent_init: {
+        Args: {
+          "": unknown
+        }
+        Returns: unknown
+      }
     }
     Enums: {
       [_ in never]: never
